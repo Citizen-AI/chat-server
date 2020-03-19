@@ -1,0 +1,25 @@
+{
+  "name": "chat-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@sentry/node": "^5.14.2",
+    "botbuilder-adapter-facebook": "^1.0.9",
+    "botbuilder-adapter-web": "^1.0.7",
+    "botkit": "^4.8.0",
+    "chalk": "^3.0.0",
+    "coffeescript": "^2.5.1",
+    "dotenv": "^8.2.0",
+    "envalid": "^6.0.1",
+    "eventemitter2": "^6.0.0",
+    "fb": "^2.0.0",
+    "ngrok": "^3.2.7"
+  }
+}
