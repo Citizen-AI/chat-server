@@ -4,17 +4,15 @@ const { Botkit } = require('botkit')
 const { WebAdapter } = require('botbuilder-adapter-web')
 const { FacebookAdapter, FacebookEventTypeMiddleware } = require('botbuilder-adapter-facebook')
 
+require('./ngrok')
+
 
 const {
   fb_verify_token,
   fb_page_token,
   fb_app_secret,
-  ngrok_subdomain,
-  ngrok_authtoken,
   NODE_ENV
 } = process.env
-
-// if(ngrok_subdomain && ngrok_authtoken) require('../ngrok')
 
 const web_adapter = new WebAdapter({})
 
@@ -33,7 +31,7 @@ facebook_adapter.use(new FacebookEventTypeMiddleware())
 const controller = new Botkit({
     debug: NODE_ENV === 'development',
     webhook_uri: '/api/messages',
-    webserver_middlewares: [(req, res, next) => { console.log('REQ > ', req.url); next(); }]
+    // webserver_middlewares: [(req, res, next) => { console.log('REQ > ', req.url); next(); }]
 })
 
 controller.ready(() => {
@@ -50,13 +48,16 @@ controller.ready(() => {
     // and calling the facebook_adapter directly as below.
     // this is what Botkit does internally, see:
     // https://github.com/howdyai/botkit/blob/master/packages/botkit/src/core.ts#L675
-    controller.webserver.post('/api/facebook', (req, res) => {
+    controller.webserver.post('/facebook/receive', (req, res) => {
+      console.log('heard something on /facebook/receive')
         facebook_adapter.processActivity(req, res, controller.handleTurn.bind(controller)).catch((err) => {
             console.error('Experienced an error inside the turn handler', err);
             throw err;
         })
     })
 })
+
+
 
 
 module.exports = controller
