@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --trace-warnings index.js"
+    "start": "node --trace-warnings --harmony index.js"
   },
   "author": "",
   "license": "ISC",
@@ -16,10 +16,13 @@
     "botkit": "^4.8.1",
     "chalk": "^3.0.0",
     "coffeescript": "^2.5.1",
+    "dialogflow": "^1.2.0",
     "dotenv": "^8.2.0",
     "envalid": "^6.0.1",
     "eventemitter2": "^6.3.1",
     "fb": "^2.0.0",
+    "flatmap": "0.0.3",
+    "google-libphonenumber": "^3.2.8",
     "ngrok": "^3.2.7"
   }
 }

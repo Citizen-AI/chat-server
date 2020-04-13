@@ -5,7 +5,11 @@ const botkit = require('./botkit')
 botkit.on('message', async (bot, user_message) => {
   const adapter_type = bot.getConfig('context').adapter.name
 
-  bus.emit(`message from ${adapter_type} user`, { bot, user_message })
+  bus.emit(`message from ${adapter_type} user`, {
+    bot,
+    user_message,
+    adapter_type
+  })
 
   // event = switch
   //   when (user_message.text.match regex.get_started) or (user_message.text.match regex.welcome_back)
