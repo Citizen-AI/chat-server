@@ -1,10 +1,12 @@
+'use strict'
+
 const bus = require('../event_bus')
 const botkit = require('./botkit')
-const { regex } = require('../helpers')
+const { regex, adapter_name } = require('../helpers')
 
 
 botkit.on('message', async (bot, user_message) => {
-  const adapter_type = bot.getConfig('context').adapter.name
+  const adapter_type = adapter_name(bot)
 
   let event
   if(user_message.text.match(regex.get_started) || user_message.text.match(regex.welcome_back))
@@ -16,7 +18,6 @@ botkit.on('message', async (bot, user_message) => {
 
   bus.emit(event, {
     bot,
-    user_message,
-    adapter_type
+    user_message
   })
 })

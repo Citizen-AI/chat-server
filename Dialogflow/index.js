@@ -2,6 +2,7 @@
 
 const bus = require('../event_bus')
 const { df_query } = require('./df_api_v2')
+const { adapter_name } = require ('../helpers')
 
 
 // const response_wellformed = df_result => {
@@ -21,8 +22,10 @@ const { df_query } = require('./df_api_v2')
 // }
 
 
-const send_to_df = async ({ user_message, bot, adapter_type }) => {
-  let query = null
+const send_to_df = async ({ user_message, bot }) => {
+  let query
+  const adapter_type = adapter_name(bot)
+
   if(user_message.text?.length > 255) {
     query = 'USER_TEXT_TOO_LONG_INTENT'
     bus.emit('too-long message from user')

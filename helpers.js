@@ -33,6 +33,8 @@ module.exports = {
 
   // Js: (object) -> JSON.stringify object, null, 2
 
-  emit_error: err => bus.emit('error', err.stack)
+  emit_error: err => bus.emit('error', err.stack),
+
+  adapter_name: bot => bot.getConfig('context').adapter.name
 
 }
