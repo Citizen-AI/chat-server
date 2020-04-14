@@ -1,5 +1,7 @@
 # Todo
 
-* Hook up DF responses 
+* Differentiate web & facebook user starts
 * Add web client
+* Test all features:
+  FUs
 * … 

@@ -1,5 +1,3 @@
-# knows everything rentbot needs to know about the FB Messenger api format
-
 _ = require 'lodash'
 flatmap = require 'flatmap'
 PNF = require('google-libphonenumber').PhoneNumberFormat
@@ -152,13 +150,6 @@ text_reply = (df_speech) ->
       buttons: buttons
 
 
-remove_extra_whitespace = (text) ->
-  text
-    .replace /[\s]*\n[\s]*/g, '\n'
-    .replace regex.whitespace_around_first_more, '$1'
-    .replace /[\s]*(\[.*?\])/ig, '$1'
-
-
 follow_up_reply = (text) ->
   [, label, payload] = text.match regex.follow_up_tag
   rest_of_line = text.replace(regex.follow_up_tag, '').trim()
@@ -213,6 +204,13 @@ text_processor = (df_message) ->
   has_followup_before_more = (text) -> strip_out_from_first_more(text).match regex.follow_up_tag
   has_qr_before_more = (text) -> strip_out_from_first_more(text).match regex.quick_replies_tag
   has_cards_before_more = (text) -> strip_out_from_first_more(text).match regex.cards_tag
+  remove_extra_whitespace = (text) ->
+    text
+      .replace /[\s]*\n[\s]*/g, '\n'
+      .replace regex.whitespace_around_first_more, '$1'
+      .replace /[\s]*(\[.*?\])/ig, '$1'
+
+
 
   cleaned_speech = remove_extra_whitespace df_message.text.text[0]
   lines = remove_empties \    # to get rid of removed source lines
