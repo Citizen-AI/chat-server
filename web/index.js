@@ -2,19 +2,7 @@
 
 const bus = require('../event_bus')
 const { format, msec_delay } = require('./df_to_webchat_formatter')
-
-
-const tell_me_more = ({ user_message, bot }) => {
-  const tell_me_more_content = user_message.text.match(/^tell_me_more: ?([\s\S]*)/i)?.[1]
-  const fake_df_result = {
-    fulfillmentMessages: [ { text: { text: [ tell_me_more_content ] } } ]
-  }
-  send_queue({
-    df_result: fake_df_result,
-    user_message,
-    bot
-  })
-}
+const { regex } = require('../helpers')
 
 
 const send_queue = ({ df_result, user_message, bot }) => {
@@ -45,6 +33,19 @@ const send_queue = ({ df_result, user_message, bot }) => {
       }
     })(m, cumulative_wait)
     cumulative_wait += msec_delay(m)
+  })
+}
+
+
+const tell_me_more = ({ user_message, bot }) => {
+  const tell_me_more_content = user_message.text.match(regex.tell_me_more)?.[1]
+  const fake_df_result = {
+    fulfillmentMessages: [ { text: { text: [ tell_me_more_content ] } } ]
+  }
+  send_queue({
+    df_result: fake_df_result,
+    user_message,
+    bot
   })
 }
 

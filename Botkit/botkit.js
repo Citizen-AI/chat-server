@@ -42,18 +42,11 @@ controller.ready(() => {
     // bind websocket to the webserver
     web_adapter.createSocketServer(controller.http, {}, controller.handleTurn.bind(controller))
 
-
-    // Make the Facebook adapter work
-    // we do this by creating a SECOND webhook endpoint
-    // and calling the facebook_adapter directly as below.
-    // this is what Botkit does internally, see:
-    // https://github.com/howdyai/botkit/blob/master/packages/botkit/src/core.ts#L675
     controller.webserver.post('/facebook/receive', (req, res) => {
-      console.log('heard something on /facebook/receive')
-        facebook_adapter.processActivity(req, res, controller.handleTurn.bind(controller)).catch((err) => {
-            console.error('Experienced an error inside the turn handler', err);
-            throw err;
-        })
+      facebook_adapter.processActivity(req, res, controller.handleTurn.bind(controller)).catch((err) => {
+          console.error('Experienced an error inside the turn handler', err);
+          throw err;
+      })
     })
 })
 

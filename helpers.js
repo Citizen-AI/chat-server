@@ -5,7 +5,7 @@ bus = require('./event_bus')
 
 module.exports = {
   regex: {
-    tell_me_more: /^tell_me_more: ?/i,
+    tell_me_more: /^tell_me_more: ?([\s\S]*)/i,
     get_started: /^\[Web\] get started/i,
     welcome_back: /^\[Web\] welcome back/i,
     follow_up: /^follow_up: ?/i,
