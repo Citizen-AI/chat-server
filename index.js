@@ -21,6 +21,7 @@ bus
   .on('Facebook Adapter user starts', df.send_to_df)
   .on('message from Facebook Adapter user', df.send_to_df)
   .on('postback from Facebook Adapter: quick reply button', df.send_to_df)
+  .on('postback from Facebook Adapter: card button', df.send_to_df)
   .on('postback from Facebook Adapter: tell me more', fb.tell_me_more)
 
   .on('message from Dialogflow for Web Adapter', web.send_queue)

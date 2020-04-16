@@ -14,18 +14,24 @@ const message_and_postback_handler = (bot, user_message) => {
     event = `${adapter_type} user starts`
   else if(user_message.text.match(regex.tell_me_more))
     event = `postback from ${adapter_type}: tell me more`
-  else if(user_message.quick_reply?.payload.match(regex.follow_up)) {                   // FB style
+  // FB only
+  else if(user_message.quick_reply?.payload.match(regex.follow_up)) {
     event = `postback from ${adapter_type}: quick reply button`
     user_message.text = user_message.quick_reply.payload.replace(regex.follow_up, '')
   }
-  else
-    event = `message from ${adapter_type} user`
+  else if(user_message.text?.match(regex.card_button)) {
+    event = `postback from ${adapter_type}: card button`
+    user_message.text = user_message.text.replace(regex.card_button, '')
+  }
+  //
+  else event = `message from ${adapter_type} user`
   bus.emit(event, { bot, user_message })
 }
 
 
 botkit.on('message', message_and_postback_handler)
 botkit.on('facebook_postback', message_and_postback_handler)
+
 
 
 
