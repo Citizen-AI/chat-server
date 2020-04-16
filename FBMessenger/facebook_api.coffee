@@ -8,7 +8,7 @@ bus = require '../event_bus'
 FB.setAccessToken fb_page_token
 
 
-fields = [ 'first_name', 'last_name', 'profile_pic' ] 
+fields = [ 'first_name', 'last_name', 'profile_pic' ]
 
 get_facebook_profile = (fb_user_id, cb) ->
   new Promise (resolve, reject) ->

@@ -6,39 +6,45 @@ const { replace } = require('lodash/fp')
 const bus = require('../event_bus')
 const { get_facebook_profile, send_typing } = require('./facebook_api')
 const {
-  fb_messages_text_contains,
-  apply_fn_to_fb_messages,
+  // fb_messages_text_contains,
+  // apply_fn_to_fb_messages,
   msec_delay,
   format
 } = require('./df_to_messenger_formatter')
 const { regex } = require('../helpers')
-const { User, update_user } = require('../logger/db')
+// const { User, update_user } = require('../logger/db')
+
+// const swap_in_user_name = messages_to_send => new Promise(async resolve => {
+//   const fb_user_id = user_message.user
+//   if(fb_messages_text_contains(messages_to_send, '#generic.fb_first_name')) {
+//     bus.emit('Looking up username in storage')
+//     const user = await User.findOne({ id: fb_user_id })
+//     let first_name
+//     if(user?.fb_user_profile?.first_name) {
+//       bus.emit('Found user name in db')
+//       ({ first_name } = user.fb_user_profile)
+//     } else {
+//       const fb_user = await get_facebook_profile(fb_user_id)
+//       User.findOneAndUpdate({ id: fb_user_id }, { fb_user_profile: fb_user }, { new: true, upsert: true, setDefaultsOnInsert: true })
+
+//       // await update_user(fb_user_id, { fb_user_profile: fb_user })
+//       ({ first_name } = fb_user)
+//     }
+//     resolve(apply_fn_to_fb_messages(messages_to_send, replace('#generic.fb_first_name', first_name)))
+//   }
+//   else resolve(messages_to_send)
+// })
+
 
 
 const send_queue = async ({ df_result, user_message, bot }) => {
-  const swap_in_user_name = ({ fb_message, messages_to_send }) => new Promise(async resolve => {
-    const fb_user_id = fb_message.user
-    if(fb_messages_text_contains(messages_to_send, '#generic.fb_first_name')) {
-      bus.emit('Looking up username in storage')
-      user = await User.findOne({ _id: fb_user_id })
-      let first_name
-      if(user?.fb_user_profile?.first_name) {
-        bus.emit('Found user name in db')
-        ({ first_name } = user.fb_user_profile)
-      } else {
-        const fb_user = await get_facebook_profile(fb_user_id)
-        update_user(fb_user_id, { fb_user_profile: fb_user })
-        ({ first_name } = fb_user)
-      }
-      resolve(apply_fn_to_fb_messages(messages_to_send, replace('#generic.fb_first_name', first_name)))
-    }
-    else resolve(messages_to_send)
-  })
+  const fudge_user_name = web_chat_messages =>
+    JSON.parse(JSON.stringify(web_chat_messages).replace(/#generic.fb_first_name/g, 'there'))
 
   let messages_to_send = format(df_result.fulfillmentMessages)
+  messages_to_send = fudge_user_name(messages_to_send)
   await bot.changeContext(user_message.reference)
   send_typing(user_message)
-  // messages_to_send = swap_in_user_name({ messages_to_send, fb_message:user_message })
 
   let cumulative_wait = 500
   messages_to_send.forEach((m, i) => {

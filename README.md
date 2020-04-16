@@ -1,5 +1,6 @@
 # Todo
 
+* record interview against user
 * Add web client
 * Kontent.ai
 * initial chat delay to .env
