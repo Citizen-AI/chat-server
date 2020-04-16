@@ -6,7 +6,7 @@ PNF = require('google-libphonenumber').PhoneNumberFormat
 phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance()
 
 bus = require '../event_bus'
-{regex, remove_empties, Js} = require '../helpers'
+{ regex, remove_empties, Js } = require '../helpers'
 
 # pure FB templates (knowing nothing about DF's or Rentbot's APIs)
 image_reply_template = require './templates/image_reply'
@@ -163,10 +163,13 @@ remove_extra_whitespace = (text) ->
 follow_up_reply = (text) ->
   [, label, payload] = text.match regex.follow_up_tag
   rest_of_line = text.replace(regex.follow_up_tag, '').trim()
-  [
-    text_reply rest_of_line
-    follow_up_button {label, payload}
-  ]
+  if rest_of_line
+    [
+      text_reply rest_of_line
+      follow_up_button { label, payload }
+    ]
+  else
+    follow_up_button { label, payload }
 
 
 quick_replies_reply = (text) ->
@@ -192,7 +195,7 @@ cards_reply = (text) ->
       [ , title, subtitle ] = title_and_subtitle.match(/(.*)\((.*)\)/)
     else
       [ title, subtitle ] = [ title_and_subtitle, null ]
-    { 
+    {
       title
       subtitle
       button_label

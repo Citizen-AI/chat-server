@@ -12,7 +12,7 @@ bus
   .on('Web Adapter user starts', df.send_to_df)
   .on('Web Adapter user starts', logger.user_starts)
   .on('message from Web Adapter user', df.send_to_df)
-  .on('message from Facebook Adapter user', ({ user_message }) => console.log(user_message))
+  // .on('message from Facebook Adapter user', ({ user_message }) => console.log(user_message))
 
   .on('message from Web Adapter user', logger.from_web)
   .on('postback from Web Adapter: tell me more', web.tell_me_more)
@@ -25,11 +25,13 @@ bus
 
   .on('message from Dialogflow for Web Adapter', web.send_queue)
   .on('message from Dialogflow for Facebook Adapter', fb.send_queue)
+  // .on('message from Dialogflow for Facebook Adapter', ({ df_result }) => console.log(df_result))
   .on('message from Dialogflow for Web Adapter', logger.from_df)
- 
+
   .on('user feedback received', logger.feedback)
 
   .on('message to Web Adapter user', logger.to_web)
+  // .on('message to Facebook Adapter user', ({ message }) => console.log(message))
 
 //   .on('message from Facebook Adapter user', df.process_fb_message)          // events from FB Messenger client
 

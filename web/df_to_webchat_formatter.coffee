@@ -153,10 +153,13 @@ text_reply = (df_speech) ->
 follow_up_reply = (text) ->
   [, label, payload] = text.match regex.follow_up_tag
   rest_of_line = text.replace(regex.follow_up_tag, '').trim()
-  [
-    text_reply rest_of_line
-    follow_up_button {label, payload}
-  ]
+  if rest_of_line
+    [
+      text_reply rest_of_line
+      follow_up_button { label, payload }
+    ]
+  else
+    follow_up_button { label, payload }
 
 
 quick_replies_reply = (text) ->
@@ -209,8 +212,6 @@ text_processor = (df_message) ->
       .replace /[\s]*\n[\s]*/g, '\n'
       .replace regex.whitespace_around_first_more, '$1'
       .replace /[\s]*(\[.*?\])/ig, '$1'
-
-
 
   cleaned_speech = remove_extra_whitespace df_message.text.text[0]
   lines = remove_empties \    # to get rid of removed source lines
