@@ -22,6 +22,7 @@ module.exports = {
     map_url: /(.+) (https?:\/\/.+\/maps\/.+)/i,
     follow_up_tag: /\[fu: ?(.*?): ?(.*?)\]/i,
     quick_replies_tag: /\[qr: (.+?)\]/i,
+    card_button: /^card_button: ?/i,
     cards_tag: /\[cards?: (.+?)\]/i
   },
 
@@ -37,5 +38,4 @@ module.exports = {
   emit_error: err => bus.emit('error', err.stack),
 
   adapter_name: bot => bot.getConfig('context').adapter.name
-
 }

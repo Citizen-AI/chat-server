@@ -14,7 +14,7 @@ const send_queue = ({ df_result, user_message, bot }) => {
   bot.reply(user_message, { "type": "typing" })
   web_chat_messages = fudge_user_name(web_chat_messages)
 
-  let cumulative_wait = 500
+  let cumulative_wait = 0
   web_chat_messages.forEach((m, i) => {
     (function(m, cumulative_wait) {
       var next_message_delay, typing_delay
@@ -23,7 +23,8 @@ const send_queue = ({ df_result, user_message, bot }) => {
         bot.reply(user_message, m)
         bus.emit('message to Web Adapter user', {
           user_message,
-          message: m
+          message: m,
+          bot
         })
       }, cumulative_wait)
       if(i < web_chat_messages.length - 1) {

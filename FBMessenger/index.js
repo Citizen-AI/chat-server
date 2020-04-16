@@ -49,7 +49,8 @@ const send_queue = async ({ df_result, user_message, bot }) => {
         bot.reply(user_message, m)
         bus.emit('message to Facebook Adapter user', {
           user_message,
-          message: m
+          message: m,
+          bot
         })
       }, cumulative_wait)
       if(i < messages_to_send.length - 1) {

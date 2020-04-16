@@ -1,14 +1,9 @@
 # Todo
 
 * Add web client
-* Test all features:
-  * FU
-  * QR
 * Kontent.ai
 * initial chat delay to .env
-* check FB messages all logging properly
 * Fix FB user name swapping in
-* FB logger
 * can we combine
   * some templates?
   * df_to_X_formatter
@@ -19,6 +14,9 @@
 * … 
 
 
+# The below need updating & pertains to an older websocket-only version
+
+----
 
 # Chat server
 
@@ -36,13 +34,13 @@ This server interprets Dialogflow messages with custom syntax. Like:
 * FU: `[FU: Words to show the user: Words to send to Dialogflow]`
 * QR: `[QR: Message text; Option 1 words to show user: Text to send to Dialogflow; Option 2 words to show user: Words to send to Dialogflow; etc]`
 
-It also spaces out bot messages, so recipients have time to read them.  
+It also spaces out bot messages, so recipients have time to read them.
 
 ## Running locally
 
-You will need 
+You will need
 
-* a [Dialogflow](https://dialogflow.com) agent. 
+* a [Dialogflow](https://dialogflow.com) agent.
 
 * a chat client (e.g. [this one](https://github.com/Citizen-AI/workbot-webchat-client))
 
