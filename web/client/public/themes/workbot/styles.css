@@ -1,0 +1,100 @@
+body,
+input[type=text],
+button {
+  font-family: 'Montserrat', sans-serif;
+}
+
+body {
+  background: url('images/pattern.png');
+  background-size: 200px;
+  padding: 20px 25px 0;
+  color: #444;
+}
+
+.wrapper {
+  height: calc(100vh - 40px);
+}
+
+h1 {
+  background: #00a4b4 url(images/workbot-header.png) no-repeat;
+  background-size: 240px;
+  margin: 0 0 0.5rem 0;
+  padding: 0;
+  height: 120px;
+  background-position: 16px 10px;
+  position: relative;
+  border-top-right-radius: 8px;
+}
+h1 span.name { display: none; }
+h1 span.strapline {
+  font-size: 16px;
+  color: #262261;
+  position: absolute;
+  bottom: 10px;
+  right: 10px; 
+  font-weight: 600;
+}
+
+a.button {
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+}
+
+#message_window {
+  border: 0;
+  border-left: 1px solid #cccccc;
+}
+
+#message_window .message {
+  background-color: #00a4b438;
+}
+
+#message_window #message_replies a {
+  border: 1px solid #252161;
+  color: #252161;
+}
+
+#message_window footer button {
+  color: #252161;
+  background: none; 
+}
+
+#sidebar {
+  background: #f3f3f3;
+}
+
+#sidebar .footer {
+  font-size: 13px;
+}
+
+.typing-indicator span {
+  background-color: #333;
+}
+
+@media (max-width: 600px) {
+  body {
+    background: none;
+    padding: 0;
+  }
+
+  .wrapper { 
+    height: 100%;
+  }
+
+  h1 {
+    background-size: 167px;
+    height: 118px;
+    z-index: 10; 
+    border-top-right-radius: 0;
+  }
+  h1 span.strapline {
+    left: 10px;
+  }
+
+  #sidebar {
+    top: 118px
+  }
+
+  #message_window {
+    border: 0;
+  }
+}

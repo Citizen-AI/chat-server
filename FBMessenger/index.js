@@ -2,17 +2,10 @@
 
 const { replace } = require('lodash/fp')
 
-
 const bus = require('../event_bus')
-const { get_facebook_profile, send_typing } = require('./facebook_api')
-const {
-  // fb_messages_text_contains,
-  // apply_fn_to_fb_messages,
-  msec_delay,
-  format
-} = require('./df_to_messenger_formatter')
+const { send_typing } = require('./facebook_api')
+const { msec_delay, format } = require('./df_to_messenger_formatter')
 const { regex } = require('../helpers')
-// const { User, update_user } = require('../logger/db')
 
 // const swap_in_user_name = messages_to_send => new Promise(async resolve => {
 //   const fb_user_id = user_message.user

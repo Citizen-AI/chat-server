@@ -1,7 +1,7 @@
 'use strict'
 
 const bus = require('../event_bus')
-const botkit = require('./botkit')
+const botkit = require('./botkit').controller
 const { regex, adapter_name } = require('../helpers')
 
 

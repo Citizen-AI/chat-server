@@ -1,2 +1,4 @@
 node_modules
 .env
+web/client/public/settings.js
+.DS_Store
