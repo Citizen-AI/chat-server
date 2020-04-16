@@ -1,9 +1,7 @@
 # Todo
 
-* QR
-* FU
-* FB user start
-* Differentiate web & facebook user starts
+* FB: FU
+* card buttons
 * Add web client
 * Test all features:
   * FU
@@ -15,4 +13,6 @@
 * FB logger
 * can we combine some templates?
 * allow optional adapters
+* Log too-long intents
+* timestamp to log
 * … 

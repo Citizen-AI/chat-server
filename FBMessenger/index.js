@@ -55,7 +55,7 @@ const send_queue = async ({ df_result, user_message, bot }) => {
       if(i < messages_to_send.length - 1) {
         next_message_delay = msec_delay(m)
         typing_delay = cumulative_wait + (next_message_delay * 0.75)
-        setTimeout(async () => { 
+        setTimeout(async () => {
           await bot.changeContext(user_message.reference)
           send_typing(user_message)
         }, typing_delay)
@@ -126,5 +126,4 @@ module.exports = {
 //   check_user_type,
 //   check_session,
 //   store_user_type
-// 
 }

@@ -5,7 +5,7 @@ const chalk = require('chalk')
 const Sentry = require('@sentry/node')
 
 
-const { sentry_dsn, NODE_ENV } = process.env
+const { sentry_dsn, NODE_ENV, DEBUG } = process.env
 
 Sentry.init({ dsn: sentry_dsn, environment: NODE_ENV })
 
@@ -22,8 +22,12 @@ bus.onAny((event, payload) => {
   }
   else {
     console.log(chalk.green(`Bus: ${event}`))
-    if(payload && (NODE_ENV === 'development'))
+    if(payload && (NODE_ENV === 'development')) {
       console.log('Payload:', Object.keys(payload))
+    }
+    // if(DEBUG && payload?.user_message) {
+    //   console.log('User said:', payload.user_message)
+    // }
   }
 })
 
