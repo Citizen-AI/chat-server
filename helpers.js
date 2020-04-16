@@ -6,8 +6,9 @@ bus = require('./event_bus')
 module.exports = {
   regex: {
     tell_me_more: /^tell_me_more: ?([\s\S]*)/i,
-    get_started: /^\[Web\] get started/i,
-    welcome_back: /^\[Web\] welcome back/i,
+    web_get_started: /^\[Web\] get started/i,
+    web_welcome_back: /^\[Web\] welcome back/i,
+    fb_get_started: /GET_STARTED/,
     follow_up: /^follow_up: ?/i,
     button_tag: /\[(?!sources?:).*?(0800|111|0[0-9]|http).*?\]/ig,    // excludes sources
     sources_tag: /\[sources?: ?(.+?)\]/i,

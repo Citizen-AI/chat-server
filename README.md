@@ -1,5 +1,7 @@
 # Todo
 
+* QR
+* FU
 * FB user start
 * Differentiate web & facebook user starts
 * Add web client
@@ -12,4 +14,5 @@
 * Fix FB user name swapping in 
 * FB logger
 * can we combine some templates?
+* allow optional adapters
 * … 
