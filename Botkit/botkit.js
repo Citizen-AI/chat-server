@@ -32,7 +32,7 @@ facebook_adapter.use(new FacebookEventTypeMiddleware())
 const controller = new Botkit({
   debug: NODE_ENV === 'development',
   webhook_uri: '/api/messages',
-  // webserver_middlewares: [(req, res, next) => { console.log('REQ > ', req.url); next(); }]
+  webserver_middlewares: [(req, res, next) => { console.log('REQ > ', req.url); next(); }]
 })
 
 
