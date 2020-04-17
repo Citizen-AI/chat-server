@@ -1,0 +1,7 @@
+const bot_name = 'Workbot'
+const bot_page_title = 'Workbot – a chatbot that helps workers with employment problems'
+const bot_strapline = 'Talk to me about your <nobr>problems at work</nobr>'
+const default_server = 'workbot-webchat-server.herokuapp.com'
+const gtmid = 'GTM-T5LQH9K'
+const theme_dir = 'workbot'
+const theme_colour = '#00a4b4'

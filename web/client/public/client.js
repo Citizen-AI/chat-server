@@ -9,52 +9,6 @@ if(typeof gtmid !== 'undefined') {
   console.log('No gtmid found in settings.js, not loading Google Tag manager')
 }
 
-// Populate theme-specific stuff
-const bot_heading_template = `
-<h1>
- <span class="name">${bot_name}</span>
- <span class="strapline">${bot_strapline}</span>
-</h1>
-`
-const theme_stylesheet_template = `<link rel="stylesheet" href="themes/${theme_dir}/styles.css" type="text/css" />`
-const theme_colour_template = typeof theme_colour !== 'undefined' ? `<meta name="theme-color" content="${theme_colour}" />` : null
-
-const head_tag = document.querySelector('head')
-head_tag.insertAdjacentHTML('beforeEnd', theme_stylesheet_template)
-head_tag.insertAdjacentHTML('beforeEnd', theme_colour_template)
-
-domReady = fn => {
-  document.addEventListener("DOMContentLoaded", fn)
-  if (document.readyState === "interactive" || document.readyState === "complete" ) fn()
-}
-
-function getScript(source, callback) {
-  var script = document.createElement('script');
-  var prior = document.getElementsByTagName('script')[0];
-  script.async = 1;
-
-  script.onload = script.onreadystatechange = function( _, isAbort ) {
-      if(isAbort || !script.readyState || /loaded|complete/.test(script.readyState) ) {
-          script.onload = script.onreadystatechange = null;
-          script = undefined;
-
-          if(!isAbort && callback) setTimeout(callback, 0);
-      }
-  };
-
-  script.src = source;
-  prior.parentNode.insertBefore(script, prior);
-}
-
-getScript('themes/' + theme_dir + '/content.js', () =>{
-  document.title = bot_page_title
-  domReady(() => {
-    head_tag.insertAdjacentHTML('beforeEnd', twitter_favicon_opengraph_font_content)
-    document.querySelector('#bot-heading').insertAdjacentHTML('beforeEnd', bot_heading_template)
-    document.querySelector('#sidebar').insertAdjacentHTML('beforeEnd', sidebar_content)
-  })  
-})
-
 
 const { host } = window.location
 const page_url = new URL(window.location.href)

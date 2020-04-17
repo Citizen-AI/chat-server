@@ -8,13 +8,22 @@
       <script src="client.js?n=12"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js"></script>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="themes/{{theme_dir}}/styles.css" type="text/css" />
+      {{#if theme_colour}}<meta name="theme-color" content="{{theme_colour}}" />{{/if}}
+      <title>{{bot_page_title}}</title>
+      {{> (meta) }}
     </head>
     <body>
       <div class="wrapper">
-        <div id="sidebar"></div>
+        <div id="sidebar">{{> (sidebar) }}</div>
         <div id="message_window">
             <div id="kebab_menu_icon"></div>
-            <div id="bot-heading"></div>
+            <div id="bot-heading">
+              <h1>
+                <span class="name">{{bot_name}}</span>
+                <span class="strapline">{{bot_strapline}}</span>
+              </h1>
+            </div>
             <div class="offline">
                 Offline! Reload to reconnect.
             </div>
