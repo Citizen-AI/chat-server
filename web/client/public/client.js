@@ -1,31 +1,14 @@
-// Optional Google Tag Manager script
-if(typeof gtmid !== 'undefined') {
-  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer',gtmid);
-} else {
-  console.log('No gtmid found in settings.js, not loading Google Tag manager')
-}
-
-
 const { host } = window.location
 const page_url = new URL(window.location.href)
-let server = page_url.searchParams.get('server')
-if(!server && typeof default_server !== 'undefined') server = default_server // defined in env.js
-else if(!server) server = 'workbot-webchat-server.herokuapp.com'
+const query = page_url.searchParams.get('query')
+const converter = new showdown.Converter({ simplifiedAutoLink: true })
+converter.setOption('openLinksInNewWindow', true)
 
-let query = page_url.searchParams.get('query')
-
-var converter = new showdown.Converter({ simplifiedAutoLink: true });
-converter.setOption('openLinksInNewWindow', true);
-
-let user_has_sent_something = false; // used to later decide whether to send GTM event
+let user_has_sent_something = false   // used to later decide whether to send GTM event
 
 var Botkit = {
     config: {
-        ws_url: (location.protocol === 'https:' ? 'wss' : 'ws') + '://' + server,
+        ws_url: (location.protocol === 'https:' ? 'wss' : 'ws') + '://' + host,
         reconnect_timeout: 3000,
         max_reconnect: 5,
         enable_history: false,

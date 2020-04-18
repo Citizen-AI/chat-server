@@ -1,8 +1,8 @@
 # Todo
 
-* web client
-  * GTMID > layout
+* make web client work
 * record interview against user
+* Answers
 * Kontent.ai
 * initial chat delay to .env
 * Fix FB user name swapping in
