@@ -13,6 +13,7 @@
 * Log too-long intents
 * timestamp to log
 * Update readme
+* Get rid of remaining coffeescript
 * … 
 
 
@@ -55,6 +56,20 @@ Run `npm install`, then `npm start`. The script will tell you what environment v
 * **delay_ms**: Overide the default (25) number of milliseconds per character to space out bot messages by.
 
 * **NODE_ENV**: Set to 'development' to get more detailed logs
+
+
+## Hosting notes
+
+* Assuming Ubuntu / Digital Ocean
+* Install nginx
+* [Install node & npm](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-18-04)
+*
+```
+cd /var/www
+git clone THISREPO
+mv chat-server chat-server-rentbot
+```
+
 
 
 ## Thanks to
