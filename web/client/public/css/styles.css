@@ -117,8 +117,6 @@ a.button:hover {
   padding: 0.25rem;
   display: block;
 }
-#message_list {
-}
 #message_window section {
   flex-grow: 1;
   flex-direction: column-reverse;

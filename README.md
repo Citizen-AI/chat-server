@@ -1,9 +1,9 @@
 # Todo
 
-* make web client work
 * record interview against user
-* Answers
+* check loading experience (clearing/disabled input box?)
 * Kontent.ai
+* , then Answers
 * initial chat delay to .env
 * Fix FB user name swapping in
 * can we combine
@@ -44,9 +44,7 @@ You will need
 
 * a [Dialogflow](https://dialogflow.com) agent.
 
-* a chat client (e.g. [this one](https://github.com/Citizen-AI/workbot-webchat-client))
-
-Run `npm install`, then `npm start`. The script will tell you waht environment variables are required. You can put them in a `.env` file. 
+Run `npm install`, then `npm start`. The script will tell you what environment variables are required. You can put them in a `.env` file. 
 
 ### Optional environment variables
 

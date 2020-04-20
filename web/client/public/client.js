@@ -547,10 +547,8 @@ var Botkit = {
             }
         });
 
-        console.log('Messenger booted in stand-alone mode');
-        that.connect(user);
-
-        return that;
+        that.connect(user)
+        return that
     }
 };
 
