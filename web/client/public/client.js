@@ -6,6 +6,55 @@ converter.setOption('openLinksInNewWindow', true)
 
 let user_has_sent_something = false   // used to later decide whether to send GTM event
 
+const message_template = `
+<div id="message_template">
+  <div class="message {{message.type}}">
+      {{#if message.isTyping}}
+        <div class="typing-indicator">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      {{/if}}
+      {{{message.html}}}
+
+      {{#if message.open_link}}
+        <a href="{{{message.open_link}}}" target="_blank" class="button_message">{{#if message.link_title}}{{message.link_title}}{{else}}{{message.open_link}}{{/if}}</a>
+      {{/if}}
+
+      {{#each message.buttons}}
+        {{#if this.postback}}
+          <a href="#" onclick="javscript:Botkit.quietSend('{{this.payload}}')" class="button_message">{{this.title}}</a>
+        {{else if this.map}}
+          <iframe src="https://www.google.com/maps/embed/v1/search?key=AIzaSyBYTcRWDssK7eRByLCdh0OJJBlF6qQsHZI&q={{this.payload}}" width="100%" height="400" frameborder="0" style="border:0" allowfullscreen></iframe>
+        {{else if source}}
+          <div class="source">{{{contents}}}</div>
+        {{else}}
+          <a href="{{this.payload}}" target="_blank" class="button_message">{{#if this.title}}{{this.title}}{{else}}{{this.payload}}{{/if}}</a>
+        {{/if}}
+      {{/each}}
+
+      {{#each message.attachment.payload.elements}}
+      <card>
+        {{#if buttons}}<a href="#" onclick="javascript:Botkit.quietSend('{{buttons.0.payload}}')">{{/if}}
+        <header>{{title}}</header>
+        <subtitle>{{subtitle}}</subtitle>
+        {{#if buttons}}</a>{{/if}}
+      </card>
+      {{/each}}
+  </div>
+  {{#message.files}}
+    <div class="file_attachment">
+    {{#if image}}
+      <a href="{{{url}}}" alt="Click for full size" target="workbot_big_image"><img src="{{{url}}}" alt="{{{url}}}" /></a>
+    {{else}}
+      <a href="{{{url}}}" title="{{{url}}}">{{{url}}}</a>
+    {{/if}}
+    </div>
+  {{/message.files}}
+</div>
+`
+
 var Botkit = {
     config: {
         ws_url: (location.protocol === 'https:' ? 'wss' : 'ws') + '://' + host,
@@ -387,18 +436,10 @@ var Botkit = {
             s4() + '-' + s4() + s4() + s4();
     },
     boot: function (user) {
-
-        console.log('Booting up');
-
-        var that = this;
-
-
-        that.message_window = document.getElementById("message_window");
-
-        that.message_list = document.getElementById("message_list");
-
-        var source = document.getElementById('message_template').innerHTML;
-        that.message_template = Handlebars.compile(source);
+        var that = this
+        that.message_window = document.getElementById("message_window")
+        that.message_list = document.getElementById("message_list")
+        that.message_template = Handlebars.compile(message_template)
 
         that.replies = document.getElementById('message_replies');
 

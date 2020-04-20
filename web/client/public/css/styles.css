@@ -125,10 +125,6 @@ a.button:hover {
   display: flex;
   overflow-y: auto;
 }
-#message_window section div div {
-  margin: 6px;
-  clear: both;
-}
 #message_window footer {
   border-top: 1px solid #ccc;
   padding: 0.25rem;
@@ -150,9 +146,6 @@ a.button:hover {
   display: flex;
   margin: 0;
   padding: 0.25rem;
-}
-#message_window #message_template {
-  display: none;
 }
 #message_window .message {
   font-size: 15px;
@@ -195,6 +188,9 @@ a.button:hover {
 }
 #message_window .button_message:last-child {
   margin-bottom: 0;
+}
+.message {
+  margin: 10px;
 }
 #message_window .message p {
   margin-top: 0;
