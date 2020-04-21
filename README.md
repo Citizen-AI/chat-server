@@ -1,8 +1,10 @@
 # Todo
 
+* setup Lagbot version
+* with Kontent.ai
+* move FB connection to FB module, like web
 * record interview against user
 * check loading experience (clearing/disabled input box?)
-* Kontent.ai
 * , then Answers
 * initial chat delay to .env
 * Fix FB user name swapping in
@@ -13,6 +15,7 @@
 * Log too-long intents
 * timestamp to log
 * Update readme
+  * incorporate messenger server docs
 * Get rid of remaining coffeescript
 * … 
 
@@ -45,7 +48,7 @@ You will need
 
 * a [Dialogflow](https://dialogflow.com) agent.
 
-Run `npm install`, then `npm start`. The script will tell you what environment variables are required. You can put them in a `.env` file. 
+Run `npm install`, then `npm start`. The script will tell you what environment variables are required. You can put them in a `.env` file.
 
 ### Optional environment variables
 
@@ -62,13 +65,15 @@ Run `npm install`, then `npm start`. The script will tell you what environment v
 
 * Assuming Ubuntu / Digital Ocean
 * Install nginx
-* [Install node & npm](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-18-04)
-*
-```
-cd /var/www
-git clone THISREPO
-mv chat-server chat-server-rentbot
-```
+* [Configure nginx to handle websockets](https://www.nginx.com/blog/websocket-nginx/)
+* `nvm install 13.12.0`
+* [Create a safeuser and install pm2](https://www.digitalocean.com/community/tutorials/how-to-use-pm2-to-setup-a-node-js-production-environment-on-an-ubuntu-vps)
+* [Install nvm](https://github.com/nvm-sh/nvm#install--update-script)
+* `git clone https://github.com/Citizen-AI/chat-server`
+* Populate `.env` as per the above
+* `npm install`
+* `pm2 start npm -- start; pm2 start 0`
+* https will need to be set up for messenger webhook to work
 
 
 

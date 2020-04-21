@@ -9,7 +9,7 @@ const { emit_error } = require('../helpers')
 const { mongo_conn_string } = process.env
 mongoose
   .connect(mongo_conn_string, { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true })
-  .then(m => bus.emit(`STARTUP: connected to database ${m.connections[0].host}/${m.connections[0].name}`))
+  .then(m => bus.emit(`STARTUP: Connected to database ${m.connections[0].host}/${m.connections[0].name}`))
   .catch(emit_error)
 const Schema = mongoose.Schema
 const ObjectId = mongoose.Schema.Types.ObjectId

@@ -26,12 +26,16 @@ const facebook_adapter = new FacebookAdapter({
   receive_via_postback: true
 })
 
+const messenger_endpoint = '/facebook/receive'
+const web_endpoint = '/api/messages'
+
 facebook_adapter.use(new FacebookEventTypeMiddleware())
 
 
 const controller = new Botkit({
   debug: NODE_ENV === 'development',
-  webhook_uri: '/api/messages',
+  webhook_uri: web_endpoint,
+  disable_console: true,
   // webserver_middlewares: [(req, res, next) => { console.log('REQ > ', req.url); next(); }]
 })
 
@@ -40,7 +44,10 @@ controller.ready(() => {
   // bind websocket to the webserver
   web_adapter.createSocketServer(controller.http, {}, controller.handleTurn.bind(controller))
 
-  controller.webserver.post('/facebook/receive', (req, res) => {
+  bus.emit(`STARTUP: Web endpoint online at http://localhost:${controller.http.address().port+web_endpoint}`)
+  bus.emit(`STARTUP: Messenger endpoint online at http://localhost:${controller.http.address().port+messenger_endpoint}`)
+
+  controller.webserver.post(messenger_endpoint, (req, res) => {
     facebook_adapter.processActivity(req, res, controller.handleTurn.bind(controller)).catch((err) => {
       console.error('Experienced an error inside the turn handler', err)
       throw err

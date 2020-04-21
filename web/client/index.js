@@ -19,7 +19,7 @@ webserver.set('views', __dirname + '/views')
 
 controller.ready(() => {
   const server = 'http://localhost:' + controller.http.address().port
-  bus.emit(`STARTUP: web client live at ${server}`)
+  bus.emit(`STARTUP: Web client online at ${server}`)
   webserver.get('/', (req, res) => res.render('home', {
     ...config,
     meta: () => config.theme_dir + '_meta',

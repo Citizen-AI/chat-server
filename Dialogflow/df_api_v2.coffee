@@ -16,9 +16,9 @@ credentials = JSON.parse google_creds
 project_id = credentials.project_id
 
 config = credentials: credentials
-bus.emit "STARTUP: using Dialogflow project: #{project_id}"
+bus.emit "STARTUP: Using Dialogflow project: #{project_id}"
 if dialogflow_environment
-  bus.emit "STARTUP: using Dialogflow environment: #{dialogflow_environment}"
+  bus.emit "STARTUP: Using Dialogflow environment: #{dialogflow_environment}"
 
 user_type_to_contexts =
   'landlord': ['landlord']
