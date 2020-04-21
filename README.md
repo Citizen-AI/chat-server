@@ -1,8 +1,8 @@
 # Todo
 
+* test Messenger – clue: https://stackoverflow.com/questions/36582434/facebook-messenger-api-url-could-not-be-validated
 * setup Lagbot version
 * with Kontent.ai
-* move FB connection to FB module, like web
 * record interview against user
 * check loading experience (clearing/disabled input box?)
 * , then Answers
@@ -64,8 +64,6 @@ Run `npm install`, then `npm start`. The script will tell you what environment v
 ## Hosting notes
 
 * Assuming Ubuntu / Digital Ocean
-* Install nginx
-* [Configure nginx to handle websockets](https://www.nginx.com/blog/websocket-nginx/)
 * `nvm install 13.12.0`
 * [Create a safeuser and install pm2](https://www.digitalocean.com/community/tutorials/how-to-use-pm2-to-setup-a-node-js-production-environment-on-an-ubuntu-vps)
 * [Install nvm](https://github.com/nvm-sh/nvm#install--update-script)
@@ -73,7 +71,10 @@ Run `npm install`, then `npm start`. The script will tell you what environment v
 * Populate `.env` as per the above
 * `npm install`
 * `pm2 start npm -- start; pm2 start 0`
-* https will need to be set up for messenger webhook to work
+* Install nginx
+* [Configure nginx to handle websockets](https://www.nginx.com/blog/websocket-nginx/)
+* Will need an nginx config file that proxies domain.com to 127.0.0.1:3000
+* [Set up https](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-18-04)
 
 
 

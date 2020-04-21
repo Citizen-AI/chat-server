@@ -16,6 +16,6 @@ if(ngrok_subdomain && ngrok_authtoken) {
       subdomain: ngrok_subdomain,
       addr: PORT || 3000
     })
-    .then(url => bus.emit(`STARTUP: Messenger endpoint online at ${url}/api/facebook`))
+    .then(url => bus.emit(`STARTUP: Messenger endpoint online at ${url}/facebook/receive`))
     .catch(emit_error)
 }
