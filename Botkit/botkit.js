@@ -26,7 +26,7 @@ const facebook_adapter = new FacebookAdapter({
   receive_via_postback: true
 })
 
-const messenger_endpoint = '/facebook/receive'
+const messenger_endpoint = '/api/facebook'
 const web_endpoint = '/api/messages'
 
 facebook_adapter.use(new FacebookEventTypeMiddleware())
@@ -47,7 +47,7 @@ controller.ready(() => {
   bus.emit(`STARTUP: Web endpoint online at http://localhost:${controller.http.address().port+web_endpoint}`)
   bus.emit(`STARTUP: Messenger endpoint online at http://localhost:${controller.http.address().port+messenger_endpoint}`)
 
-  controller.webserver.get('/api/facebook', (req, res) => {
+  controller.webserver.get(messenger_endpoint, (req, res) => {
     if(req.query['hub.mode'] === 'subscribe') {
       if(req.query['hub.verify_token'] === fb_verify_token) {
         res.send(req.query['hub.challenge'])
