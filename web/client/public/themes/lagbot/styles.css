@@ -1,3 +1,9 @@
+body,
+input[type=text],
+button {
+  font-family: 'Montserrat', sans-serif;
+}
+
 body {
   background: url('images/pattern.png');
   background-size: 200px;

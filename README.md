@@ -3,9 +3,11 @@
 * test Messenger – clue: https://stackoverflow.com/questions/36582434/facebook-messenger-api-url-could-not-be-validated
 * setup Lagbot version
 * with Kontent.ai
+* , then Answers
+* web client
+  * event on sidebar open
 * record interview against user
 * check loading experience (clearing/disabled input box?)
-* , then Answers
 * initial chat delay to .env
 * Fix FB user name swapping in
 * can we combine
@@ -26,7 +28,7 @@
 
 # Chat server
 
-A Botkit-based chatbot server for websocket & Messenger clients.
+A Botkit-based chatbot server for websocket & Messenger clients. This is intended to supersede `messenger-server`, `webchat-server` and `webchat-client`.
 
 ## Notes on syntax
 
