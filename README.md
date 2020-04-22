@@ -1,6 +1,7 @@
 # Todo
 
 * test Messenger – clue: https://stackoverflow.com/questions/36582434/facebook-messenger-api-url-could-not-be-validated
+* cache
 * setup Lagbot version
 * with Kontent.ai
 * , then Answers
