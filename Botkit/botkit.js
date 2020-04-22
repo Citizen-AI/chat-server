@@ -36,7 +36,7 @@ const controller = new Botkit({
   debug: NODE_ENV === 'development',
   webhook_uri: web_endpoint,
   disable_console: true,
-  webserver_middlewares: [(req, res, next) => { console.log('REQ > ', req.url); next(); }]
+  webserver_middlewares: [(req, res, next) => { console.log(`${req.method} > ${req.url}`); next(); }]
 })
 
 

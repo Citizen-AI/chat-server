@@ -8,7 +8,6 @@ if(ngrok_subdomain && ngrok_authtoken) {
   ngrok = require('ngrok')
 
   bus = require('../event_bus')
-  const { emit_error } = require('../helpers')
 
   ngrok
     .connect({
@@ -17,5 +16,5 @@ if(ngrok_subdomain && ngrok_authtoken) {
       addr: PORT || 3000
     })
     .then(url => bus.emit(`STARTUP: Messenger endpoint online at ${url}/facebook/receive`))
-    .catch(emit_error)
+    .catch(console.error)
 }
