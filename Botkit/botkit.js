@@ -35,7 +35,7 @@ facebook_adapter.use(new FacebookEventTypeMiddleware())
 const controller = new Botkit({
   debug: NODE_ENV === 'development',
   webhook_uri: web_endpoint,
-  disable_console: true,
+  // disable_console: true,
   webserver_middlewares: [(req, res, next) => { console.log(`${req.method} > ${req.url}`); next(); }]
 })
 
@@ -46,6 +46,17 @@ controller.ready(() => {
 
   bus.emit(`STARTUP: Web endpoint online at http://localhost:${controller.http.address().port+web_endpoint}`)
   bus.emit(`STARTUP: Messenger endpoint online at http://localhost:${controller.http.address().port+messenger_endpoint}`)
+
+  controller.webserver.get('/api/facebook', (req, res) => {
+    if(req.query['hub.mode'] === 'subscribe') {
+      if(req.query['hub.verify_token'] === fb_verify_token) {
+        res.send(req.query['hub.challenge'])
+        bus.emit('Responded to Messenger webhook challenge')
+      } else {
+        res.send('OK')
+      }
+    }
+  })
 
   controller.webserver.post(messenger_endpoint, (req, res) =>
     facebook_adapter.processActivity(req, res, controller.handleTurn.bind(controller)).catch((err) => {
