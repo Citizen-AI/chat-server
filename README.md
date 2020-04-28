@@ -1,13 +1,15 @@
 # Todo
 
+* pass 'state' around — a package
 * test sentry
-* test Messenger – clue: https://stackoverflow.com/questions/36582434/facebook-messenger-api-url-could-not-be-validated
 * cache
-* setup Lagbot version
-* with Kontent.ai
+* decorate Lagbot version
+* Kontent.ai
+  * make it optional
 * , then Answers
 * web client
   * event on sidebar open
+* follow-up notifications?
 * record interview against user
 * check loading experience (clearing/disabled input box?)
 * initial chat delay to .env

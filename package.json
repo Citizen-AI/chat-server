@@ -13,7 +13,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sentry/node": "^5.15.4",
+    "@kentico/kontent-delivery": "^9.1.1",
+    "@sentry/node": "^5.15.5",
     "botbuilder-adapter-facebook": "^1.0.9",
     "botbuilder-adapter-web": "^1.0.7",
     "botkit": "^4.8.1",
@@ -26,8 +27,9 @@
     "express-handlebars": "^4.0.3",
     "fb": "^2.0.0",
     "flatmap": "0.0.3",
-    "google-libphonenumber": "^3.2.8",
+    "google-libphonenumber": "^3.2.9",
     "mongoose": "^5.9.10",
-    "ngrok": "^3.2.7"
+    "ngrok": "^3.2.7",
+    "rxjs": "^6.5.5"
   }
 }

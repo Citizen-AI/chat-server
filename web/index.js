@@ -1,15 +1,24 @@
 'use strict'
 
 const bus = require('../event_bus')
-const { format, msec_delay } = require('./df_to_webchat_formatter')
+const { format, msec_delay, text_processor } = require('./df_to_webchat_formatter')
 const { regex } = require('../helpers')
+const { get_topic } = require('../kontent-ai')
 
 
-const send_queue = ({ df_result, user_message, bot }) => {
+const send_queue = async ({ df_result, user_message, bot }) => {
   const fudge_user_name = web_chat_messages =>
     JSON.parse(JSON.stringify(web_chat_messages).replace(/#generic.fb_first_name/g, 'there'))
 
-  let web_chat_messages = format(df_result.fulfillmentMessages)
+  const intent_name = df_result.intent.name
+  const intent_key = intent_name.match(/.*\/(.*?)$/)?.[1]
+  const topic = await get_topic(intent_key)
+  // console.log(topic)
+  let web_chat_messages = topic?.answer ?
+    text_processor(topic.answer) :
+    format(df_result.fulfillmentMessages)
+
+  // let web_chat_messages = format(answer)
 
   bot.reply(user_message, { "type": "typing" })
   web_chat_messages = fudge_user_name(web_chat_messages)

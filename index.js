@@ -8,6 +8,7 @@ const web = require('./web')
 const logger = require('./logger')
 require('./Botkit')
 require('./web/client')
+require('./kontent-ai')
 
 bus
   .on('Web Adapter user starts', df.send_to_df)
