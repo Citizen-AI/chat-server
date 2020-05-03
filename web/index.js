@@ -10,10 +10,9 @@ const send_queue = async ({ df_result, user_message, bot }) => {
   const fudge_user_name = web_chat_messages =>
     JSON.parse(JSON.stringify(web_chat_messages).replace(/#generic.fb_first_name/g, 'there'))
 
-  const intent_name = df_result.intent.name
-  const intent_key = intent_name.match(/.*\/(.*?)$/)?.[1]
+  const intent_key = df_result.intent?.name.match(/.*\/(.*?)$/)?.[1]
   const topic = await get_topic(intent_key)
-  // console.log(topic)
+
   let web_chat_messages = topic?.answer ?
     text_processor(topic.answer) :
     format(df_result.fulfillmentMessages)
@@ -47,16 +46,13 @@ const send_queue = async ({ df_result, user_message, bot }) => {
 }
 
 
-const tell_me_more = ({ user_message, bot }) => {
+const tell_me_more = payload => {
+  const { user_message } = payload
   const tell_me_more_content = user_message.text.match(regex.tell_me_more)?.[1]
   const fake_df_result = {
     fulfillmentMessages: [ { text: { text: [ tell_me_more_content ] } } ]
   }
-  send_queue({
-    df_result: fake_df_result,
-    user_message,
-    bot
-  })
+  send_queue({ ...payload, df_result: fake_df_result })
 }
 
 

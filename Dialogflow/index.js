@@ -22,7 +22,8 @@ const { adapter_name } = require ('../helpers')
 // }
 
 
-const send_to_df = async ({ user_message, bot }) => {
+const send_to_df = async payload => {
+  const { user_message, bot } = payload
   let query
   const adapter_type = adapter_name(bot)
 
@@ -33,19 +34,12 @@ const send_to_df = async ({ user_message, bot }) => {
   else query = user_message.text
 
   try {
-    df_result = await df_query({
-      query: query,
-      session_id: user_message.user
-    })
+    df_result = await df_query({ query, session_id: user_message.user })
   }
   catch(err) { console.error(err) }
 
   await bot.changeContext(user_message.reference)
-  bus.emit(`message from Dialogflow for ${adapter_type}`, {
-    bot,
-    user_message,
-    df_result
-  })
+  bus.emit(`message from Dialogflow for ${adapter_type}`, { ...payload, df_result })
 
   if(df_result.parameters?.fields?.feedback?.stringValue?.length)
     bus.emit('user feedback received', {
