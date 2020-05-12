@@ -1,5 +1,4 @@
 _ = require 'lodash'
-flatmap = require 'flatmap'
 PNF = require('google-libphonenumber').PhoneNumberFormat
 phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance()
 
@@ -74,9 +73,9 @@ split_on_newlines_before_more = (text) ->
 
 
 buttons_prep = (button_tags) ->
-  flatmap button_tags, (button_tag) ->
+  button_tags.flatMap (button_tag) ->
     button_tag = button_tag.replace /\[|\]/g, ''
-    flatmap (button_tag.split /; ?/), (button_text) ->
+    (button_tag.split /; ?/).flatMap (button_text) ->
       map_url = button_text.match regex.map_url
       clm_url = button_text.match regex.clm_url
       pdf_url = button_text.match regex.pdf_url
@@ -202,7 +201,7 @@ cards_reply = (text) ->
     generic_template elements
 
 
-text_processor = (df_message) ->
+text_processor = (text) ->
   strip_out_from_first_more = (text) -> text.replace /(\[more\][\s\S]*)/i, ''
   has_followup_before_more = (text) -> strip_out_from_first_more(text).match regex.follow_up_tag
   has_qr_before_more = (text) -> strip_out_from_first_more(text).match regex.quick_replies_tag
@@ -213,10 +212,10 @@ text_processor = (df_message) ->
       .replace regex.whitespace_around_first_more, '$1'
       .replace /[\s]*(\[.*?\])/ig, '$1'
 
-  cleaned_speech = remove_extra_whitespace df_message.text.text[0]
+  cleaned_speech = remove_extra_whitespace text
   lines = remove_empties \    # to get rid of removed source lines
           split_on_newlines_before_more cleaned_speech
-  flatmap lines, (line) ->
+  lines.flatMap (line) ->
     switch
       when has_followup_before_more line  then follow_up_reply line
       when has_qr_before_more line        then quick_replies_reply line
@@ -248,16 +247,17 @@ search_fb_message_text = (message, term) ->
     message.title.match term
 
 
-format = (df_messages) ->
+dialogflow_format = (df_messages) ->
   unique_df_messages = _.uniqWith(df_messages, (a, b) -> a.text?.text[0]?) # I don't understand why this works
-  flatmap unique_df_messages, (df_message) ->
+  unique_df_messages.flatMap (df_message) ->
     switch
-      when df_message.text? then            text_processor df_message
+      when df_message.text? then            text_processor df_message.text.text[0]
       when df_message.card? then            card_reply df_message
       when df_message.quickReplies? then    quick_replies_reply_df_native df_message
       when df_message.image? then           image_reply df_message
       else
         bus.emit 'error: message from dialogflow with unknown type', "Message: #{df_message}"
+
 
 
 df_text_message_format = (text) ->
@@ -269,7 +269,7 @@ df_text_message_format = (text) ->
 
 
 module.exports = {
-  format
+  dialogflow_format
   msec_delay
   df_text_message_format
   # for testing

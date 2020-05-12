@@ -1,7 +1,7 @@
 'use strict'
 
 const bus = require('../event_bus')
-const { format, msec_delay, text_processor } = require('./df_to_webchat_formatter')
+const { dialogflow_format, msec_delay, text_processor } = require('./df_to_webchat_formatter')
 const { regex } = require('../helpers')
 const { get_topic } = require('../squidex')
 
@@ -15,9 +15,7 @@ const send_queue = async ({ df_result, user_message, bot }) => {
 
   let web_chat_messages = topic?.answer ?
     text_processor(topic.answer) :
-    format(df_result.fulfillmentMessages)
-
-  // let web_chat_messages = format(answer)
+    dialogflow_format(df_result.fulfillmentMessages)
 
   bot.reply(user_message, { "type": "typing" })
   web_chat_messages = fudge_user_name(web_chat_messages)

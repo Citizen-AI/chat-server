@@ -1,5 +1,7 @@
 # Todo
 
+* squidex
+  * sources
 * pass 'state' around — a package
 * test sentry
 * cache
