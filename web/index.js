@@ -3,7 +3,7 @@
 const bus = require('../event_bus')
 const { format, msec_delay, text_processor } = require('./df_to_webchat_formatter')
 const { regex } = require('../helpers')
-const { get_topic } = require('../kontent-ai')
+const { get_topic } = require('../squidex')
 
 
 const send_queue = async ({ df_result, user_message, bot }) => {
