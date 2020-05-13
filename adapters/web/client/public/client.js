@@ -24,7 +24,7 @@ const message_template = `
 
       {{#each message.buttons}}
         {{#if this.postback}}
-          <a href="#" onclick="javscript:Botkit.quietSend('{{this.payload}}')" class="button_message">{{this.title}}</a>
+          <a href="#" onclick="javascript:Botkit.quietSend({{this.payload}})" class="button_message">{{this.title}}</a>
         {{else if this.map}}
           <iframe src="https://www.google.com/maps/embed/v1/search?key=AIzaSyBYTcRWDssK7eRByLCdh0OJJBlF6qQsHZI&q={{this.payload}}" width="100%" height="400" frameborder="0" style="border:0" allowfullscreen></iframe>
         {{else if source}}
@@ -342,6 +342,7 @@ var Botkit = {
       if (message.buttons) {
         message.buttons.forEach(button => {
           if(button.source && button.contents) button.contents = converter.makeHtml(button.contents)
+          if(button.payload) button.payload = JSON.stringify(button.payload) // for multi-line tell-me-more payloads
         })
       }
 

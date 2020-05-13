@@ -1,11 +1,13 @@
 'use strict'
 
-const { replace } = require('lodash/fp')
+// const { replace } = require('lodash/fp')
 
-const bus = require('../event_bus')
+const bus = require('../../event_bus')
 const { send_typing } = require('./facebook_api')
-const { msec_delay, format } = require('./df_to_messenger_formatter')
-const { regex } = require('../helpers')
+const { format } = require('./df_to_messenger_formatter')
+const { ms_delay, fudge_user_name } = require('../shared')
+const { get_topic } = require('../../squidex')
+const { regex } = require('../../helpers')
 
 // const swap_in_user_name = messages_to_send => new Promise(async resolve => {
 //   const fb_user_id = user_message.user
@@ -31,10 +33,16 @@ const { regex } = require('../helpers')
 
 
 const send_queue = async ({ df_result, user_message, bot }) => {
-  const fudge_user_name = web_chat_messages =>
-    JSON.parse(JSON.stringify(web_chat_messages).replace(/#generic.fb_first_name/g, 'there'))
+  const intent_key = df_result.intent?.name.match(/.*\/(.*?)$/)?.[1]
+  const topic = await get_topic(intent_key)
 
-  let messages_to_send = format(df_result.fulfillmentMessages)
+  if(!topic?.answer)
+    bus.emit('No matching squidex content found; falling back to Dialogflow')
+
+  let messages_to_send = topic?.answer ?
+    text_processor(topic.answer) :
+    dialogflow_format(df_result.fulfillmentMessages)
+
   messages_to_send = fudge_user_name(messages_to_send)
   await bot.changeContext(user_message.reference)
   send_typing(user_message)
@@ -53,7 +61,7 @@ const send_queue = async ({ df_result, user_message, bot }) => {
         })
       }, cumulative_wait)
       if(i < messages_to_send.length - 1) {
-        next_message_delay = msec_delay(m)
+        next_message_delay = ms_delay(m)
         typing_delay = cumulative_wait + (next_message_delay * 0.75)
         setTimeout(async () => {
           await bot.changeContext(user_message.reference)
@@ -61,7 +69,7 @@ const send_queue = async ({ df_result, user_message, bot }) => {
         }, typing_delay)
       }
     })(m, cumulative_wait)
-    cumulative_wait += msec_delay(m)
+    cumulative_wait += ms_delay(m)
   })
 }
 

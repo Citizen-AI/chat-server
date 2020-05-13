@@ -2,12 +2,12 @@ require('coffeescript/register')
 
 require('./env')
 const bus = require('./event_bus')
-const fb = require('./FBMessenger')
+const fb = require('./adapters/FBMessenger')
+const web = require('./adapters/web')
+require('./adapters/web/client')
 const df = require('./Dialogflow')
-const web = require('./web')
 const logger = require('./logger')
 require('./Botkit')
-require('./web/client')
 
 
 bus

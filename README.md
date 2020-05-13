@@ -2,12 +2,14 @@
 
 * squidex
   * sources
+  * make it optional
+  * console log (incl dropping back to DF)
+  * test logger
+* webchat: emoji
 * pass 'state' around — a package
 * test sentry
 * cache
 * decorate Lagbot version
-* Kontent.ai
-  * make it optional
 * , then Answers
 * web client
   * event on sidebar open

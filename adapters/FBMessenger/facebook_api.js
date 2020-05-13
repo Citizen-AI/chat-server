@@ -2,7 +2,7 @@ const { fb_page_token } = process.env
 
 const FB = require('fb')
 
-const bus = require('../event_bus')
+const bus = require('../../event_bus')
 
 
 FB.setAccessToken(fb_page_token)

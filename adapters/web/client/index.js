@@ -4,8 +4,8 @@ const express = require('express')
 const exphbs = require('express-handlebars')
 const path = require('path')
 
-const { controller, webserver } = require('../../Botkit/botkit')
-const bus = require('../../event_bus')
+const { controller, webserver } = require('../../../Botkit/botkit')
+const bus = require('../../../event_bus')
 
 
 const { web_client_config } = process.env

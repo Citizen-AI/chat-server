@@ -1,31 +1,32 @@
 'use strict'
 
-const bus = require('../event_bus')
-const { dialogflow_format, msec_delay, text_processor } = require('./df_to_webchat_formatter')
-const { regex } = require('../helpers')
-const { get_topic } = require('../squidex')
+const bus = require('../../event_bus')
+const { dialogflow_format, text_processor } = require('./df_to_webchat_formatter')
+const { ms_delay, fudge_user_name } = require('../shared')
+const { regex } = require('../../helpers')
+const { get_topic } = require('../../squidex')
 
 
 const send_queue = async ({ df_result, user_message, bot }) => {
-  const fudge_user_name = web_chat_messages =>
-    JSON.parse(JSON.stringify(web_chat_messages).replace(/#generic.fb_first_name/g, 'there'))
-
   const intent_key = df_result.intent?.name.match(/.*\/(.*?)$/)?.[1]
   const topic = await get_topic(intent_key)
 
-  let web_chat_messages = topic?.answer ?
+  if(!topic?.answer)
+    bus.emit('No matching squidex content found; falling back to Dialogflow')
+
+  let messages_to_send = topic?.answer ?
     text_processor(topic.answer) :
     dialogflow_format(df_result.fulfillmentMessages)
 
   bot.reply(user_message, { "type": "typing" })
-  web_chat_messages = fudge_user_name(web_chat_messages)
+  messages_to_send = fudge_user_name(messages_to_send)
 
   let cumulative_wait = 0
-  web_chat_messages.forEach((m, i) => {
+  messages_to_send.forEach((m, i) => {
     (function(m, cumulative_wait) {
       var next_message_delay, typing_delay
       setTimeout(async () => {
-        await bot.changeContext(user_message.reference)
+        // await bot.changeContext(user_message.reference)
         bot.reply(user_message, m)
         bus.emit('message to Web Adapter user', {
           user_message,
@@ -33,13 +34,13 @@ const send_queue = async ({ df_result, user_message, bot }) => {
           bot
         })
       }, cumulative_wait)
-      if(i < web_chat_messages.length - 1) {
-        next_message_delay = msec_delay(m)
+      if(i < messages_to_send.length - 1) {
+        next_message_delay = ms_delay(m)
         typing_delay = cumulative_wait + (next_message_delay * 0.75)
         setTimeout(() => { bot.reply(user_message, { "type": "typing" }) }, typing_delay)
       }
     })(m, cumulative_wait)
-    cumulative_wait += msec_delay(m)
+    cumulative_wait += ms_delay(m)
   })
 }
 

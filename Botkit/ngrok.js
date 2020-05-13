@@ -1,20 +1,14 @@
-const {
-  ngrok_subdomain,
-  ngrok_authtoken,
-  PORT
-} = process.env
+const { ngrok_subdomain, ngrok_authtoken, PORT } = process.env
 
-if(ngrok_subdomain && ngrok_authtoken) {
-  ngrok = require('ngrok')
+if(!ngrok_subdomain && !ngrok_authtoken) return
 
-  bus = require('../event_bus')
 
-  ngrok
-    .connect({
-      authtoken: ngrok_authtoken,
-      subdomain: ngrok_subdomain,
-      addr: PORT || 3000
-    })
-    .then(url => bus.emit(`STARTUP: Messenger endpoint online at ${url}/facebook/receive`))
-    .catch(console.error)
-}
+ngrok = require('ngrok')
+
+bus = require('../event_bus')
+
+
+ngrok
+  .connect({ authtoken: ngrok_authtoken, subdomain: ngrok_subdomain, addr: PORT || 3000 })
+  .then(url => bus.emit(`STARTUP: Messenger endpoint online at ${url}/api/facebook`))
+  .catch(console.error)
