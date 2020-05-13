@@ -4,8 +4,8 @@
 
 const bus = require('../../event_bus')
 const { send_typing } = require('./facebook_api')
-const { format } = require('./df_to_messenger_formatter')
-const { ms_delay, fudge_user_name } = require('../shared')
+const { dialogflow_format, text_processor } = require('./df_to_messenger_formatter')
+const { ms_delay, fudge_user_name, intent_key_from_df_result } = require('../shared')
 const { get_topic } = require('../../squidex')
 const { regex } = require('../../helpers')
 
@@ -32,9 +32,9 @@ const { regex } = require('../../helpers')
 
 
 
+
 const send_queue = async ({ df_result, user_message, bot }) => {
-  const intent_key = df_result.intent?.name.match(/.*\/(.*?)$/)?.[1]
-  const topic = await get_topic(intent_key)
+  const topic = await get_topic(intent_key_from_df_result(df_result))
 
   if(!topic?.answer)
     bus.emit('No matching squidex content found; falling back to Dialogflow')
@@ -74,17 +74,15 @@ const send_queue = async ({ df_result, user_message, bot }) => {
 }
 
 
-const tell_me_more = ({ user_message, bot }) => {
+const tell_me_more = payload => {
+  const { user_message } = payload
   const tell_me_more_content = user_message.text.match(regex.tell_me_more)?.[1]
   const fake_df_result = {
     fulfillmentMessages: [ { text: { text: [ tell_me_more_content ] } } ]
   }
-  send_queue({
-    df_result: fake_df_result,
-    user_message,
-    bot
-  })
+  send_queue({ ...payload, df_result: fake_df_result })
 }
+
 
 
 

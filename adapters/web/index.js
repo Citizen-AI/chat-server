@@ -2,14 +2,13 @@
 
 const bus = require('../../event_bus')
 const { dialogflow_format, text_processor } = require('./df_to_webchat_formatter')
-const { ms_delay, fudge_user_name } = require('../shared')
+const { ms_delay, fudge_user_name, intent_key_from_df_result } = require('../shared')
 const { regex } = require('../../helpers')
 const { get_topic } = require('../../squidex')
 
 
 const send_queue = async ({ df_result, user_message, bot }) => {
-  const intent_key = df_result.intent?.name.match(/.*\/(.*?)$/)?.[1]
-  const topic = await get_topic(intent_key)
+  const topic = await get_topic(intent_key_from_df_result(df_result))
 
   if(!topic?.answer)
     bus.emit('No matching squidex content found; falling back to Dialogflow')
@@ -26,7 +25,6 @@ const send_queue = async ({ df_result, user_message, bot }) => {
     (function(m, cumulative_wait) {
       var next_message_delay, typing_delay
       setTimeout(async () => {
-        // await bot.changeContext(user_message.reference)
         bot.reply(user_message, m)
         bus.emit('message to Web Adapter user', {
           user_message,

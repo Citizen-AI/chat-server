@@ -30,15 +30,26 @@
 * … 
 
 
-# The below need updating & pertains to an older websocket-only version
+## Some(!) of the below is out of date
 
 ----
 
 # Chat server
 
-A Botkit-based chatbot server for websocket & Messenger clients. This is intended to supersede `messenger-server`, `webchat-server` and `webchat-client`.
+A Botkit-based chatbot server for websocket & Messenger clients. This is intended to supersede `messenger-server`, `webchat-server` and `webchat-client`. It uses [Dialogflow](https://dialogflow.cloud.google.com/) to identify intents,
+and [Squidex](https://squidex.io/) to host the content.
 
-## Notes on syntax
+
+## Squidex schema
+
+The server will be looking for a topic schema including:
+
+* **intentKey** to match Dialogflow intents
+* **answer**: the topic content, which can make use of the below syntax
+* **source**: optional citation, e.g. 'Employment Relations Act 2000'
+
+
+## Message syntax
 
 This server interprets Dialogflow messages with custom syntax. Like:
 
@@ -57,6 +68,7 @@ It also spaces out bot messages, so recipients have time to read them.
 You will need
 
 * a [Dialogflow](https://dialogflow.com) agent.
+* a [Squidex](https://squidex.io/) app.
 
 Run `npm install`, then `npm start`. The script will tell you what environment variables are required. You can put them in a `.env` file.
 

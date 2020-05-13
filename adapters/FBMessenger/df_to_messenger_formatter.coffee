@@ -181,13 +181,13 @@ cards_reply = (text) ->
     generic_template elements
 
 
-text_processor = (df_message) ->
+text_processor = (text) ->
   strip_out_from_first_more = (text) -> text.replace /(\[more\][\s\S]*)/i, ''
   has_followup_before_more = (text) -> strip_out_from_first_more(text).match regex.follow_up_tag
   has_qr_before_more = (text) -> strip_out_from_first_more(text).match regex.quick_replies_tag
   has_cards_before_more = (text) -> strip_out_from_first_more(text).match regex.cards_tag
 
-  cleaned_speech = remove_extra_whitespace remove_sources_tags df_message.text.text[0]
+  cleaned_speech = remove_extra_whitespace remove_sources_tags text
   lines = remove_empties \    # to get rid of removed source lines
           split_on_newlines_before_more cleaned_speech
   lines.flatMap (line) ->
@@ -232,11 +232,11 @@ fb_messages_text_contains = (messages, term) ->
   if matches.length is 0 then false else true
 
 
-format = (df_messages) ->
+dialogflow_format = (df_messages) ->
   unique_df_messages = _.uniqWith(df_messages, (a, b) -> a.text?.text[0]?) # I don't understand why this works
   unique_df_messages.flatMap (df_message) ->
     switch
-      when df_message.text? then            text_processor df_message
+      when df_message.text? then            text_processor df_message.text.text[0]
       when df_message.card? then            card_reply df_message
       when df_message.quickReplies? then    quick_replies_reply_df_native df_message
       when df_message.image? then           image_reply df_message
@@ -253,7 +253,7 @@ df_text_message_format = (text) ->
 
 
 module.exports = {
-  format
+  dialogflow_format
   apply_fn_to_fb_messages
   fb_messages_text_contains
   df_text_message_format

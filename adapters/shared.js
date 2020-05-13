@@ -35,8 +35,12 @@ const fudge_user_name = messages_to_send =>
   JSON.parse(JSON.stringify(messages_to_send).replace(/#generic.fb_first_name/g, 'there'))
 
 
+const intent_key_from_df_result = df_result => df_result.intent?.name.match(/.*\/(.*?)$/)?.[1]
+
+
 module.exports = {
   split_on_newlines_before_more,
   ms_delay,
-  fudge_user_name
+  fudge_user_name,
+  intent_key_from_df_result
 }
