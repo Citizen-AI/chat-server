@@ -1,5 +1,7 @@
 'use strict'
 
+const { regex } = require('../helpers')
+
 
 const split_on_newlines_before_more = text => {
   const more_position = text.search(/\[more\]/i)
@@ -38,9 +40,28 @@ const fudge_user_name = messages_to_send =>
 const intent_key_from_df_result = df_result => df_result.intent?.name.match(/.*\/(.*?)$/)?.[1]
 
 
+const remove_extra_whitespace = text =>
+  text
+    .replace(/[\s]*\n[\s]*/g, '\n')
+    .replace(regex.whitespace_around_first_more, '$1')
+    .replace(/[\s]*(\[.*?\])/ig, '$1')
+
+
+const strip_out_from_first_more = text => text.replace(/(\[more\][\s\S]*)/i, '')
+const has_followup_before_more = text => strip_out_from_first_more(text).match(regex.follow_up_tag)
+const has_qr_before_more = text => strip_out_from_first_more(text).match(regex.quick_replies_tag)
+const has_cards_before_more = text => strip_out_from_first_more(text).match(regex.cards_tag)
+const has_image_before_more = text => strip_out_from_first_more(text).match(regex.image_tag)
+
+
 module.exports = {
   split_on_newlines_before_more,
   ms_delay,
   fudge_user_name,
-  intent_key_from_df_result
+  intent_key_from_df_result,
+  remove_extra_whitespace,
+  has_followup_before_more,
+  has_qr_before_more,
+  has_cards_before_more,
+  has_image_before_more
 }

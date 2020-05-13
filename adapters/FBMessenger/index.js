@@ -25,6 +25,7 @@ const { regex } = require('../../helpers')
 //       // await update_user(fb_user_id, { fb_user_profile: fb_user })
 //       ({ first_name } = fb_user)
 //     }
+      // this would be better done with JSON stringify replace technique
 //     resolve(apply_fn_to_fb_messages(messages_to_send, replace('#generic.fb_first_name', first_name)))
 //   }
 //   else resolve(messages_to_send)

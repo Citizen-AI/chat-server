@@ -5,15 +5,14 @@
   * make it optional
   * console log (incl dropping back to DF)
   * test logger
+  * copy 'Facebook Messeger' content for import
 * webchat: emoji
-* pass 'state' around — a package
 * test sentry
 * cache
 * decorate Lagbot version
-* , then Answers
+* Answers
 * web client
   * event on sidebar open
-* follow-up notifications?
 * record interview against user
 * check loading experience (clearing/disabled input box?)
 * initial chat delay to .env
@@ -27,6 +26,7 @@
 * Update readme
   * incorporate messenger server docs
 * Get rid of remaining coffeescript
+* follow-up notifications?
 * … 
 
 
@@ -51,9 +51,10 @@ The server will be looking for a topic schema including:
 
 ## Message syntax
 
-This server interprets Dialogflow messages with custom syntax. Like:
+This server interprets messages with custom syntax. Like:
 
 * sources: `[Source: Employment Relations Act 2000, ss 69B, 69N, 69O]`
+* images: `[Image: https://i.imgur.com/lYm759q.jpg]`
 * cards: `[Cards: Card 1 title (Card 1 subtitle): Button label: Text to send to Dialogflow on click; Card 2 title...]`
 * buttons:
   * `[Emergency phone 111]`

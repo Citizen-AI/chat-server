@@ -25,6 +25,7 @@ const send_queue = async ({ df_result, user_message, bot }) => {
     (function(m, cumulative_wait) {
       var next_message_delay, typing_delay
       setTimeout(async () => {
+        await bot.changeContext(user_message.reference)
         bot.reply(user_message, m)
         bus.emit('message to Web Adapter user', {
           user_message,

@@ -4,10 +4,17 @@ phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance()
 
 bus = require '../../event_bus'
 { regex, remove_empties, Js } = require '../../helpers'
-{ split_on_newlines_before_more, ms_delay } = require '../shared'
+{
+  split_on_newlines_before_more,
+  ms_delay,
+  remove_extra_whitespace,
+  has_followup_before_more,
+  has_qr_before_more,
+  has_cards_before_more,
+  has_image_before_more
+} = require '../shared'
 
 # pure FB templates (knowing nothing about DF's or Rentbot's APIs)
-image_reply_template = require './templates/image_reply'
 quick_replies_template = require '../templates/quick_replies'
 generic_template = require './templates/generic_template'
 button_template_attachment = require './templates/button_template_attachment'
@@ -15,11 +22,12 @@ postback_button = require './templates/postback_button'
 
 # less pure templates
 follow_up_button = require '../web/templates/follow_up_button'
+image_reply_template = require './templates/image_reply'
 
 
 # these functions translate between dialoglow-style message types, and the webchat-client API
 
-image_reply = (df_message) ->
+image_reply_df_native = (df_message) ->
   image_reply_template df_message.image.imageUri
 
 
@@ -179,17 +187,19 @@ cards_reply = (text) ->
     generic_template elements
 
 
-text_processor = (text) ->
-  strip_out_from_first_more = (text) -> text.replace /(\[more\][\s\S]*)/i, ''
-  has_followup_before_more = (text) -> strip_out_from_first_more(text).match regex.follow_up_tag
-  has_qr_before_more = (text) -> strip_out_from_first_more(text).match regex.quick_replies_tag
-  has_cards_before_more = (text) -> strip_out_from_first_more(text).match regex.cards_tag
-  remove_extra_whitespace = (text) ->
-    text
-      .replace /[\s]*\n[\s]*/g, '\n'
-      .replace regex.whitespace_around_first_more, '$1'
-      .replace /[\s]*(\[.*?\])/ig, '$1'
+image_reply = (text) ->
+  [, url] = text.match regex.image_tag
+  rest_of_line = text.replace(regex.image_tag, '').trim()
+  if rest_of_line
+    [
+      text_reply rest_of_line
+      image_reply_template url
+    ]
+  else
+    image_reply_template url
 
+
+text_processor = (text) ->
   cleaned_speech = remove_extra_whitespace text
   lines = remove_empties \    # to get rid of removed source lines
           split_on_newlines_before_more cleaned_speech
@@ -198,6 +208,7 @@ text_processor = (text) ->
       when has_followup_before_more line  then follow_up_reply line
       when has_qr_before_more line        then quick_replies_reply line
       when has_cards_before_more line     then cards_reply line
+      when has_image_before_more line     then image_reply line
       else                                     text_reply line
 
 
@@ -219,7 +230,7 @@ dialogflow_format = (df_messages) ->
       when df_message.text? then            text_processor df_message.text.text[0]
       when df_message.card? then            card_reply df_message
       when df_message.quickReplies? then    quick_replies_reply_df_native df_message
-      when df_message.image? then           image_reply df_message
+      when df_message.image? then           image_reply_df_native df_message
       else
         bus.emit 'error: message from dialogflow with unknown type', "Message: #{df_message}"
 

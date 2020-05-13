@@ -23,7 +23,8 @@ module.exports = {
     follow_up_tag: /\[fu: ?(.*?): ?(.*?)\]/i,
     quick_replies_tag: /\[qr: (.+?)\]/i,
     card_button: /^card_button: ?/i,
-    cards_tag: /\[cards?: (.+?)\]/i
+    cards_tag: /\[cards?: (.+?)\]/i,
+    image_tag: /\[image: (.+?)\]/i
   },
 
   remove_empties: arr => arr.filter(x => x != ''),

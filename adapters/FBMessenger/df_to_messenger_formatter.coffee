@@ -6,7 +6,15 @@ phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance()
 
 bus = require '../../event_bus'
 { regex, remove_empties, Js } = require '../../helpers'
-{ split_on_newlines_before_more, ms_delay } = require '../shared.js'
+{
+  split_on_newlines_before_more,
+  ms_delay,
+  remove_extra_whitespace,
+  has_followup_before_more,
+  has_qr_before_more,
+  has_cards_before_more
+} = require '../shared'
+
 
 # pure FB templates (knowing nothing about DF's or Rentbot's APIs)
 image_reply_template = require './templates/image_reply'
@@ -136,13 +144,6 @@ text_reply = (df_speech) ->
       buttons: buttons
 
 
-remove_extra_whitespace = (text) ->
-  text
-    .replace /[\s]*\n[\s]*/g, '\n'
-    .replace regex.whitespace_around_first_more, '$1'
-    .replace /[\s]*(\[.*?\])/ig, '$1'
-
-
 quick_replies_reply = (text) ->
   [, qr_tag_contents] = text.match regex.quick_replies_tag
   rest_of_line = text.replace(regex.quick_replies_tag, '').trim()
@@ -182,11 +183,6 @@ cards_reply = (text) ->
 
 
 text_processor = (text) ->
-  strip_out_from_first_more = (text) -> text.replace /(\[more\][\s\S]*)/i, ''
-  has_followup_before_more = (text) -> strip_out_from_first_more(text).match regex.follow_up_tag
-  has_qr_before_more = (text) -> strip_out_from_first_more(text).match regex.quick_replies_tag
-  has_cards_before_more = (text) -> strip_out_from_first_more(text).match regex.cards_tag
-
   cleaned_speech = remove_extra_whitespace remove_sources_tags text
   lines = remove_empties \    # to get rid of removed source lines
           split_on_newlines_before_more cleaned_speech
