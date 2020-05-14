@@ -194,23 +194,6 @@ text_processor = (text) ->
       else                                     text_reply line
 
 
-apply_fn_to_fb_message = (message, fn) ->
-  if typeof message is 'string'
-    message = fn message
-  else if message.text?
-    message.text = fn message.text
-  else if message.attachment?.payload?.text?
-    message.attachment.payload.text = fn message.attachment.payload.text
-  else if message.title? # quick replies
-    message.title = fn message.title
-  message
-
-
-apply_fn_to_fb_messages = (messages, fn) ->
-  messages.map (message) ->
-    apply_fn_to_fb_message message, fn
-
-
 search_fb_message_text = (message, term) ->
   if typeof message is 'string'
     message.match term
@@ -220,12 +203,6 @@ search_fb_message_text = (message, term) ->
     message.attachment.payload.text.match term
   else if message.title? # quick replies
     message.title.match term
-
-
-fb_messages_text_contains = (messages, term) ->
-  matches = (messages.filter (message) ->
-    search_fb_message_text(message, term)?)
-  if matches.length is 0 then false else true
 
 
 dialogflow_format = (df_messages) ->
@@ -240,21 +217,9 @@ dialogflow_format = (df_messages) ->
         bus.emit 'error: message from dialogflow with unknown type', "Message: #{df_message}"
 
 
-df_text_message_format = (text) ->
-  [
-    message: 'text'
-    text:
-      text: [text]
-  ]
-
-
 module.exports = {
   dialogflow_format
-  apply_fn_to_fb_messages
-  fb_messages_text_contains
-  df_text_message_format
   # for testing
-  text_reply
   text_processor
   cards_reply
 }

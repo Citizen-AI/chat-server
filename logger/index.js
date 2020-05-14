@@ -61,7 +61,6 @@ module.exports = {
 
 
   feedback: ({ user_id, feedback }) => {
-    console.log('trying to update feedback')
     User.findOneAndUpdate(
       { id: user_id },
       { $push: { feedback: { feedback: feedback } } },

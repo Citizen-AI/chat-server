@@ -33,8 +33,12 @@ const ms_delay = message => {
 }
 
 
-const fudge_user_name = messages_to_send =>
-  JSON.parse(JSON.stringify(messages_to_send).replace(/#generic.fb_first_name/g, 'there'))
+const find_in_object = (obj, find) =>
+  JSON.stringify(obj).match(find)
+
+
+const replace_in_object = (obj, regex_find, replace) =>
+  JSON.parse(JSON.stringify(obj).replace(regex_find, replace))
 
 
 const intent_key_from_df_result = df_result => df_result.intent?.name.match(/.*\/(.*?)$/)?.[1]
@@ -57,11 +61,12 @@ const has_image_before_more = text => strip_out_from_first_more(text).match(rege
 module.exports = {
   split_on_newlines_before_more,
   ms_delay,
-  fudge_user_name,
   intent_key_from_df_result,
   remove_extra_whitespace,
   has_followup_before_more,
   has_qr_before_more,
   has_cards_before_more,
-  has_image_before_more
+  has_image_before_more,
+  find_in_object,
+  replace_in_object
 }

@@ -5,21 +5,16 @@
   * make it optional
   * console log (incl dropping back to DF)
   * test logger
-  * copy 'Facebook Messeger' content for import
+  * copy 'Facebook Messenger' content for import
 * webchat: emoji
 * test sentry
-* cache
 * decorate Lagbot version
 * Answers
 * web client
   * event on sidebar open
+* cache
 * record interview against user
 * check loading experience (clearing/disabled input box?)
-* initial chat delay to .env
-* Fix FB user name swapping in
-* can we combine
-  * some templates?
-  * df_to_X_formatter
 * allow optional adapters
 * Log too-long intents
 * timestamp to log

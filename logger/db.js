@@ -25,6 +25,14 @@ const UserSchema = new Schema({
     created_at: { type: Date, default: Date.now }
   }],
   last_platform: String,
+  last_session_id: String,
+  user_type: String,
+  fb_user_profile: {
+    id: String,            // duplicate of _id but kinda necessary presently to simplify return from FB api I think
+    first_name: String,
+    last_name: String,
+    profile_pic: String
+  },
   created_at: { type: Date, default: Date.now }
 })
 
@@ -42,8 +50,10 @@ const EventSchema = new Schema({
   host: String
 })
 
-const User = mongoose.models.User || mongoose.model('User', UserSchema)
-const Event = mongoose.models.Event || mongoose.model('Event', EventSchema)
+const User = mongoose.model('User', UserSchema)
+// const User = mongoose.models.User || mongoose.model('User', UserSchema)
+const Event = mongoose.model('Event', EventSchema)
+// const Event = mongoose.models.Event || mongoose.model('Event', EventSchema)
 
 
 const update_user = (user_id, update) => new Promise((resolve, reject) =>

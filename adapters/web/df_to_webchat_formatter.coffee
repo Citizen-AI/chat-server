@@ -235,19 +235,8 @@ dialogflow_format = (df_messages) ->
         bus.emit 'error: message from dialogflow with unknown type', "Message: #{df_message}"
 
 
-
-df_text_message_format = (text) ->
-  [
-    message: 'text'
-    text:
-      text: [text]
-  ]
-
-
 module.exports = {
   dialogflow_format
-  df_text_message_format
   # for testing
-  text_reply
   text_processor
 }
