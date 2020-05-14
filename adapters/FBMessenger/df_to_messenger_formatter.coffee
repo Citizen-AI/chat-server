@@ -224,7 +224,5 @@ squidex_format = (topic) ->
 
 module.exports = {
   dialogflow_format
-  # for testing
-  text_processor
-  cards_reply
+  squidex_format
 }
