@@ -1,13 +1,13 @@
 # Todo
 
 * squidex
-  * sources
   * make it optional
-  * console log (incl dropping back to DF)
   * test logger
-  * copy 'Facebook Messenger' content for import
+  * copy 'Facebook Messenger' Dialogflow content for import
+* fix floaty short messages
 * webchat: emoji
 * test sentry
+* Test case assessment
 * decorate Lagbot version
 * Answers
 * web client

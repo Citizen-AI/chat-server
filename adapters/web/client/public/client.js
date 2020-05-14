@@ -23,14 +23,14 @@ const message_template = `
       {{/if}}
 
       {{#each message.buttons}}
-        {{#if this.postback}}
-          <a href="#" onclick="javascript:Botkit.quietSend({{this.payload}})" class="button_message">{{this.title}}</a>
-        {{else if this.map}}
-          <iframe src="https://www.google.com/maps/embed/v1/search?key=AIzaSyBYTcRWDssK7eRByLCdh0OJJBlF6qQsHZI&q={{this.payload}}" width="100%" height="400" frameborder="0" style="border:0" allowfullscreen></iframe>
+        {{#if postback}}
+          <a href="#" onclick="javascript:Botkit.quietSend({{payload}})" class="button_message">{{title}}</a>
+        {{else if map}}
+          <iframe src="https://www.google.com/maps/embed/v1/search?key=AIzaSyBYTcRWDssK7eRByLCdh0OJJBlF6qQsHZI&q={{payload}}" width="100%" height="400" frameborder="0" style="border:0" allowfullscreen></iframe>
         {{else if source}}
           <div class="source">{{{contents}}}</div>
         {{else}}
-          <a href="{{this.payload}}" target="_blank" class="button_message">{{#if this.title}}{{this.title}}{{else}}{{this.payload}}{{/if}}</a>
+          <a href="{{payload}}" target="_blank" class="button_message">{{#if title}}{{title}}{{else}}{{payload}}{{/if}}</a>
         {{/if}}
       {{/each}}
 

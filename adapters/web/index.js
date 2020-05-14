@@ -1,7 +1,7 @@
 'use strict'
 
 const bus = require('../../event_bus')
-const { dialogflow_format, text_processor } = require('./df_to_webchat_formatter')
+const { dialogflow_format, squidex_format } = require('./df_to_webchat_formatter')
 const { ms_delay, intent_key_from_df_result, replace_in_object } = require('../shared')
 const { regex } = require('../../helpers')
 const { get_topic } = require('../../squidex')
@@ -14,8 +14,8 @@ const send_queue = async ({ df_result, user_message, bot }) => {
     bus.emit('No matching squidex content found; falling back to Dialogflow')
 
   let messages_to_send = topic?.answer ?
-    text_processor(topic.answer) :
-    dialogflow_format(df_result.fulfillmentMessages)
+    squidex_format(topic) :
+    dialogflow_format(df_result)
 
   bot.reply(user_message, { "type": "typing" })
   messages_to_send = replace_in_object(messages_to_send, /#generic.fb_first_name/g, 'there')

@@ -70,8 +70,9 @@ buttons_prep = (button_tags) ->
       page_url = button_text.match regex.url
       phone_number = button_text.match regex.phone
       if map_url
-        type: 'web_url'
-        url: map_url[2]
+        map_query = map_url[2].match(/.*search\/(.*)/)[1]
+        map: true
+        payload: map_query
         title: "📍 #{map_url[1]}"
       else if clm_url
         type: 'web_url'
@@ -223,7 +224,8 @@ search_fb_message_text = (message, term) ->
     message.title.match term
 
 
-dialogflow_format = (df_messages) ->
+dialogflow_format = (df_result) ->
+  df_messages = df_result.fulfillmentMessages
   unique_df_messages = _.uniqWith(df_messages, (a, b) -> a.text?.text[0]?) # I don't understand why this works
   unique_df_messages.flatMap (df_message) ->
     switch
@@ -235,8 +237,21 @@ dialogflow_format = (df_messages) ->
         bus.emit 'error: message from dialogflow with unknown type', "Message: #{df_message}"
 
 
+# surely could be prettier
+squidex_format = (topic) ->
+  messages = text_processor topic.answer
+  if topic.source?
+    source_button = source: true, contents: topic.source
+    if messages[messages.length - 1].buttons?
+      messages[messages.length - 1].buttons.push source_button
+    else
+      messages[messages.length - 1] =
+        text: messages[messages.length - 1]
+        buttons: [source_button]
+  messages
+
+
 module.exports = {
   dialogflow_format
-  # for testing
-  text_processor
+  squidex_format
 }

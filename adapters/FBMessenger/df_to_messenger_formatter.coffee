@@ -205,7 +205,8 @@ search_fb_message_text = (message, term) ->
     message.title.match term
 
 
-dialogflow_format = (df_messages) ->
+dialogflow_format = (df_result) ->
+  df_messages = df_result.fulfillmentMessages
   unique_df_messages = _.uniqWith(df_messages, (a, b) -> a.text?.text[0]?) # I don't understand why this works
   unique_df_messages.flatMap (df_message) ->
     switch
@@ -215,6 +216,10 @@ dialogflow_format = (df_messages) ->
       when df_message.image? then           image_reply df_message
       else
         bus.emit 'error: message from dialogflow with unknown type', "Message: #{df_message}"
+
+
+squidex_format = (topic) ->
+  text_processor topic.answer
 
 
 module.exports = {

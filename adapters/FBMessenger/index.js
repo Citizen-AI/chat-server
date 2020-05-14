@@ -1,10 +1,8 @@
 'use strict'
 
-// const { replace } = require('lodash/fp')
-
 const bus = require('../../event_bus')
 const { send_typing } = require('./facebook_api')
-const { dialogflow_format, text_processor } = require('./df_to_messenger_formatter')
+const { dialogflow_format, squidex_format } = require('./df_to_messenger_formatter')
 const {
   ms_delay,
   intent_key_from_df_result,
@@ -45,8 +43,8 @@ const send_queue = async ({ df_result, user_message, bot }) => {
     bus.emit('No matching squidex content found; falling back to Dialogflow')
 
   let messages_to_send = topic?.answer ?
-    text_processor(topic.answer) :
-    dialogflow_format(df_result.fulfillmentMessages)
+    squidex_format(topic) :
+    dialogflow_format(df_result)
 
   messages_to_send = await swap_in_user_name(user_message, messages_to_send)
   await bot.changeContext(user_message.reference)
