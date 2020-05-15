@@ -10,6 +10,12 @@
 * Test case assessment
 * decorate Lagbot version
 * Answers
+  * by category
+  * pretty
+  * nice quotes
+  * paragraphs
+  * quick replies
+  * sources
 * web client
   * event on sidebar open
 * cache

@@ -1,6 +1,8 @@
+'use strict'
+
 require('./env')
+
 const got = require('got')
-const fs = require('fs')
 
 const bus = require('./event_bus')
 
@@ -9,8 +11,13 @@ const { squidex_endpoint, squidex_token } = process.env
 
 
 const response_processor = response => {
+  const linkify = question => question.replace(/ /g, '-').replace(/[?']/g, '').toLowerCase()
+
   const topic_map = item => ({
     intent_key: item.data.intentKey.iv,
+    name: item.data.name.iv,
+    question: item.data.exampleQuestions.iv[0].question,
+    link: linkify(item.data.exampleQuestions.iv[0].question),
     answer: item.data.answer.iv,
     source: item.data.source?.iv
   })
@@ -33,6 +40,11 @@ const topics = got
 const get_topic = intent_key => topics.then(ts => ts.find(t => t.intent_key == intent_key))
 
 
+const get_topic_by_link = link => topics.then(ts => ts.find(t => t.link == link))
+
+
 module.exports = {
-  get_topic
+  get_topic,
+  get_topic_by_link,
+  topics
 }
