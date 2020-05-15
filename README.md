@@ -3,6 +3,7 @@
 * squidex
   * make it optional
   * copy 'Facebook Messenger' Dialogflow content for import
+* how often should the server get new content from squidex?
 * fix floaty short messages
 * webchat: emoji
 * test sentry

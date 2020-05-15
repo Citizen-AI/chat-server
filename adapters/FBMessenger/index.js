@@ -25,6 +25,7 @@ const swap_in_user_name = (user_message, messages_to_send) => new Promise(async 
     if(!user?.fb_user_profile?.first_name) {
       bus.emit('Asking Facebook for user name')
       const fb_user_profile = await get_facebook_profile(fb_user_id)
+      // this should catch errors
       update_user(fb_user_id, { fb_user_profile })
       first_name = fb_user_profile.first_name
     } else {

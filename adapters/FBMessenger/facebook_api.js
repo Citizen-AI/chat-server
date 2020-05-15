@@ -8,12 +8,12 @@ const bus = require('../../event_bus')
 FB.setAccessToken(fb_page_token)
 
 
-get_facebook_profile = (fb_user_id, cb) => new Promise((resolve, reject) => {
+get_facebook_profile = (fb_user_id) => new Promise((resolve, reject) => {
   FB.api(fb_user_id.toString(), 'get', { fields: [ 'first_name', 'last_name', 'profile_pic' ] }, fb_user => {
     if(!fb_user)
       reject(new Error('Facebook user not found'))
     if(fb_user.error)
-      reject(cb(fb_user.error))
+      reject(fb_user.error)
     resolve(fb_user)
   })
 })

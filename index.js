@@ -47,6 +47,4 @@ bus
 
 // # events from Dialogflow
 //   .on 'message from dialogflow', fb.check_session
-//   .on 'message from dialogflow', logger.from_df
-//   .on 'message from dialogflow', fb.process_df_response_into_fb_messages
 //   .on 'message from user: user_type interview', fb.store_user_type
