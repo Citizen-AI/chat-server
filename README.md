@@ -2,7 +2,6 @@
 
 * squidex
   * make it optional
-  * test logger
   * copy 'Facebook Messenger' Dialogflow content for import
 * fix floaty short messages
 * webchat: emoji

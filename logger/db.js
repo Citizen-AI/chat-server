@@ -12,7 +12,6 @@ mongoose
   .then(m => bus.emit(`STARTUP: Connected to database ${m.connections[0].host}/${m.connections[0].name}`))
   .catch(emit_error)
 const Schema = mongoose.Schema
-const ObjectId = mongoose.Schema.Types.ObjectId
 
 const UserSchema = new Schema({
   id: String,
