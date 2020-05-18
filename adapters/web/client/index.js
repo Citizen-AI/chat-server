@@ -23,11 +23,11 @@ controller.ready(() => {
   const context = {
     ...config,
     meta: () => config.theme_dir + '_meta',
+    sidebar: () => config.theme_dir + '_sidebar'
   }
   webserver
     .get('/', (req, res) => res.render('home', {
-      ...context,
-      sidebar: () => config.theme_dir + '_sidebar'
+      ...context
     }))
     .get('/answers', async (req, res) => res.render('answers', {
       ...context,

@@ -162,7 +162,7 @@ var Botkit = {
             text: text
         };
 
-        this.clearReplies();
+        // this.clearReplies();
 
         that.deliverMessage({
             type: 'message',
@@ -462,7 +462,6 @@ var Botkit = {
         });
 
         that.on('webhook_error', function (err) {
-
             alert('Error sending message!');
             console.error('Webhook Error', err);
 
@@ -478,10 +477,8 @@ var Botkit = {
         });
 
         that.on('message', function (message) {
-
             console.log('RECEIVED MESSAGE', message);
             that.renderMessage(message);
-
         });
 
         that.on('message', function (message) {
@@ -489,7 +486,6 @@ var Botkit = {
                 window.location = message.goto_link;
             }
         });
-
 
         that.on('message', function (message) {
             that.clearReplies();
