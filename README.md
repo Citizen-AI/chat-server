@@ -3,7 +3,6 @@
 * squidex
   * make it optional
   * copy 'Facebook Messenger' Dialogflow content for import
-* how often should the server get new content from squidex?
 * fix floaty short messages
 * webchat: emoji
 * test sentry
@@ -71,6 +70,7 @@ You will need
 
 * a [Dialogflow](https://dialogflow.com) agent.
 * a [Squidex](https://squidex.io/) app.
+* Ngrok…
 
 Run `npm install`, then `npm start`. The script will tell you what environment variables are required. You can put them in a `.env` file.
 
