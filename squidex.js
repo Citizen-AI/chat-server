@@ -51,7 +51,7 @@ const update_topic = async (intent_key, payload) => {
 }
 
 
-const handler = async req => {
+const handler = async (req, res) => {
   const { body } = req
   const { type, payload } = body
   bus.emit(`Squidex: heard event ${type}`)
@@ -59,6 +59,7 @@ const handler = async req => {
     await update_topic(payload.data.intentKey.iv, payload)
     bus.emit(`Squidex: updated topic ${payload.data.name.iv}`)
   }
+  res.sendStatus(200)
 }
 
 

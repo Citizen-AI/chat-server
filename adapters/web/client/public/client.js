@@ -1,4 +1,4 @@
-const { host } = window.location
+const { host, pathname } = window.location
 const page_url = new URL(window.location.href)
 const query = page_url.searchParams.get('query')
 const converter = new showdown.Converter({ simplifiedAutoLink: true })
@@ -9,49 +9,45 @@ let user_has_sent_something = false   // used to later decide whether to send GT
 const message_template = `
 <div id="message_template">
   <div class="message {{message.type}}">
-      {{#if message.isTyping}}
-        <div class="typing-indicator">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      {{/if}}
-      {{{message.html}}}
+    {{#if message.isTyping}}
+    <div class="typing-indicator"><span></span><span></span><span></span></div>
+    {{/if}}
+    {{{message.html}}}
 
-      {{#if message.open_link}}
-        <a href="{{{message.open_link}}}" target="_blank" class="button_message">{{#if message.link_title}}{{message.link_title}}{{else}}{{message.open_link}}{{/if}}</a>
-      {{/if}}
+    {{#if message.open_link}}
+      <a href="{{{message.open_link}}}" target="_blank" class="button_message">{{#if message.link_title}}{{message.link_title}}{{else}}{{message.open_link}}{{/if}}</a>
+    {{/if}}
 
-      {{#each message.buttons}}
-        {{#if postback}}
-          <a href="#" onclick="javascript:Botkit.quietSend({{payload}})" class="button_message">{{title}}</a>
-        {{else if map}}
-          <iframe src="https://www.google.com/maps/embed/v1/search?key=AIzaSyBYTcRWDssK7eRByLCdh0OJJBlF6qQsHZI&q={{payload}}" width="100%" height="400" frameborder="0" style="border:0" allowfullscreen></iframe>
-        {{else if source}}
-          <div class="source">{{{contents}}}</div>
-        {{else}}
-          <a href="{{payload}}" target="_blank" class="button_message">{{#if title}}{{title}}{{else}}{{payload}}{{/if}}</a>
-        {{/if}}
-      {{/each}}
-
-      {{#each message.attachment.payload.elements}}
-      <card>
-        {{#if buttons}}<a href="#" onclick="javascript:Botkit.quietSend('{{buttons.0.payload}}')">{{/if}}
-        <header>{{title}}</header>
-        <subtitle>{{subtitle}}</subtitle>
-        {{#if buttons}}</a>{{/if}}
-      </card>
-      {{/each}}
-      {{#message.files}}
-      <div class="file_attachment">
-      {{#if image}}
-        <a href="{{{url}}}" alt="Click for full size" target="workbot_big_image"><img src="{{{url}}}" alt="{{{url}}}" /></a>
+    {{#each message.buttons}}
+      {{#if postback}}
+        <a href="#" onclick="javascript:Botkit.quietSend({{payload}})" class="button_message">{{title}}</a>
+      {{else if map}}
+        <iframe src="https://www.google.com/maps/embed/v1/search?key=AIzaSyBYTcRWDssK7eRByLCdh0OJJBlF6qQsHZI&q={{payload}}" width="100%" height="400" frameborder="0" style="border:0" allowfullscreen></iframe>
+      {{else if source}}
+        <div class="source">{{{contents}}}</div>
       {{else}}
-        <a href="{{{url}}}" title="{{{url}}}">{{{url}}}</a>
+        <a href="{{payload}}" target="_blank" class="button_message">{{#if title}}{{title}}{{else}}{{payload}}{{/if}}</a>
       {{/if}}
-      </div>
-    {{/message.files}}
+    {{/each}}
+
+    {{#each message.attachment.payload.elements}}
+    <card>
+      {{#if buttons}}<a href="#" onclick="javascript:Botkit.quietSend('{{buttons.0.payload}}')">{{/if}}
+      <header>{{title}}</header>
+      <subtitle>{{subtitle}}</subtitle>
+      {{#if buttons}}</a>{{/if}}
+    </card>
+    {{/each}}
+    {{#message.files}}
+    <div class="file_attachment">
+    {{#if image}}
+      <a href="{{{url}}}" alt="Click for full size" target="workbot_big_image"><img src="{{{url}}}" alt="{{{url}}}" /></a>
+    {{else}}
+      <a href="{{{url}}}" title="{{{url}}}">{{{url}}}</a>
+    {{/if}}
     </div>
+  {{/message.files}}
+  </div>
 </div>
 `
 
@@ -70,7 +66,7 @@ var Botkit = {
     current_user: null,
     on: function (event, handler) {
         this.message_window.addEventListener(event, function (evt) {
-            handler(evt.detail);
+            handler(evt.detail)
         });
     },
     once: function (event, handler) {
@@ -113,9 +109,9 @@ var Botkit = {
                 }
             };
 
-            xmlhttp.open("POST", url, true);
-            xmlhttp.setRequestHeader("Content-Type", "application/json");
-            xmlhttp.send(JSON.stringify(body));
+            xmlhttp.open("POST", url, true)
+            xmlhttp.setRequestHeader("Content-Type", "application/json")
+            xmlhttp.send(JSON.stringify(body))
         });
 
     },
@@ -154,28 +150,23 @@ var Botkit = {
     quietSend: function (text, e) {
         var that = this;
         if (e) e.preventDefault();
-        if (!text) {
-            return;
-        }
-        var message = {
+        if (!text) return
+        const message = {
             type: 'outgoing',
-            text: text
-        };
+            text
+        }
 
         // this.clearReplies();
 
         that.deliverMessage({
-            type: 'message',
-            text: text,
-            user: this.guid,
-            channel: this.options.use_sockets ? 'websocket' : 'webhook'
-        });
-
-        this.input.value = '';
-
-        this.trigger('sent', message);
-
-        return false;
+          type: 'message',
+          text: text,
+          user: this.guid,
+          channel: this.options.use_sockets ? 'websocket' : 'webhook'
+        })
+        this.input.value = ''
+        this.trigger('sent', message)
+        return false
     },
     deliverMessage: function (message) {
         message.host = host
@@ -327,9 +318,7 @@ var Botkit = {
           type: 'outgoing'
         })
     },
-    focus: function () {
-        this.input.focus();
-    },
+    focus: function () { this.input.focus() },
     renderMessage: function (message) {
       var that = this;
       if (!that.next_line) {
@@ -346,11 +335,9 @@ var Botkit = {
         })
       }
 
-      that.next_line.innerHTML = that.message_template({
-          message: message
-      });
+      that.next_line.innerHTML = that.message_template({ message })
       if (!message.isTyping) {
-          delete (that.next_line);
+          delete (that.next_line)
       }
     },
     triggerScript: function (script, thread) {
@@ -363,48 +350,45 @@ var Botkit = {
         });
     },
     typing: function () { this.renderMessage({ isTyping: true }) },
-    identifyUser: function (user) {
+    // identifyUser: function (user) {
+    //     user.timezone_offset = new Date().getTimezoneOffset();
 
-        user.timezone_offset = new Date().getTimezoneOffset();
+    //     this.guid = user.id;
+    //     Botkit.setCookie('botkit_guid', user.id, 1);
 
-        this.guid = user.id;
-        Botkit.setCookie('botkit_guid', user.id, 1);
+    //     this.current_user = user;
 
-        this.current_user = user;
-
-        this.deliverMessage({
-            type: 'identify',
-            user: this.guid,
-            channel: 'socket',
-            user_profile: user,
-        });
-    },
-    receiveCommand: function (event) {
-        switch (event.data.name) {
-            case 'trigger':
-                // tell Botkit to trigger a specific script/thread
-                console.log('TRIGGER', event.data.script, event.data.thread);
-                Botkit.triggerScript(event.data.script, event.data.thread);
-                break;
-            case 'identify':
-                // link this account info to this user
-                console.log('IDENTIFY', event.data.user);
-                Botkit.identifyUser(event.data.user);
-                break;
-            case 'connect':
-                // link this account info to this user
-                Botkit.connect(event.data.user);
-                break;
-            default:
-                console.log('UNKNOWN COMMAND', event.data);
-        }
-    },
+    //     this.deliverMessage({
+    //         type: 'identify',
+    //         user: this.guid,
+    //         channel: 'socket',
+    //         user_profile: user,
+    //     });
+    // },
+    // receiveCommand: function (event) {
+    //     switch (event.data.name) {
+    //         case 'trigger':
+    //             // tell Botkit to trigger a specific script/thread
+    //             console.log('TRIGGER', event.data.script, event.data.thread);
+    //             Botkit.triggerScript(event.data.script, event.data.thread);
+    //             break;
+    //         case 'identify':
+    //             // link this account info to this user
+    //             console.log('IDENTIFY', event.data.user);
+    //             Botkit.identifyUser(event.data.user);
+    //             break;
+    //         case 'connect':
+    //             // link this account info to this user
+    //             Botkit.connect(event.data.user);
+    //             break;
+    //         default:
+    //             console.log('UNKNOWN COMMAND', event.data);
+    //     }
+    // },
     sendEvent: function (event) {
-
         if (this.parent_window) {
             this.parent_window.postMessage(event, '*');
         }
-
     },
     setCookie: function (cname, cvalue, exdays) {
         var d = new Date();
@@ -568,14 +552,19 @@ window.onload = () => {
   if (Botkit.getCookie('botkit_guid')) seen_before = true
 
   Botkit.boot()
-  Botkit.typing()
   Botkit.once('connected', () => {
-    if(query)
-      Botkit.send(query, null, true)
-    else if(seen_before)
-      Botkit.quietSend('[Web] welcome back')
-    else
-      Botkit.quietSend('[Web] get started')
+    if(pathname == '/') {     // don't do any of the below if we're at an answer/…
+      Botkit.typing()
+      switch(true) {
+        case query:
+          Botkit.send(query, null, true)
+          break
+        case seen_before:
+          Botkit.quietSend('[Web] welcome back')
+          break
+        default:
+          Botkit.quietSend('[Web] get started')
+      }
+    }
   })
-
 }

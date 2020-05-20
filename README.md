@@ -15,6 +15,7 @@
   * paragraphs
   * quick replies
   * sources
+  * // should just send names & links
 * web client
   * event on sidebar open
 * cache
