@@ -25,7 +25,7 @@ const message_template = `
       {{else if source}}
         <div class="source">{{{contents}}}</div>
       {{else}}
-        <a href="{{payload}}" target="_blank" class="button_message">{{#if title}}{{title}}{{else}}{{payload}}{{/if}}</a>
+        <a href="{{url}}" target="_blank" class="button_message">{{#if title}}{{title}}{{else}}{{payload}}{{/if}}</a>
       {{/if}}
     {{/each}}
 
@@ -465,9 +465,10 @@ var Botkit = {
         that.on('message', function (message) {
             that.clearReplies()
             if (message.quick_replies) {
-                const list = document.createElement('ul');
-                let elements = []
-                for (const r = 0; r < message.quick_replies.length; r++) {
+                const list = document.createElement('ul')
+                // message.quick_replies.map(qr)
+                // let elements = []
+                for (let r = 0; r < message.quick_replies.length; r++) {
                     (function (reply) {
                         const li = document.createElement('li')
                         const el = document.createElement('a')
@@ -536,7 +537,7 @@ window.onload = () => {
 
   Botkit.boot()
   Botkit.once('connected', () => {
-    if(server_data) {  // pre-populated answer
+    if(typeof server_data != 'undefined') {  // pre-populated answer
       const { question, answer_messages } = server_data
       Botkit.renderMessage({ text: question, type: 'outgoing' })
       answer_messages.forEach(message => Botkit.renderMessage(message))

@@ -3,6 +3,7 @@
 const got = require('got')
 
 const bus = require('./event_bus')
+const { emit_error } = require('./helpers')
 const { controller, webserver } = require('./Botkit/botkit')
 
 
@@ -35,11 +36,16 @@ const response_processor = response => {
 
 
 const topics = got
-  .get(squidex_endpoint, { headers: { Authorization: 'Bearer ' + squidex_token } })
+  .get(squidex_endpoint, {
+    headers: { Authorization: 'Bearer ' + squidex_token },
+    timeout: 4000
+  })
   .then(response_processor)
 
 
-const get_topic = intent_key => topics.then(ts => ts.find(t => t.intent_key == intent_key))
+const get_topic = intent_key => topics
+  .then(ts => ts.find(t => t.intent_key == intent_key))
+  .catch(emit_error)
 
 
 const get_topic_by_link = link => topics.then(ts => ts.find(t => t.link == link))

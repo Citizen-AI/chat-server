@@ -1,6 +1,7 @@
 # Todo
 
 * squidex
+  * handle server down
   * make it optional
   * copy 'Facebook Messenger' Dialogflow content for import
 * fix floaty short messages
@@ -10,7 +11,6 @@
 * decorate Lagbot version
 * Answers
   * by category
-  * pretty
   * nice quotes
   * paragraphs
   * quick replies
@@ -18,6 +18,7 @@
   * // should just send names & links
 * web client
   * event on sidebar open
+* try a bunch of fail states (each env var being a bit wrong)
 * cache
 * record interview against user
 * check loading experience (clearing/disabled input box?)
