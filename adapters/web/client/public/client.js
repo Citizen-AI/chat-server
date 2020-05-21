@@ -7,7 +7,6 @@ converter.setOption('openLinksInNewWindow', true)
 let user_has_sent_something = false   // used to later decide whether to send GTM event
 
 const message_template = `
-<div id="message_template">
   <div class="message {{message.type}}">
     {{#if message.isTyping}}
     <div class="typing-indicator"><span></span><span></span><span></span></div>
@@ -48,7 +47,6 @@ const message_template = `
     </div>
   {{/message.files}}
   </div>
-</div>
 `
 
 var Botkit = {
@@ -117,7 +115,7 @@ var Botkit = {
     },
     send: function (text, e, gtm_off) {
         var that = this;
-        if (e) e.preventDefault();
+        if (e) e.preventDefault()
         if (!text) {
             return;
         }
@@ -202,15 +200,11 @@ var Botkit = {
         }).catch(function (err) {
             that.trigger('webhook_error', err);
         });
-
     },
     connect: function (user) {
-
-        var that = this;
-
+        var that = this
         if (user && user.id) {
             Botkit.setCookie('botkit_guid', user.id, 1);
-
             user.timezone_offset = new Date().getTimezoneOffset();
             that.current_user = user;
             console.log('CONNECT WITH USER', user);
@@ -222,7 +216,6 @@ var Botkit = {
         } else {
             that.connectWebhook();
         }
-
     },
     connectWebhook: function () {
         var that = this;
@@ -245,7 +238,6 @@ var Botkit = {
             user: that.guid,
             channel: 'webhook',
         });
-
     },
     connectWebsocket: function (ws_url) {
         var that = this;
@@ -447,8 +439,7 @@ var Botkit = {
 
         that.on('webhook_error', function (err) {
             alert('Error sending message!');
-            console.error('Webhook Error', err);
-
+            console.error('Webhook Error', err)
         });
 
         that.on('typing', function () {
@@ -467,34 +458,26 @@ var Botkit = {
 
         that.on('message', function (message) {
             if (message.goto_link) {
-                window.location = message.goto_link;
+                window.location = message.goto_link
             }
         });
 
         that.on('message', function (message) {
-            that.clearReplies();
+            that.clearReplies()
             if (message.quick_replies) {
-
-                var list = document.createElement('ul');
-
-                var elements = [];
-                for (var r = 0; r < message.quick_replies.length; r++) {
+                const list = document.createElement('ul');
+                let elements = []
+                for (const r = 0; r < message.quick_replies.length; r++) {
                     (function (reply) {
-
-                        var li = document.createElement('li');
-                        var el = document.createElement('a');
-                        el.innerHTML = reply.title;
-                        el.href = '#';
-
-                        el.onclick = function () {
-                          that.quickReply(reply);
-                        }
-
-                        li.appendChild(el);
-                        list.appendChild(li);
-                        elements.push(li);
-
-                    })(message.quick_replies[r]);
+                        const li = document.createElement('li')
+                        const el = document.createElement('a')
+                        el.innerHTML = reply.title
+                        el.href = '#'
+                        el.onclick = function () { that.quickReply(reply) }
+                        li.appendChild(el)
+                        list.appendChild(li)
+                        elements.push(li)
+                    })(message.quick_replies[r])
                 }
 
                 that.replies.appendChild(list);
@@ -553,7 +536,16 @@ window.onload = () => {
 
   Botkit.boot()
   Botkit.once('connected', () => {
-    if(pathname == '/') {     // don't do any of the below if we're at an answer/…
+    if(server_data) {  // pre-populated answer
+      const { question, answer_messages } = server_data
+      Botkit.renderMessage({ text: question, type: 'outgoing' })
+      answer_messages.forEach(message => Botkit.renderMessage(message))
+      const section = document.getElementsByTagName('section')[0]
+      section.addEventListener('scroll', () => {
+        if (section.scrollHeight - section.scrollTop === section.clientHeight)
+          section.classList.remove('noscroll')
+      })
+    } else {
       Botkit.typing()
       switch(true) {
         case query:

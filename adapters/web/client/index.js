@@ -15,10 +15,7 @@ const { web_client_config } = process.env
 const config = JSON.parse(web_client_config)
 
 webserver.use(express.static(path.join(__dirname, 'public')))
-webserver.engine('handlebars', exphbs({
-  layoutsDir: __dirname + '/views/layouts',
-  helpers: { squidex_format }
-}))
+webserver.engine('handlebars', exphbs({ layoutsDir: __dirname + '/views/layouts' }))
 webserver.set('view engine', 'handlebars')
 webserver.set('views', __dirname + '/views')
 webserver.use(slashes(false))
@@ -41,9 +38,15 @@ controller.ready(() => {
       ...context,
       topics: await topics, // should just send names & links
     }))
-    .get('/answers/:topic', async (req, res) => res.render('answer', {
-      ...context,
-      topic: await get_topic_by_link(req.params.topic),
-      something: exphbs.compile()
-    }))
+    .get('/answers/:topic', async (req, res) => {
+      const topic = await get_topic_by_link(req.params.topic)
+      const { question, source } = topic
+      const simple_items_to_objects = item => typeof item === 'object' ? item : { text: item }
+      const answer_messages = squidex_format(topic).map(simple_items_to_objects)
+      res.render('home', {
+        ...context,
+        scroll_q: 'noscroll',
+        data: JSON.stringify({ question, answer_messages })
+      })
+    })
 })

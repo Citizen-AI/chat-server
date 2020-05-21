@@ -130,6 +130,9 @@ a.button:hover {
   display: flex;
   overflow-y: auto;
 }
+#message_window section.noscroll { 
+  flex-direction: column;
+}
 #message_window footer {
   border-top: 1px solid #ccc;
   padding: 0.25rem;
@@ -342,7 +345,7 @@ a.button:hover {
 #message_window div.source {
   margin: 0;
 }
-.source p {
+.source {
   font-size: 11px;
   color: #00000063;
 }
