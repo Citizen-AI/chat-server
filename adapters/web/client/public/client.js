@@ -536,17 +536,17 @@ window.onload = () => {
   if (Botkit.getCookie('botkit_guid')) seen_before = true
 
   Botkit.boot()
-  Botkit.once('connected', () => {
-    if(typeof server_data != 'undefined') {  // pre-populated answer
-      const { question, answer_messages } = server_data
-      Botkit.renderMessage({ text: question, type: 'outgoing' })
-      answer_messages.forEach(message => Botkit.renderMessage(message))
-      const section = document.getElementsByTagName('section')[0]
-      section.addEventListener('scroll', () => {
-        if (section.scrollHeight - section.scrollTop === section.clientHeight)
-          section.classList.remove('noscroll')
-      })
-    } else {
+  if(typeof server_data != 'undefined') {  // pre-populated answer
+    const { question, answer_messages } = server_data
+    Botkit.renderMessage({ text: question, type: 'outgoing' })
+    answer_messages.forEach(message => Botkit.renderMessage(message))
+    const section = document.getElementsByTagName('section')[0]
+    section.addEventListener('scroll', () => {
+      if (section.scrollHeight - section.scrollTop === section.clientHeight)
+        section.classList.remove('noscroll')
+    })
+  } else {
+    Botkit.once('connected', () => {
       Botkit.typing()
       switch(true) {
         case query:
@@ -558,6 +558,8 @@ window.onload = () => {
         default:
           Botkit.quietSend('[Web] get started')
       }
-    }
-  })
+    })
+  }
+
+
 }

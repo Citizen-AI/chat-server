@@ -10,12 +10,13 @@
 * Test case assessment
 * decorate Lagbot version
 * Answers
+  * schema-tise
+    * with alt questions
+  * speed up answer showing
   * by category
   * nice quotes
-  * paragraphs
-  * quick replies
-  * sources
-  * // should just send names & links
+  * should just send names & links
+  * make add to bottom work nicely when the page is only gradually filling up with short answers
 * web client
   * event on sidebar open
 * try a bunch of fail states (each env var being a bit wrong)
