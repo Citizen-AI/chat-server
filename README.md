@@ -1,9 +1,14 @@
 # Todo
 
 * squidex
+  * Make linked topics work
+    * still work with QRs
+    * test for button label
   * handle server down
   * make it optional
   * copy 'Facebook Messenger' Dialogflow content for import
+* Pre-populate hello guest
+* Airtable
 * fix floaty short messages
 * webchat: emoji
 * test sentry

@@ -379,6 +379,10 @@ card a {
   color: black;
 }
 
+#message_list > div {
+  clear: both
+}
+
 /* Answers */
 
 .answer_content {

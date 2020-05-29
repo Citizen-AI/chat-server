@@ -304,6 +304,7 @@ var Botkit = {
         this.replies.innerHTML = '';
     },
     quickReply: function (reply) {
+        this.clearReplies()
         this.quietSend(reply.payload)
         this.renderMessage({
           text: reply.title,
@@ -467,7 +468,7 @@ var Botkit = {
             if (message.quick_replies) {
                 const list = document.createElement('ul')
                 // message.quick_replies.map(qr)
-                // let elements = []
+                let elements = []
                 for (let r = 0; r < message.quick_replies.length; r++) {
                     (function (reply) {
                         const li = document.createElement('li')
