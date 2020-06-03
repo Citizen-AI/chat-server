@@ -13,6 +13,8 @@ bus = require '../../event_bus'
   has_cards_before_more,
   has_image_before_more
 } = require '../shared'
+{ get_topic_by_id } = require '../../squidex'
+
 
 # pure FB templates (knowing nothing about DF's or Rentbot's APIs)
 quick_replies_template = require '../templates/quick_replies'
@@ -248,6 +250,13 @@ squidex_format = (topic) ->
       messages[messages.length - 1] =
         text: messages[messages.length - 1]
         buttons: [source_button]
+  if topic.linked_topics?
+    messages.push quick_replies_template
+      title: 'Want something else?'
+      replies: topic.linked_topics.map (lt) ->
+        title: lt.button_label
+        payload: lt.intent_key
+  console.log messages
   messages
 
 

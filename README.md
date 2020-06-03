@@ -4,6 +4,8 @@
   * Make linked topics work
     * still work with QRs
     * test for button label
+    * what do about [more]?
+  * image tag for Messenger
   * handle server down
   * make it optional
   * copy 'Facebook Messenger' Dialogflow content for import
@@ -13,6 +15,7 @@
 * webchat: emoji
 * test sentry
 * Test case assessment
+* Incorporate case assessment webhook
 * decorate Lagbot version
 * Answers
   * schema-tise
@@ -35,7 +38,7 @@
   * incorporate messenger server docs
 * Get rid of remaining coffeescript
 * follow-up notifications?
-* … 
+* We could have abbreviations (https://bitsofco.de/making-abbr-work-for-touchscreen-keyboard-mouse/)
 
 
 ## Some(!) of the below is out of date

@@ -318,7 +318,7 @@ var Botkit = {
           that.next_line = document.createElement('div')
           that.message_list.appendChild(that.next_line)
       }
-      if (message.text) {
+      if (message.text && typeof message.text == 'string' ) {
           message.html = converter.makeHtml(message.text)
       }
       if (message.buttons) {
