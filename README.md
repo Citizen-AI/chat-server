@@ -5,6 +5,7 @@
     * still work with QRs
     * test for button label
     * what do about [more]?
+    * for FB Messenger
   * image tag for Messenger
   * handle server down
   * make it optional
@@ -27,6 +28,7 @@
   * make add to bottom work nicely when the page is only gradually filling up with short answers
 * web client
   * event on sidebar open
+  * disable send button, not text entry
 * try a bunch of fail states (each env var being a bit wrong)
 * cache
 * record interview against user

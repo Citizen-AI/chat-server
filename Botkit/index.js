@@ -14,6 +14,8 @@ const message_and_postback_handler = (bot, user_message) => {
     event = `${adapter_type} user starts`
   else if(user_message.text.match(regex.tell_me_more))
     event = `postback from ${adapter_type}: tell me more`
+  else if(user_message.text.match(regex.intent_key))
+    event = `linked topic request from ${adapter_type}`
   // FB only
   else if(user_message.quick_reply?.payload.match(regex.follow_up)) {
     event = `postback from ${adapter_type}: quick reply button`

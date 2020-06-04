@@ -48,15 +48,12 @@ const topics = got
   .then(response_processor)
 
 
-const get_topic = intent_key => topics
+const get_topic_by_intent_key = intent_key => topics
   .then(ts => ts.find(t => t.intent_key == intent_key))
   .catch(emit_error)
 
 
 const get_topic_by_link = link => topics.then(ts => ts.find(t => t.link == link))
-
-
-const get_topic_by_id = id => topics.then(ts => ts.find(t => t.id == id))
 
 
 const update_topic = async (intent_key, payload) => {
@@ -85,8 +82,7 @@ controller.ready(() => {
 
 
 module.exports = {
-  get_topic,
+  get_topic_by_intent_key,
   get_topic_by_link,
-  get_topic_by_id,
   update_topic
 }

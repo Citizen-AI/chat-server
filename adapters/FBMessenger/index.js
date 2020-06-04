@@ -9,7 +9,7 @@ const {
   find_in_object,
   replace_in_object
 } = require('../shared')
-const { get_topic } = require('../../squidex')
+const { get_topic_by_intent_key } = require('../../squidex')
 const { regex } = require('../../helpers')
 const { User, update_user } = require('../../logger/db')
 
@@ -38,7 +38,7 @@ const swap_in_user_name = (user_message, messages_to_send) => new Promise(async 
 
 
 const send_queue = async ({ df_result, user_message, bot }) => {
-  const topic = await get_topic(intent_key_from_df_result(df_result))
+  const topic = await get_topic_by_intent_key(intent_key_from_df_result(df_result))
 
   if(!topic?.answer)
     bus.emit('No matching squidex content found; falling back to Dialogflow')

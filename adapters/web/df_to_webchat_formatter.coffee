@@ -13,13 +13,11 @@ bus = require '../../event_bus'
   has_cards_before_more,
   has_image_before_more
 } = require '../shared'
-{ get_topic_by_id } = require '../../squidex'
+{ get_topic_by_intent_key } = require '../../squidex'
 
 
-# pure FB templates (knowing nothing about DF's or Rentbot's APIs)
 quick_replies_template = require '../templates/quick_replies'
 generic_template = require './templates/generic_template'
-button_template_attachment = require './templates/button_template_attachment'
 postback_button = require './templates/postback_button'
 
 # less pure templates
@@ -124,7 +122,7 @@ text_reply = (df_speech) ->
   if not button_tags \
     and not sources_tags \
     and not split_text.overflow
-    df_speech
+    text: df_speech
   else
     buttons = []
     if button_tags then buttons = buttons_prep button_tags
@@ -133,9 +131,8 @@ text_reply = (df_speech) ->
       buttons.push postback_button
         title: 'Tell me more…'
         payload: 'TELL_ME_MORE:' + split_text.overflow
-    button_template_attachment
-      title: split_text.reply_text.replace(regex.button_tag, '').replace(regex.sources_tag, '')
-      buttons: buttons
+    text: split_text.reply_text.replace(regex.button_tag, '').replace(regex.sources_tag, '')
+    buttons: buttons
 
 
 follow_up_reply = (text) ->
@@ -247,20 +244,22 @@ squidex_format = (topic) ->
     if messages[messages.length - 1].buttons?
       messages[messages.length - 1].buttons.push source_button
     else
-      messages[messages.length - 1] =
-        text: messages[messages.length - 1]
+      messages[messages.length - 1] = {
+        ...messages[messages.length - 1]
         buttons: [source_button]
+      }
   if topic.linked_topics?
-    messages.push quick_replies_template
-      title: 'Want something else?'
-      replies: topic.linked_topics.map (lt) ->
+    messages.push
+      text: 'Want something else?'
+      quick_replies: topic.linked_topics.map (lt) ->
         title: lt.button_label
-        payload: lt.intent_key
-  console.log messages
+        payload: 'INTENT_KEY: ' + lt.intent_key
+
   messages
 
 
 module.exports = {
   dialogflow_format
   squidex_format
+  text_processor
 }

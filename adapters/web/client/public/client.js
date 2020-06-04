@@ -17,18 +17,6 @@ const message_template = `
       <a href="{{{message.open_link}}}" target="_blank" class="button_message">{{#if message.link_title}}{{message.link_title}}{{else}}{{message.open_link}}{{/if}}</a>
     {{/if}}
 
-    {{#each message.buttons}}
-      {{#if postback}}
-        <a href="#" onclick="javascript:Botkit.quietSend({{payload}})" class="button_message">{{title}}</a>
-      {{else if map}}
-        <iframe src="https://www.google.com/maps/embed/v1/search?key=AIzaSyBYTcRWDssK7eRByLCdh0OJJBlF6qQsHZI&q={{payload}}" width="100%" height="400" frameborder="0" style="border:0" allowfullscreen></iframe>
-      {{else if source}}
-        <div class="source">{{{contents}}}</div>
-      {{else}}
-        <a href="{{url}}" target="_blank" class="button_message">{{#if title}}{{title}}{{else}}{{payload}}{{/if}}</a>
-      {{/if}}
-    {{/each}}
-
     {{#each message.attachment.payload.elements}}
     <card>
       {{#if buttons}}<a href="#" onclick="javascript:Botkit.quietSend('{{buttons.0.payload}}')">{{/if}}
@@ -47,6 +35,18 @@ const message_template = `
       {{/if}}
     </div>
     {{/message.files}}
+
+    {{#each message.buttons}}
+      {{#if postback}}
+        <a href="#" onclick="javascript:Botkit.quietSend({{payload}})" class="button_message">{{title}}</a>
+      {{else if map}}
+        <iframe src="https://www.google.com/maps/embed/v1/search?key=AIzaSyBYTcRWDssK7eRByLCdh0OJJBlF6qQsHZI&q={{payload}}" width="100%" height="400" frameborder="0" style="border:0" allowfullscreen></iframe>
+      {{else if source}}
+        <div class="source">{{{contents}}}</div>
+      {{else}}
+        <a href="{{url}}" target="_blank" class="button_message">{{#if title}}{{title}}{{else}}{{payload}}{{/if}}</a>
+      {{/if}}
+    {{/each}}
   </div>
 `
 
@@ -302,7 +302,7 @@ var Botkit = {
         });
     },
     clearReplies: function () {
-        this.replies.innerHTML = '';
+        this.replies.innerHTML = ''
     },
     quickReply: function (reply) {
         this.clearReplies()
@@ -468,38 +468,24 @@ var Botkit = {
             that.clearReplies()
             if (message.quick_replies) {
                 const list = document.createElement('ul')
-                // message.quick_replies.map(qr)
-                let elements = []
-                for (let r = 0; r < message.quick_replies.length; r++) {
-                    (function (reply) {
-                        const li = document.createElement('li')
-                        const el = document.createElement('a')
-                        el.innerHTML = reply.title
-                        el.href = '#'
-                        el.onclick = function () { that.quickReply(reply) }
-                        li.appendChild(el)
-                        list.appendChild(li)
-                        elements.push(li)
-                    })(message.quick_replies[r])
-                }
-
-                that.replies.appendChild(list);
-
-                // uncomment this code if you want your quick replies to scroll horizontally instead of stacking
-                // var width = 0;
-                // // resize this element so it will scroll horizontally
-                // for (var e = 0; e < elements.length; e++) {
-                //     width = width + elements[e].offsetWidth + 18;
-                // }
-                // list.style.width = width + 'px';
+                message.quick_replies.forEach(qr => {
+                  const li = document.createElement('li')
+                  const el = document.createElement('a')
+                  el.innerHTML = qr.title
+                  el.href = '#'
+                  el.onclick = () => that.quickReply(qr)
+                  li.appendChild(el)
+                  list.appendChild(li)
+                })
+                that.replies.appendChild(list)
 
                 if (message.disable_input) {
-                    that.input.disabled = true;
+                    that.input.disabled = true
                 } else {
-                    that.input.disabled = false;
+                    that.input.disabled = false
                 }
             } else {
-                that.input.disabled = false;
+                that.input.disabled = false
             }
         });
 
