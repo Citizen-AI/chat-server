@@ -37,15 +37,16 @@ const message_template = `
       {{#if buttons}}</a>{{/if}}
     </card>
     {{/each}}
+
     {{#message.files}}
     <div class="file_attachment">
-    {{#if image}}
+      {{#if image}}
       <a href="{{{url}}}" alt="Click for full size" target="workbot_big_image"><img src="{{{url}}}" alt="{{{url}}}" /></a>
-    {{else}}
+      {{else}}
       <a href="{{{url}}}" title="{{{url}}}">{{{url}}}</a>
-    {{/if}}
+      {{/if}}
     </div>
-  {{/message.files}}
+    {{/message.files}}
   </div>
 `
 
