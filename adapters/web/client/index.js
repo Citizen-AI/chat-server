@@ -7,8 +7,9 @@ const slashes = require('connect-slashes')
 
 const { controller, webserver } = require('../../../Botkit/botkit')
 const bus = require('../../../event_bus')
-const { topics, get_topic_by_link } = require('../../../squidex')
+const { topic_index, get_topic_by_link } = require('../../../squidex')
 const { squidex_format } = require('../../web/df_to_webchat_formatter')
+
 
 
 const { web_client_config } = process.env
@@ -36,7 +37,7 @@ controller.ready(() => {
     }))
     .get('/answers', async (req, res) => res.render('answers', {
       ...context,
-      topics: await topics, // should just send names & links
+      topics: await topic_index
     }))
     .get('/answers/:topic', async (req, res) => {
       const topic = await get_topic_by_link(req.params.topic)

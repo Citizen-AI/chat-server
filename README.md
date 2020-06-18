@@ -121,3 +121,4 @@ Run `npm install`, then `npm start`. The script will tell you what environment v
 * [Nick Volynkin](https://stackoverflow.com/a/30772025/1876628) for `git diff` between to local repositories
 * [Andrew Downes
 ](https://stackoverflow.com/questions/23047211/replace-all-instances-of-a-string-within-an-object-and-or-array-javascript) for find and replace across a whole object
+* [Mohammad Usman](https://stackoverflow.com/a/53718921/1876628) for a nice way of filtering out properties from an array of objects
