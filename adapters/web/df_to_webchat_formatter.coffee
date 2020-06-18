@@ -254,7 +254,6 @@ squidex_format = (topic) ->
       quick_replies: topic.linked_topics.map (lt) ->
         title: lt.button_label
         payload: 'INTENT_KEY: ' + lt.intent_key
-
   messages
 
 

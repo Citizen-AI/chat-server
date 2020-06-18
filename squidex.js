@@ -3,11 +3,23 @@
 const got = require('got')
 
 const bus = require('./event_bus')
-const { emit_error } = require('./helpers')
 const { controller, webserver } = require('./Botkit/botkit')
 
 
-const { squidex_endpoint, squidex_token } = process.env
+const { squidex_endpoint, squidex_client_id, squidex_client_secret } = process.env
+const squidex_identity_endpoint = 'https://cloud.squidex.io/identity-server/connect/token'
+
+
+const get_token = new Promise((resolve, reject) => {
+  got
+    .post(squidex_identity_endpoint, {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+     body: `grant_type=client_credentials&client_id=${squidex_client_id}&client_secret=${squidex_client_secret}&scope=squidex-api`
+   })
+   .then(response => resolve(JSON.parse(response.body).access_token))
+   .catch(reject)
+})
+
 
 
 const topic_map = item => {
@@ -40,17 +52,20 @@ const response_processor = response => {
 }
 
 
-const topics = got
-  .get(squidex_endpoint, {
-    headers: { Authorization: 'Bearer ' + squidex_token },
-    timeout: 4000
+const topics =
+  get_token.then(squidex_token => {
+    got.get(squidex_endpoint, {
+      headers: { Authorization: 'Bearer ' + squidex_token },
+      timeout: 4000
+    })
+    .then(response_processor)
+    .catch(console.error)
   })
-  .then(response_processor)
 
 
 const get_topic_by_intent_key = intent_key => topics
   .then(ts => ts.find(t => t.intent_key == intent_key))
-  .catch(emit_error)
+  .catch(console.error)
 
 
 const get_topic_by_link = link => topics.then(ts => ts.find(t => t.link == link))

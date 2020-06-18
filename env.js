@@ -9,5 +9,7 @@ envalid.cleanEnv(process.env, {
   fb_page_token: str({ desc: 'Facebook Page Access Token' }),
   fb_verify_token: str({ desc: 'Facebook Verify Token' }),
   fb_app_secret: str({ desc: 'Facebook App Secret' }),
-  squidex_token: str({ desc: 'Squidex auth token (get from your Squidex app > Settings > Clients > [Client] > Client Secret' }),
+  squidex_endpoint: str({ desc: 'Squidex API url endpoint for chatbot topics'}),
+  squidex_client_id: str({ desc: 'Squidex auth token (get from your Squidex app > Settings > Clients > [Client] > Client Id'}),
+  squidex_client_secret: str({ desc: 'Squidex auth token (get from your Squidex app > Settings > Clients > [Client] > Client Secret' })
 })
