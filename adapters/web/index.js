@@ -12,9 +12,9 @@ const send_queue = async payload => {
   bot.reply(user_message, { "type": "typing" })
   const messages_to_send_decorated = replace_in_object(messages_to_send, /#generic.fb_first_name/g, 'there')
 
-  let cumulative_wait = 0
+  let cumulative_wait = 10
   messages_to_send_decorated.forEach((m, i) => {
-    (function(m, cumulative_wait) {
+    (function(m) {
       var next_message_delay, typing_delay
       setTimeout(async () => {
         await bot.changeContext(user_message.reference)
@@ -30,7 +30,7 @@ const send_queue = async payload => {
         typing_delay = cumulative_wait + (next_message_delay * 0.75)
         setTimeout(() => { bot.reply(user_message, { "type": "typing" }) }, typing_delay)
       }
-    })(m, cumulative_wait)
+    })(m)
     cumulative_wait += ms_delay(m)
   })
 }

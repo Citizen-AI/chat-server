@@ -23,6 +23,8 @@ const ms_delay = message => {
   let delay
   if(typeof(message) == 'string')
     delay = message.length * ms
+  else if(message.text)
+    delay = message.text * ms
   else if(message.attachment?.payload?.text)
     delay = message.attachment.payload.text.length * ms
   else
