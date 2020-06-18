@@ -20,18 +20,8 @@ const split_on_newlines_before_more = text => {
 
 const ms_delay = message => {
   const ms = process.env.delay_ms || 25
-  let delay
-  if(typeof(message) == 'string')
-    delay = message.length * ms
-  else if(message.text)
-    delay = message.text * ms
-  else if(message.attachment?.payload?.text)
-    delay = message.attachment.payload.text.length * ms
-  else
-    3000
-
-  if(delay < 1000) delay = 1000
-  return delay
+  const delay = JSON.stringify(message).length * ms
+  return delay >= 1000 ? delay : 1000
 }
 
 
