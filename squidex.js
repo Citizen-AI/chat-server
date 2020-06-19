@@ -20,25 +20,25 @@ const get_token = new Promise((resolve, reject) => {
    .catch(reject)
 })
 
+const topic_map = ({ id, data }) => {
+  const { intentKey, name, exampleQuestions, answer, source, buttonLabel, linkedTopics } = data
+  const linkify = question => question?.replace(/ /g, '-').replace(/[?']/g, '').toLowerCase()
+
+  return {
+    id,
+    intent_key: intentKey?.iv,
+    name: name.iv,
+    question: exampleQuestions.iv[0]?.question,
+    link: linkify(exampleQuestions.iv[0]?.question),
+    answer: answer.iv,
+    source: source?.iv,
+    button_label: buttonLabel?.iv,
+    linked_topics: linkedTopics?.iv
+  }
+}
+
 
 const response_processor = response => {
-  const topic_map = ({ id, data }) => {
-    const { intentKey, name, exampleQuestions, answer, source, buttonLabel, linkedTopics } = data
-    const linkify = question => question?.replace(/ /g, '-').replace(/[?']/g, '').toLowerCase()
-
-    return {
-      id,
-      intent_key: intentKey?.iv,
-      name: name.iv,
-      question: exampleQuestions.iv[0]?.question,
-      link: linkify(exampleQuestions.iv[0]?.question),
-      answer: answer.iv,
-      source: source?.iv,
-      button_label: buttonLabel?.iv,
-      linked_topics: linkedTopics?.iv
-    }
-  }
-
   const with_intents = topic => topic.intent_key != ''
   const body = JSON.parse(response.body)
   const topics = body.items.map(topic_map)

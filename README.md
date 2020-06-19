@@ -6,6 +6,7 @@
     * test for button label
     * what do about [more]?
     * for FB Messenger
+    * when updating via webhook, redo links
   * space out replies
   * image tag for Messenger
   * handle server down

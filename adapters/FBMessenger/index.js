@@ -2,7 +2,7 @@
 
 const bus = require('../../event_bus')
 const { send_typing } = require('./facebook_api')
-const { dialogflow_format, squidex_format } = require('./df_to_messenger_formatter')
+const { dialogflow_format, squidex_format, text_processor } = require('./df_to_messenger_formatter')
 const {
   ms_delay,
   intent_key_from_df_result,
@@ -81,13 +81,24 @@ const send_queue = async ({ df_result, user_message, bot }) => {
 const tell_me_more = payload => {
   const { user_message } = payload
   const tell_me_more_content = user_message.text.match(regex.tell_me_more)?.[1]
-  const fake_df_result = {
-    fulfillmentMessages: [ { text: { text: [ tell_me_more_content ] } } ]
-  }
-  send_queue({ ...payload, df_result: fake_df_result })
+  const messages_to_send = text_processor(tell_me_more_content)
+  send_queue({
+    ...payload,
+    messages_to_send
+  })
 }
 
 
+const linked_topic = async payload => {
+  const { user_message } = payload
+  const intent_key = user_message.quick_reply?.payload.match(regex.intent_key)[1]
+  const topic = await get_topic_by_intent_key(intent_key)
+  const messages_to_send = squidex_format(topic)
+  send_queue({
+    ...payload,
+    messages_to_send
+  })
+}
 
 
 // check_user_type = ({ fb_message, bot }) ->
@@ -133,6 +144,7 @@ const tell_me_more = payload => {
 module.exports = {
   send_queue,
   tell_me_more,
+  linked_topic
 //   check_user_type,
 //   check_session,
 //   store_user_type
