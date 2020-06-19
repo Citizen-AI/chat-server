@@ -30,7 +30,7 @@ bus
   .on('linked topic request from Facebook Adapter', fb.linked_topic)
 
   .on('message from Dialogflow for Web Adapter', web.regular_message)
-  .on('message from Dialogflow for Facebook Adapter', fb.send_queue)
+  .on('message from Dialogflow for Facebook Adapter', fb.regular_message)
   .on('message from Dialogflow for Web Adapter', logger.from_df)
   .on('message from Dialogflow for Facebook Adapter', logger.from_df)
 

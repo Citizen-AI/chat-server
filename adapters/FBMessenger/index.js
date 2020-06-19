@@ -37,23 +37,15 @@ const swap_in_user_name = (user_message, messages_to_send) => new Promise(async 
 })
 
 
-const send_queue = async ({ df_result, user_message, bot }) => {
-  const topic = await get_topic_by_intent_key(intent_key_from_df_result(df_result))
-
-  if(!topic?.answer)
-    bus.emit('No matching squidex content found; falling back to Dialogflow')
-
-  let messages_to_send = topic?.answer ?
-    squidex_format(topic) :
-    dialogflow_format(df_result)
-
-  messages_to_send = await swap_in_user_name(user_message, messages_to_send)
+const send_queue = async payload => {
+  const { bot, messages_to_send, user_message } = payload
+  const messages_to_send_decorated = await swap_in_user_name(user_message, messages_to_send)
   await bot.changeContext(user_message.reference)
   send_typing(user_message)
 
-  let cumulative_wait = 500
-  messages_to_send.forEach((m, i) => {
-    (function(m, cumulative_wait) {
+  let cumulative_wait = 10
+  messages_to_send_decorated.forEach((m, i) => {
+    (function(m) {
       var next_message_delay, typing_delay
       setTimeout(async () => {
         await bot.changeContext(user_message.reference)
@@ -64,7 +56,7 @@ const send_queue = async ({ df_result, user_message, bot }) => {
           bot
         })
       }, cumulative_wait)
-      if(i < messages_to_send.length - 1) {
+      if(i < messages_to_send_decorated.length - 1) {
         next_message_delay = ms_delay(m)
         typing_delay = cumulative_wait + (next_message_delay * 0.75)
         setTimeout(async () => {
@@ -72,8 +64,20 @@ const send_queue = async ({ df_result, user_message, bot }) => {
           send_typing(user_message)
         }, typing_delay)
       }
-    })(m, cumulative_wait)
+    })(m)
     cumulative_wait += ms_delay(m)
+  })
+}
+
+
+const regular_message = async payload => {
+  const { df_result } = payload
+  const topic = await get_topic_by_intent_key(intent_key_from_df_result(df_result))
+  if(!topic?.answer) bus.emit('No matching squidex content found; falling back to Dialogflow')
+  const messages_to_send = topic?.answer ? squidex_format(topic) : dialogflow_format(df_result)
+  send_queue({
+    ...payload,
+    messages_to_send
   })
 }
 
@@ -142,7 +146,7 @@ const linked_topic = async payload => {
 
 
 module.exports = {
-  send_queue,
+  regular_message,
   tell_me_more,
   linked_topic
 //   check_user_type,
