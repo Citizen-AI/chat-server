@@ -250,7 +250,7 @@ squidex_format = (topic) ->
       }
   if topic.linked_topics?
     messages.push
-      text: 'Want something else?'
+      text: _.sample ['Want something else?', 'Learn more about …', 'Want to know more?']
       quick_replies: topic.linked_topics.map (lt) ->
         title: lt.button_label
         payload: 'INTENT_KEY: ' + lt.intent_key

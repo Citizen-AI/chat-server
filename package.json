@@ -29,8 +29,6 @@
     "google-libphonenumber": "^3.2.10",
     "got": "^11.3.0",
     "mongoose": "^5.9.19",
-    "ngrok": "^3.2.7",
-    "node-fetch": "^2.6.0",
-    "rxjs": "^6.5.5"
+    "ngrok": "^3.2.7"
   }
 }

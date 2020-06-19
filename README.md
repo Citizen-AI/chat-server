@@ -99,6 +99,10 @@ Run `npm install`, then `npm start`. The script will tell you what environment v
 * **NODE_ENV**: Set to 'development' to get more detailed logs
 
 
+## Errors
+
+* 'Experienced an error inside the turn handler Error: Invalid signature on incoming request' — indicates a wrong value for the fb_app_secret environment variable
+
 ## Hosting notes
 
 * Assuming Ubuntu / Digital Ocean

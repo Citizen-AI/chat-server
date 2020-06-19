@@ -12,7 +12,8 @@ bus = require '../../event_bus'
   remove_extra_whitespace,
   has_followup_before_more,
   has_qr_before_more,
-  has_cards_before_more
+  has_cards_before_more,
+  has_image_before_more
 } = require '../shared'
 
 
@@ -29,7 +30,7 @@ follow_up_button = require './templates/follow_up_button'
 
 # these functions translate between dialogflow-style message types, and the FB Messenger API
 
-image_reply = (df_message) ->
+image_reply_df_native = (df_message) ->
   image_reply_template df_message.image.imageUri
 
 
@@ -59,6 +60,17 @@ quick_replies_reply_handrolled = (qr_tag_contents) ->
       payload: if payload? then "FOLLOW_UP: #{payload}" else "FOLLOW_UP: #{title}"
 
 # --- #
+
+image_reply = (text) ->
+  [, url] = text.match regex.image_tag
+  rest_of_line = text.replace(regex.image_tag, '').trim()
+  if rest_of_line
+    [
+      text_reply rest_of_line
+      image_reply_template url
+    ]
+  else
+    image_reply_template url
 
 
 remove_sources_tags = (text) -> text.replace /(\[Sources?.+\])/ig, ''
@@ -191,6 +203,7 @@ text_processor = (text) ->
       when has_followup_before_more line  then follow_up_reply line
       when has_qr_before_more line        then quick_replies_reply line
       when has_cards_before_more line     then cards_reply line
+      when has_image_before_more line     then image_reply line
       else                                     text_reply line
 
 
@@ -213,13 +226,25 @@ dialogflow_format = (df_result) ->
       when df_message.text? then            text_processor df_message.text.text[0]
       when df_message.card? then            card_reply df_message
       when df_message.quickReplies? then    quick_replies_reply_df_native df_message
-      when df_message.image? then           image_reply df_message
+      when df_message.image? then           image_reply_df_native df_message
       else
         bus.emit 'error: message from dialogflow with unknown type', "Message: #{df_message}"
 
 
+# squidex_format = (topic) ->
+#   text_processor topic.answer
+
+
 squidex_format = (topic) ->
-  text_processor topic.answer
+  messages = text_processor topic.answer
+  if topic.linked_topics?
+    messages.push
+      text: _.sample ['Want something else?', 'Learn more about …', 'Want to know more?']
+      quick_replies: topic.linked_topics.map (lt) ->
+        title: lt.button_label
+        payload: 'INTENT_KEY: ' + lt.intent_key
+  messages
+
 
 
 module.exports = {
