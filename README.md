@@ -2,11 +2,12 @@
 
 * squidex
   * Make linked topics work
-    * still work with QRs
+    * still work with QRs (?)
     * test for button label
     * what do about [more]?
-    * for FB Messenger
-    * when updating via webhook, redo links
+    * when updating via webhook, redo links (breaks buttons at the moment)
+    * proper error on squidex not found
+    * Shouldn't die on one bad topic
   * space out replies
   * image tag for Messenger
   * handle server down
@@ -68,12 +69,15 @@ The server will be looking for a topic schema including:
 
 This server interprets messages with custom syntax. Like:
 
-* sources: `[Source: Employment Relations Act 2000, ss 69B, 69N, 69O]`
 * images: `[Image: https://i.imgur.com/lYm759q.jpg]`
-* cards: `[Cards: Card 1 title (Card 1 subtitle): Button label: Text to send to Dialogflow on click; Card 2 title...]`
 * buttons:
   * `[Emergency phone 111]`
   * `[Community Law https://communitylaw.org.nz]`
+* cards: `[Cards: Card 1 title (Card 1 subtitle): Button label: Text to send to Dialogflow on click; Card 2 title...]`
+
+These old-fashioned syntaxes are still supported, though using Squidex to create topic links & record sources is preferrred:
+
+* sources: `[Source: Employment Relations Act 2000, ss 69B, 69N, 69O]`
 * FU: `[FU: Words to show the user: Words to send to Dialogflow]`
 * QR: `[QR: Message text; Option 1 words to show user: Text to send to Dialogflow; Option 2 words to show user: Words to send to Dialogflow; etc]`
 
@@ -83,9 +87,10 @@ It also spaces out bot messages, so recipients have time to read them.
 
 You will need
 
-* a [Dialogflow](https://dialogflow.com) agent.
+* a [Dialogflow](https://dialogflow.com) agent, with a certain schema setup.
 * a [Squidex](https://squidex.io/) app.
 * Ngrok…
+* If you'd like the instance to update live from Squidex… rules… webhook
 
 Run `npm install`, then `npm start`. The script will tell you what environment variables are required. You can put them in a `.env` file.
 
