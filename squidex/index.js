@@ -1,5 +1,7 @@
 'use strict'
 
+const fs = require('fs')
+
 const bus = require('../event_bus')
 const { controller, webserver } = require('../Botkit/botkit')
 const { squidex_items } = require('./squidex_api')
@@ -46,11 +48,17 @@ const get_topic_by_intent_key = intent_key => topics
 const get_topic_by_link = link => topics.then(ts => ts.find(t => t.link == link))
 
 
-const update_topic = async (intent_key, payload) => {
+const update_topic = async payload => {
   console.log(payload)
+  const intent_key = payload.data.intentKey.iv
   const ts = await topics
-  console.log(ts.length)
-  Object.assign(ts.find(t => t.intent_key == intent_key), topic_map(payload))
+  const topic_to_update = ts.find(topic => topic.intent_key == intent_key)
+  console.log(intent_key)
+  console.log(topic_to_update)
+  const replacement_topic = topic_map(payload)
+  replacement_topic.linked_topics = replacement_topic.linked_topics?.map(id => ts.find(topic2 => topic2.id === id))
+  console.log(replacement_topic)
+  Object.assign(topic_to_update, replacement_topic)
   bus.emit(`Squidex: updated topic ${payload.data.name.iv}`)
 }
 
@@ -64,7 +72,8 @@ controller.ready(() => {
     const { type, payload } = body
     bus.emit(`Squidex: heard event ${type}`)
     if(type == 'TopicUpdated')
-      await update_topic(payload.data.intentKey.iv, payload)
+      await update_topic(payload)
+        .catch(err => console.error('trouble updating: ', err))
     res.sendStatus(200)
   }
 

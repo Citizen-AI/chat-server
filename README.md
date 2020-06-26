@@ -8,6 +8,7 @@
     * when updating via webhook, redo links (breaks buttons at the moment)
     * proper error on squidex not found
     * Shouldn't die on one bad topic
+    * work out how to open port for webhook incoming
   * space out replies
   * image tag for Messenger
   * handle server down
