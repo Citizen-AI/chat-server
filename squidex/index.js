@@ -49,15 +49,11 @@ const get_topic_by_link = link => topics.then(ts => ts.find(t => t.link == link)
 
 
 const update_topic = async payload => {
-  console.log(payload)
   const intent_key = payload.data.intentKey.iv
   const ts = await topics
   const topic_to_update = ts.find(topic => topic.intent_key == intent_key)
-  console.log(intent_key)
-  console.log(topic_to_update)
   const replacement_topic = topic_map(payload)
   replacement_topic.linked_topics = replacement_topic.linked_topics?.map(id => ts.find(topic2 => topic2.id === id))
-  console.log(replacement_topic)
   Object.assign(topic_to_update, replacement_topic)
   bus.emit(`Squidex: updated topic ${payload.data.name.iv}`)
 }
