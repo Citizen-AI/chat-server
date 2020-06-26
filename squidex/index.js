@@ -83,5 +83,5 @@ module.exports = {
   get_topic_by_intent_key,
   get_topic_by_link,
   update_topic,
-  topic_index
+  topic_index,
 }
