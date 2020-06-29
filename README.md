@@ -2,14 +2,10 @@
 
 * squidex
   * Make linked topics work
-    * still work with QRs (?)
     * test for button label
     * what do about [more]?
-    * when updating via webhook, redo links (breaks buttons at the moment)
     * proper error on squidex not found
     * Shouldn't die on one bad topic
-    * work out how to open port for webhook incoming
-  * space out replies
   * image tag for Messenger
   * handle server down
   * make it optional
@@ -113,9 +109,12 @@ Run `npm install`, then `npm start`. The script will tell you what environment v
 ## Hosting notes
 
 * Assuming Ubuntu / Digital Ocean
-* `nvm install 13.12.0`
 * [Create a safeuser and install pm2](https://www.digitalocean.com/community/tutorials/how-to-use-pm2-to-setup-a-node-js-production-environment-on-an-ubuntu-vps)
+* [Allow ssh with safeuser@](https://www.digitalocean.com/community/questions/error-permission-denied-publickey-when-i-try-to-ssh?answer=44730)
 * [Install nvm](https://github.com/nvm-sh/nvm#install--update-script)
+* `nvm install-latest-npm`
+* Install a nice recent version of Node like: `nvm install 13.12.0` (I use the new Coffeescripty
+  [optional chaining operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining))
 * `git clone https://github.com/Citizen-AI/chat-server`
 * Populate `.env` as per the above
 * `npm install`
