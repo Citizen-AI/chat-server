@@ -19,6 +19,7 @@
 * Incorporate case assessment webhook
 * decorate Lagbot version
 * Answers
+  * Hide empty titles
   * schema-tise
     * with alt questions
   * speed up answer showing
