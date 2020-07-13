@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sentry/node": "^5.18.0",
+    "@sentry/node": "^5.19.1",
     "botbuilder-adapter-facebook": "^1.0.10",
     "botbuilder-adapter-web": "^1.0.8",
     "botkit": "^4.9.0",
@@ -24,11 +24,11 @@
     "dotenv": "^8.2.0",
     "envalid": "^6.0.2",
     "eventemitter2": "^6.4.3",
-    "express-handlebars": "^4.0.4",
+    "express-handlebars": "^4.0.6",
     "fb": "^2.0.0",
     "google-libphonenumber": "^3.2.10",
-    "got": "^11.3.0",
-    "mongoose": "^5.9.20",
+    "got": "^11.5.0",
+    "mongoose": "^5.9.23",
     "ngrok": "^3.2.7"
   }
 }
