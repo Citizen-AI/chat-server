@@ -24,15 +24,16 @@ webserver.use(slashes(false))
 
 controller.ready(() => {
   const server = 'http://localhost:' + controller.http.address().port
-  bus.emit(`STARTUP: Web client online at ${server}`)
+  bus.emit(`STARTUP: Web client online at ${server}/chat`)
   bus.emit(`STARTUP: Answers online at ${server}/answers`)
   const context = {
     ...config,
     meta: () => config.theme_dir + '_meta',
     sidebar: () => config.theme_dir + '_sidebar'
   }
+
   webserver
-    .get('/', (req, res) => res.render('home', {
+    .get('/chat', (req, res) => res.render('home', {
       ...context
     }))
     .get('/answers', async (req, res) => res.render('answers', {
