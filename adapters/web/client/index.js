@@ -33,6 +33,7 @@ controller.ready(() => {
   }
 
   webserver
+    .get('/', (req, res) => res.redirect('/chat'))
     .get('/chat', (req, res) => res.render('home', {
       ...context
     }))
