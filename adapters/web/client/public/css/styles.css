@@ -385,6 +385,9 @@ card a {
   max-width: 40em;
   border-radius: 5px;
 }
+.answer_content h1 {
+  font-size: 0;
+}
 
 
 /*  */

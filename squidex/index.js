@@ -1,7 +1,5 @@
 'use strict'
 
-const fs = require('fs')
-
 const bus = require('../event_bus')
 const { controller, webserver } = require('../Botkit/botkit')
 const { squidex_items } = require('./squidex_api')
@@ -24,8 +22,8 @@ const topic_map = ({ id, data }) => {
   }
 }
 
-const link_up_topics = ts => ts.map(topic1 => {
-  topic1.linked_topics = topic1.linked_topics?.map(id => ts.find(topic2 => topic2.id === id))
+const link_up_topics = _topics => _topics.map(topic1 => {
+  topic1.linked_topics = topic1.linked_topics?.map(id => _topics.find(topic2 => topic2.id === id))
   return topic1
 })
 
@@ -41,25 +39,34 @@ const topics = squidex_items.then(items_to_topics)
 
 
 const get_topic_by_intent_key = intent_key => topics
-  .then(ts => ts.find(t => t.intent_key == intent_key))
+  .then(_topics => _topics.find(topic => topic.intent_key == intent_key))
   .catch(console.error)
 
 
-const get_topic_by_link = link => topics.then(ts => ts.find(t => t.link == link))
+const get_topic_by_link = link => topics
+  .then(_topics => _topics.find(topic => topic.link == link))
+  .catch(console.error)
 
 
 const update_topic = async payload => {
   const intent_key = payload.data.intentKey.iv
-  const ts = await topics
-  const topic_to_update = ts.find(topic => topic.intent_key == intent_key)
+  const _topics = await topics
+  const topic_to_update = _topics.find(topic => topic.intent_key == intent_key)
   const replacement_topic = topic_map(payload)
-  replacement_topic.linked_topics = replacement_topic.linked_topics?.map(id => ts.find(topic2 => topic2.id === id))
+  replacement_topic.linked_topics = replacement_topic.linked_topics?.map(id => _topics.find(topic2 => topic2.id === id))
   Object.assign(topic_to_update, replacement_topic)
   bus.emit(`Squidex: updated topic ${payload.data.name.iv}`)
 }
 
 
-const topic_index = topics.then(ts => ts.map(({ question, link }) => ({ question, link })))
+const topic_index = topics.then(_topics => {
+  const no_metas_or_small_talk = ({ name }) => !name.match(/\[(Meta|Small talk)\]/i)
+  const has_question = ({ question }) => question
+  return _topics
+    .filter(no_metas_or_small_talk)
+    .filter(has_question)
+    .map(({ question, link }) => ({ question, link }))
+})
 
 
 controller.ready(() => {

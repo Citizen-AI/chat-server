@@ -19,14 +19,13 @@
 * Incorporate case assessment webhook
 * decorate Lagbot version
 * Answers
-  * Hide empty titles
   * schema-tise
+    * by category
     * with alt questions
-  * speed up answer showing
-  * by category
   * nice quotes
   * should just send names & links
   * make add to bottom work nicely when the page is only gradually filling up with short answers
+  * error on no question found (so we can add them)
 * web client
   * event on sidebar open
   * disable send button, not text entry
