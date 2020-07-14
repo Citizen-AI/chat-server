@@ -1,8 +1,6 @@
 const got = require('got')
-const fs = require('fs')
 
 const bus = require('../event_bus')
-const { get } = require('mongoose')
 
 
 const { squidex_endpoint, squidex_client_id, squidex_client_secret } = process.env

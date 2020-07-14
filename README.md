@@ -85,10 +85,13 @@ It also spaces out bot messages, so recipients have time to read them.
 
 You will need
 
-* a [Dialogflow](https://dialogflow.com) agent, with a certain schema setup.
-* a [Squidex](https://squidex.io/) app.
+* a [Dialogflow](https://dialogflow.com) agent.
+* a [Squidex](https://squidex.io/) app, with a certain schema setup.
 * Ngrok…
-* If you'd like the instance to update live from Squidex… rules… webhook
+* If you'd like the instance to update live from Squidex:
+  * Go to `https://cloud.squidex.io/app/<your app>/rules`
+  * New > Content Changed > Add Schema (topic) > Next > Webhook
+  * In the Send webhook screen, Url field, use `<your server>/api/squidex`
 
 Run `npm install`, then `npm start`. The script will tell you what environment variables are required. You can put them in a `.env` file.
 
@@ -124,11 +127,14 @@ Run `npm install`, then `npm start`. The script will tell you what environment v
 * [Configure nginx to handle websockets](https://www.nginx.com/blog/websocket-nginx/)
 * Will need an nginx config file that proxies domain.com to 127.0.0.1:3000
 * [Set up https](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-18-04)
+* Set up Squidex rule (see above) to notify app of content changes
 
 
 
 ## Thanks to
 
+* [Eze Rodriguez
+](https://www.facebook.com/groups/NewZealandtechstartups/?post_id=2826203547491477&comment_id=2826237847488047) for the suggestion of using express routes rather than nginx aliases
 * [Nick Volynkin](https://stackoverflow.com/a/30772025/1876628) for `git diff` between to local repositories
 * [Andrew Downes
 ](https://stackoverflow.com/questions/23047211/replace-all-instances-of-a-string-within-an-object-and-or-array-javascript) for find and replace across a whole object

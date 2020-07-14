@@ -33,24 +33,3 @@ const message_and_postback_handler = (bot, user_message) => {
 
 botkit.on('message', message_and_postback_handler)
 botkit.on('facebook_postback', message_and_postback_handler)
-
-
-
-
-
-
-
-// botkit.on 'message', (bot, fb_message) ->
-//   event = switch
-//     when fb_message.quick_reply?.payload.match regex.follow_up then 'quick reply: follow up'
-//     else 'message from user'
-//   bus.emit event, { fb_message, bot }
-
-// botkit.on 'facebook_postback', (bot, fb_message) ->
-//   event = switch
-//     when fb_message.text?.match regex.follow_up then 'postback: follow up'
-//     when fb_message.text?.match regex.card_button then 'postback: card button'
-//   if event
-//     bus.emit event, { fb_message, bot }
-//   else
-//     bus.emit "error: unknown kinda postback: #{fb_message.text}"
