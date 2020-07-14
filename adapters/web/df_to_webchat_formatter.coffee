@@ -215,7 +215,7 @@ squidex_format = (topic) ->
         ...messages[messages.length - 1]
         buttons: [source_button]
       }
-  if topic.linked_topics?
+  if topic.linked_topics?.length
     messages.push
       text: _.sample ['Want something else?', 'Learn more about …', 'Want to know more?']
       quick_replies: topic.linked_topics.map (lt) ->

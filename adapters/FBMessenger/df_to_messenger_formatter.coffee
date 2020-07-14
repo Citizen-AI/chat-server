@@ -214,7 +214,7 @@ dialogflow_format = (df_result) ->
 
 squidex_format = (topic) ->
   messages = text_processor topic.answer
-  if topic.linked_topics?
+  if topic.linked_topics?.length
     messages.push
       text: _.sample ['Want something else?', 'Learn more about …', 'Want to know more?']
       quick_replies: topic.linked_topics.map (lt) ->
