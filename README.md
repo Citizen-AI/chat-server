@@ -22,6 +22,7 @@
   * schema-tise
     * by category
     * with alt questions
+  * make QRs work
   * nice quotes
   * should just send names & links
   * make add to bottom work nicely when the page is only gradually filling up with short answers
