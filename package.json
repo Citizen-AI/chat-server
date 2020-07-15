@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sentry/node": "^5.19.1",
+    "@sentry/node": "^5.19.2",
     "botbuilder-adapter-facebook": "^1.0.10",
     "botbuilder-adapter-web": "^1.0.8",
     "botkit": "^4.9.0",
@@ -28,7 +28,7 @@
     "fb": "^2.0.0",
     "google-libphonenumber": "^3.2.10",
     "got": "^11.5.0",
-    "mongoose": "^5.9.23",
+    "mongoose": "^5.9.24",
     "ngrok": "^3.2.7"
   }
 }

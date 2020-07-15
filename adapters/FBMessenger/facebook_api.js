@@ -1,4 +1,5 @@
 const { fb_page_token } = process.env
+if(!fb_page_token) return
 
 const FB = require('fb')
 

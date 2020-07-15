@@ -7,15 +7,15 @@ const { squidex_endpoint, squidex_client_id, squidex_client_secret } = process.e
 const squidex_identity_endpoint = 'https://cloud.squidex.io/identity-server/connect/token'
 
 
-const get_token = new Promise((resolve, reject) => {
+const get_token = new Promise(resolve =>
   got
     .post(squidex_identity_endpoint, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
      body: `grant_type=client_credentials&client_id=${squidex_client_id}&client_secret=${squidex_client_secret}&scope=squidex-api`
    })
    .then(response => resolve(JSON.parse(response.body).access_token))
-   .catch(reject)
-})
+   .catch(err => bus.emit('Error: Squidex identity: ', err))
+)
 
 
 const get_page_from_api = (skip=0) => new Promise(async (resolve, reject) => {
@@ -26,7 +26,7 @@ const get_page_from_api = (skip=0) => new Promise(async (resolve, reject) => {
       const { total, items } = JSON.parse(response.body)
       resolve({ total, items})
     })
-    .catch(reject)
+    .catch(err => bus.emit('Error: While fetching page from Squidex: ', err))
 })
 
 

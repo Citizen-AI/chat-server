@@ -4,7 +4,6 @@
   * Make linked topics work
     * test for button label
     * what do about [more]?
-    * proper error on squidex not found
     * Shouldn't die on one bad topic
   * image tag for Messenger
   * handle server down
@@ -34,7 +33,6 @@
 * cache
 * record interview against user
 * check loading experience (clearing/disabled input box?)
-* allow optional adapters
 * Log too-long intents
 * timestamp to log
 * Update readme
@@ -95,7 +93,13 @@ You will need
 
 Run `npm install`, then `npm start`. The script will tell you what environment variables are required. You can put them in a `.env` file.
 
+
 ### Optional environment variables
+
+* **Messenger adapter**: to connect your bot to Facebook Messenger, you'll need to add these environment variables:
+  * **fb_page_token**: Facebook Page Access Token (get from https://developers.facebook.com/ > your app > Messenger > Settings > Access Tokens > Generate Token
+  * **fb_verify_token**: Facebook Verify Token  (get from https://developers.facebook.com/ > your app > Messenger > Settings > Webhooks > Edit Callback URL)
+  * **fb_app_secret**: Facebook App Secret (get from https://developers.facebook.com/ > your app > Settings > Basic > App Secret
 
 * **dialogflow_environment**: If your agent has multiple environments (e.g. live and staging), set the environment name here
 

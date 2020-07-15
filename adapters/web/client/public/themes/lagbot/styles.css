@@ -5,7 +5,8 @@ button {
 }
 
 body {
-  background: url('images/pattern.png');
+  /* background: url('images/pattern.png'); */
+  background-color: #ffded4;
   background-size: 200px;
   padding: 20px 25px 0;
   color: #444;
@@ -16,8 +17,8 @@ body {
 }
 
 h1 {
-  background: #00a4b4 url(images/workbot-header.png) no-repeat;
-  background-size: 240px;
+  background: #f15a2b url(images/lagbot-header.png) no-repeat;
+  background-size: 220px;
   margin: 0 0 0.5rem 0;
   padding: 0;
   height: 120px;
@@ -31,7 +32,7 @@ h1 span.strapline {
   color: #262261;
   position: absolute;
   bottom: 10px;
-  right: 10px; 
+  right: 10px;
   font-weight: 600;
 }
 
@@ -45,7 +46,7 @@ a.button {
 }
 
 #message_window .message {
-  background-color: #00a4b438;
+  background-color: #ffded4;
 }
 
 #message_window #message_replies a {
@@ -76,14 +77,14 @@ a.button {
     padding: 0;
   }
 
-  .wrapper { 
+  .wrapper {
     height: 100%;
   }
 
   h1 {
     background-size: 167px;
     height: 118px;
-    z-index: 10; 
+    z-index: 10;
     border-top-right-radius: 0;
   }
   h1 span.strapline {
