@@ -33,10 +33,8 @@ const send_to_df = async payload => {
   }
   else query = user_message.text
 
-  try {
-    df_result = await df_query({ query, session_id: user_message.user })
-  }
-  catch(err) { console.error(err) }
+  df_result = await df_query({ query, session_id: user_message.user })
+    .catch(err => { console.error('Dialogflow error: ', err) })
 
   await bot.changeContext(user_message.reference)
   bus.emit(`message from Dialogflow for ${adapter_type}`, { ...payload, df_result })

@@ -20,7 +20,10 @@ bus.onAny((event, payload) => {
     Sentry.captureException(new Error(error_message))
   }
   else {
-    console.log(chalk.green(`Bus: ${event}`))
+    let log_message = chalk.green(`Bus: ${event}`)
+    const intent_name = payload?.df_result?.intent?.displayName
+    if(intent_name) log_message += ': ' + chalk.yellow(intent_name)
+    console.log(log_message)
     if(payload && (NODE_ENV === 'development')) {
       console.log('Payload:', Object.keys(payload))
     }
