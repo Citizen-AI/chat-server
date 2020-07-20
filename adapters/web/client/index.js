@@ -24,13 +24,13 @@ webserver.use(slashes(false))
 
 controller.ready(() => {
   const server = 'http://localhost:' + controller.http.address().port
-  bus.emit(`STARTUP: Web client online at ${server}/chat`)
-  topic_index.then(() => bus.emit(`STARTUP: Answers online at ${server}/answers`))
   const context = {
     ...config,
     meta: () => config.theme_dir + '_meta',
     sidebar: () => config.theme_dir + '_sidebar'
   }
+  bus.emit(`STARTUP: Web client online at ${server}/chat`)
+  topic_index.then(() => bus.emit(`STARTUP: Answers online at ${server}/answers`))
 
   webserver
     .get('/', (req, res) => res.redirect('/chat'))

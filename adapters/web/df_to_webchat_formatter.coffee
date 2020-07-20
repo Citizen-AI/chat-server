@@ -59,7 +59,7 @@ text_reply = (df_speech) ->
           international_number = phoneUtil.format parsed_number, PNF.INTERNATIONAL
           type: 'phone_number'
           title: "📞 #{phone_number[1]}"
-          payload: international_number
+          url: "tel:#{international_number}"
         else
           bus.emit "Error: Badly formatted button instruction in Dialogflow: #{button_text}"
 
