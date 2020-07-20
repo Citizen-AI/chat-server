@@ -384,9 +384,14 @@ card a {
   padding: 20px;
   max-width: 40em;
   border-radius: 5px;
+  margin-bottom: 20px;
 }
 .answer_content h1 {
   font-size: 0;
+}
+
+.answer {
+  white-space: pre-line;
 }
 
 

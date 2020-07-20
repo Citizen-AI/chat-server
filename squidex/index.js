@@ -58,33 +58,39 @@ const get_topic_by_link = link => topics
   .catch(console.error)
 
 
-const update_topic = async payload => {
-  const intent_key = payload.data.intentKey.iv
-  const _topics = await topics
-  const topic_to_update = _topics.find(topic => topic.intent_key == intent_key)
-  const replacement_topic = topic_map(payload)
-  replacement_topic.linked_topics = replacement_topic.linked_topics?.map(id => _topics.find(topic2 => topic2.id === id))
-  Object.assign(topic_to_update, replacement_topic)
-  bus.emit(`Squidex: updated topic ${payload.data.name.iv}`)
-}
+const no_metas_or_small_talk = ({ name }) => !name.match(/\[(Meta|Small talk)\]/i)
+const has_question = ({ question }) => question
 
 
-const topic_index = topics.then(_topics => {
-  const no_metas_or_small_talk = ({ name }) => !name.match(/\[(Meta|Small talk)\]/i)
-  const has_question = ({ question }) => question
-  return _topics
+const topic_index = topics
+  .then(_topics => _topics
     .filter(no_metas_or_small_talk)
     .filter(has_question)
     .map(({ question, link }) => ({ question, link }))
-})
+  )
 
-const topics_in_category = categories.then(_categories => {
-  console.log(categories)
-})
+
+const topics_in_category = category_id => topics
+  .then(_topics => _topics
+    .filter(no_metas_or_small_talk)
+    .filter(has_question)
+    .filter(({ categories }) => categories.includes(category_id)))
 
 
 controller.ready(() => {
-  const handler = async (req, res) => {
+  const update_topic = async payload => {
+    const intent_key = payload.data.intentKey.iv
+    const _topics = await topics
+    const topic_to_update = _topics.find(topic => topic.intent_key == intent_key)
+    const replacement_topic = topic_map(payload)
+    replacement_topic.linked_topics = replacement_topic.linked_topics?.map(id => _topics.find(topic2 => topic2.id === id))
+    Object.assign(topic_to_update, replacement_topic)
+    bus.emit(`Squidex: updated topic ${payload.data.name.iv}`)
+  }
+
+  const server = 'http://localhost:' + controller.http.address().port
+  bus.emit(`STARTUP: Listening for Squidex changes at ${server}/api/squidex`)
+  webserver.post('/api/squidex', async (req, res) => {
     const { body } = req
     const { type, payload } = body
     bus.emit(`Squidex: heard event ${type}`)
@@ -92,18 +98,13 @@ controller.ready(() => {
       await update_topic(payload)
         .catch(err => console.error('trouble updating: ', err))
     res.sendStatus(200)
-  }
-
-  const server = 'http://localhost:' + controller.http.address().port
-  bus.emit(`STARTUP: Listening for Squidex changes at ${server}/api/squidex`)
-  webserver.post('/api/squidex', handler)
+  })
 })
 
 
 module.exports = {
   get_topic_by_intent_key,
   get_topic_by_link,
-  update_topic,
   topic_index,
   topics_in_category
 }

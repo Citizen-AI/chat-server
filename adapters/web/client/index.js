@@ -8,7 +8,8 @@ const slashes = require('connect-slashes')
 const { controller, webserver } = require('../../../Botkit/botkit')
 const bus = require('../../../event_bus')
 const { topic_index, category } = require('../../../squidex')
-const topic_page = require('./controllers/topic_page')
+const topic_page = require('./controllers/topic')
+const category_page = require('./controllers/category')
 
 
 const { web_client_config } = process.env
@@ -38,9 +39,7 @@ controller.ready(() => {
       ...context,
       topics: await topic_index
     }))
-    .get('/answers/category/:category', async (req, res) => res.render('catgory', {
-      ...context,
-      topics: await category(req.params.category)
-    }))
     .get('/answers/:topic', topic_page(context))
+    .get('/answers/category/:category', category_page(context))
+    .use((req, res) => res.status(404).send("Sorry can't find that!"))
 })

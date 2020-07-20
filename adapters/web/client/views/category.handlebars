@@ -1,10 +1,12 @@
 <div class="answer_content">
-  <h1>{{bot_name}} answers</h1>
+  <a href="/"><h1>{{bot_name}} answers</h1></a>
 
-  <h2>Every topic {{bot_name}} knows about</h2>
-  <ul class="answers">
-    {{#each topics}}
-    <li><a href="answers/{{link}}">{{question}}</a></li>
-    {{/each}}
-  </ul>
+  <h2>Everything {{bot_name}} knows about this category</h2>
+
+  {{#each topics}}
+  <h3>{{question}}</h3>
+  <div class="answer">{{answer}}</div>
+  <p class="source">{{source}}</p>
+  {{/each}}
+
 </div>

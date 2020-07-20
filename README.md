@@ -16,7 +16,7 @@
 * test sentry
 * Test case assessment
 * Incorporate case assessment webhook
-* decorate Lagbot version
+* decorate 404
 * Answers
   * schema-tise
     * by category
