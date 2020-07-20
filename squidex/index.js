@@ -6,36 +6,46 @@ const { squidex_items } = require('./squidex_api')
 
 
 const topic_map = ({ id, data }) => {
-  const { intentKey, name, exampleQuestions, answer, source, buttonLabel, linkedTopics } = data
+  const { intentKey, name, exampleQuestions, answer, source, buttonLabel, linkedTopics, category } = data
   const linkify = question => question?.replace(/ /g, '-').replace(/[?']/g, '').toLowerCase()
-
+  const first_example_question = exampleQuestions.iv[0]?.question
   return {
     id,
     intent_key: intentKey?.iv,
     name: name.iv,
-    question: exampleQuestions.iv[0]?.question,
-    link: linkify(exampleQuestions.iv[0]?.question),
+    question: first_example_question,
+    link: linkify(first_example_question),
     answer: answer?.iv,
     source: source?.iv,
     button_label: buttonLabel?.iv,
-    linked_topics: linkedTopics?.iv
+    linked_topics: linkedTopics?.iv,
+    categories: category?.iv
   }
 }
 
-const link_up_topics = _topics => _topics.map(topic1 => {
-  topic1.linked_topics = topic1.linked_topics?.map(id => _topics.find(topic2 => topic2.id === id))
-  return topic1
-})
-
 
 const items_to_topics = items => {
+  const link_up_topics = _topics => _topics.map(topic1 => {
+    topic1.linked_topics = topic1.linked_topics?.map(id => _topics.find(topic2 => topic2.id === id))
+    return topic1
+  })
+
   const with_intents = topic => topic.intent_key != ''
   const linked_up = link_up_topics(items.map(topic_map))
   return linked_up.filter(with_intents)
 }
 
 
-const topics = squidex_items.then(items_to_topics)
+const items_to_categories = items => items.map(({ id, data}) => ({
+  id,
+  name: data.name.iv
+}))
+
+
+const topics = squidex_items('topic').then(items_to_topics)
+
+
+const categories = squidex_items('category').then(items_to_categories)
 
 
 const get_topic_by_intent_key = intent_key => topics
@@ -68,6 +78,13 @@ const topic_index = topics.then(_topics => {
     .map(({ question, link }) => ({ question, link }))
 })
 
+const category = categories.then(_topics => {
+
+})
+
+
+// topics.then(_topics => console.log(_topics.map(({ categories }) => ({ categories }))))
+
 
 controller.ready(() => {
   const handler = async (req, res) => {
@@ -91,4 +108,5 @@ module.exports = {
   get_topic_by_link,
   update_topic,
   topic_index,
+  category
 }
