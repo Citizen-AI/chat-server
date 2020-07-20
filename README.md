@@ -128,7 +128,8 @@ Run `npm install`, then `npm start`. The script will tell you what environment v
 * `git clone https://github.com/Citizen-AI/chat-server`
 * Populate `.env` as per the above
 * `npm install`
-* `pm2 start npm -- start; pm2 start 0`
+* Create an `ecosystem.config.js` file
+* `pm2 start`
 * Install nginx
 * [Configure nginx to handle websockets](https://www.nginx.com/blog/websocket-nginx/)
 * Will need an nginx config file that proxies domain.com to 127.0.0.1:3000
