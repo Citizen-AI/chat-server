@@ -1,0 +1,10 @@
+<div class="answer_content">
+  <h1>{{bot_name}} answers</h1>
+
+  <h2>Every topic {{bot_name}} knows about</h2>
+  <ul class="answers">
+    {{#each topics}}
+    <li><a href="answers/{{link}}">{{question}}</a></li>
+    {{/each}}
+  </ul>
+</div>

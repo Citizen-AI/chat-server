@@ -37,7 +37,7 @@ const squidex_items = schema => new Promise(async (resolve, reject) => {
     const { items } = await get_page_from_api(all_items.length, schema).catch(reject)
     all_items = all_items.concat(items)
   }
-  bus.emit(`STARTUP: Collected ${all_items.length} topics from Squidex endpoint ${squidex_endpoint}`)
+  bus.emit(`STARTUP: Collected ${all_items.length} ${schema} items from Squidex endpoint ${squidex_endpoint}`)
   resolve(all_items)
 })
 

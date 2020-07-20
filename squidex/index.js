@@ -78,12 +78,9 @@ const topic_index = topics.then(_topics => {
     .map(({ question, link }) => ({ question, link }))
 })
 
-const category = categories.then(_topics => {
-
+const topics_in_category = categories.then(_categories => {
+  console.log(categories)
 })
-
-
-// topics.then(_topics => console.log(_topics.map(({ categories }) => ({ categories }))))
 
 
 controller.ready(() => {
@@ -108,5 +105,5 @@ module.exports = {
   get_topic_by_link,
   update_topic,
   topic_index,
-  category
+  topics_in_category
 }

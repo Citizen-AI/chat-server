@@ -21,6 +21,8 @@
   * schema-tise
     * by category
     * with alt questions
+  * log answer views
+  * fix scroll
   * make QRs work
   * nice quotes
   * should just send names & links
