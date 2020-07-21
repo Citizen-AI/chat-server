@@ -8,7 +8,6 @@
   * image tag for Messenger
   * handle server down
   * make it optional
-  * copy 'Facebook Messenger' Dialogflow content for import
 * Pre-populate hello guest
 * Airtable
 * fix floaty short messages
@@ -18,12 +17,8 @@
 * Incorporate case assessment webhook
 * decorate 404
 * Answers
-  * schema-tise
-    * by category
-    * with alt questions
-  * log answer views
-  * fix scroll
   * make QRs work
+  * log answer views
   * nice quotes
   * should just send names & links
   * make add to bottom work nicely when the page is only gradually filling up with short answers
