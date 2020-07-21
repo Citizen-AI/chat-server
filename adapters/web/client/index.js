@@ -7,9 +7,10 @@ const slashes = require('connect-slashes')
 
 const { controller, webserver } = require('../../../Botkit/botkit')
 const bus = require('../../../event_bus')
-const { topic_index, category } = require('../../../squidex')
+const { topic_index } = require('../../../squidex')
 const topic_page = require('./controllers/topic')
 const category_page = require('./controllers/category')
+const { sampleSize } = require('lodash')
 
 
 const { web_client_config } = process.env
@@ -22,12 +23,14 @@ webserver.set('views', __dirname + '/views')
 webserver.use(slashes(false))
 
 
-controller.ready(() => {
+controller.ready(async () => {
+  const _topic_index = await topic_index
   const server = 'http://localhost:' + controller.http.address().port
   const context = {
     ...config,
     meta: () => config.theme_dir + '_meta',
-    sidebar: () => config.theme_dir + '_sidebar'
+    sidebar: () => config.theme_dir + '_sidebar',
+    example_questions: () => sampleSize(_topic_index, 5)
   }
   bus.emit(`STARTUP: Web client online at ${server}/chat`)
   topic_index.then(() => bus.emit(`STARTUP: Answers online at ${server}/answers`))

@@ -514,7 +514,7 @@ window.onload = () => {
     close_menu()
     Botkit.send(event.target.innerText)
   }
-  for(let e of document.getElementsByClassName('example_queries')) {
+  for(let e of document.getElementsByClassName('clickable_queries')) {
     e.addEventListener('click', handler)
   }
   document.getElementsByTagName('h1')[0].addEventListener('click', toggle_menu)

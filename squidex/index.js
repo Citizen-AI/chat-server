@@ -1,5 +1,7 @@
 'use strict'
 
+const _ = require('lodash')
+
 const bus = require('../event_bus')
 const { controller, webserver } = require('../Botkit/botkit')
 const { squidex_items } = require('./squidex_api')
@@ -7,7 +9,7 @@ const { squidex_items } = require('./squidex_api')
 
 const topic_map = ({ id, data }) => {
   const { intentKey, name, exampleQuestions, answer, source, buttonLabel, linkedTopics, category } = data
-  const linkify = question => question?.replace(/ /g, '-').replace(/[?']/g, '').toLowerCase()
+  const linkify = question => question?.replace(/ /g, '-').replace(/[?'"]/g, '').toLowerCase()
   const first_example_question = exampleQuestions.iv[0]?.question
   return {
     id,
@@ -36,16 +38,18 @@ const items_to_topics = items => {
 }
 
 
-const items_to_categories = items => items.map(({ id, data}) => ({
-  id,
-  name: data.name.iv
-}))
-
-
 const topics = squidex_items('topic').then(items_to_topics)
 
 
-const categories = squidex_items('category').then(items_to_categories)
+const no_metas_or_small_talk = ({ name }) => !name.match(/\[(Meta|Small talk)\]/i)
+const has_question = ({ question }) => question
+
+
+const display_topics = topics
+  .then(_topics => _topics
+    .filter(no_metas_or_small_talk)
+    .filter(has_question)
+  )
 
 
 const get_topic_by_intent_key = intent_key => topics
@@ -58,22 +62,14 @@ const get_topic_by_link = link => topics
   .catch(console.error)
 
 
-const no_metas_or_small_talk = ({ name }) => !name.match(/\[(Meta|Small talk)\]/i)
-const has_question = ({ question }) => question
-
-
-const topic_index = topics
-  .then(_topics => _topics
-    .filter(no_metas_or_small_talk)
-    .filter(has_question)
+const topic_index = display_topics
+  .then(_display_topics => _display_topics
     .map(({ question, link }) => ({ question, link }))
   )
 
 
-const topics_in_category = category_id => topics
-  .then(_topics => _topics
-    .filter(no_metas_or_small_talk)
-    .filter(has_question)
+const topics_in_category = category_id => display_topics
+  .then(_display_topics => _display_topics
     .filter(({ categories }) => categories.includes(category_id)))
 
 
