@@ -4,25 +4,25 @@ const express = require('express')
 const exphbs = require('express-handlebars')
 const path = require('path')
 const slashes = require('connect-slashes')
-const minify = require('express-minify')
+const { sampleSize } = require('lodash')
 
 const { controller, webserver } = require('../../../Botkit/botkit')
 const bus = require('../../../event_bus')
 const { topic_index } = require('../../../squidex')
 const topic_page = require('./controllers/topic')
 const category_page = require('./controllers/category')
-const { sampleSize } = require('lodash')
+const sitemap = require('./sitemap')
 
 
 const { web_client_config } = process.env
 const config = JSON.parse(web_client_config)
 
-webserver.use(minify())
 webserver.use(express.static(path.join(__dirname, 'public')))
 webserver.engine('handlebars', exphbs({ layoutsDir: __dirname + '/views/layouts' }))
 webserver.set('view engine', 'handlebars')
 webserver.set('views', __dirname + '/views')
 webserver.use(slashes(false))
+webserver.use(sitemap)
 
 
 controller.ready(async () => {

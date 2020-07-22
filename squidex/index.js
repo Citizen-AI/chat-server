@@ -7,8 +7,9 @@ const { controller, webserver } = require('../Botkit/botkit')
 const { squidex_items } = require('./squidex_api')
 
 
-const topic_map = ({ id, data }) => {
-  const { intentKey, name, exampleQuestions, answer, source, buttonLabel, linkedTopics, category } = data
+const topic_map = ({ id, data, lastModified }) => {
+  const { intentKey, name, exampleQuestions, answer,
+          source, buttonLabel, linkedTopics, category } = data
   const linkify = question => question?.replace(/ /g, '-')
                                        .replace(/[?'"]/g, '')
                                        .replace(/--+/g, '-')
@@ -24,7 +25,8 @@ const topic_map = ({ id, data }) => {
     source: source?.iv,
     button_label: buttonLabel?.iv,
     linked_topics: linkedTopics?.iv,
-    categories: category?.iv
+    categories: category?.iv,
+    lastModified
   }
 }
 
@@ -105,5 +107,6 @@ module.exports = {
   get_topic_by_intent_key,
   get_topic_by_link,
   topic_index,
-  topics_in_category
+  topics_in_category,
+  display_topics
 }
