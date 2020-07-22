@@ -1,12 +1,9 @@
 <div>
   <h2>What people are asking…</h2>
   <ul class="example_queries">
-    <li><strong>Coronavirus questions</strong></li>
-    <li>what happens if i don't pay rent for a month?</li>
-    <li>Can the landlord increase our rent as soon as they insulate?</li>
-    <li>What counts as fair wear and tear?</li>
-    <li>What do I do if my landlady doesn’t lodge my bond</li>
-    <li>aggressive dogs next door</li>
+    {{#each example_questions}}
+    <li><a href="/answers/{{link}}">{{question}}</a></li>
+    {{/each}}
   </ul>
 </div>
 <div>

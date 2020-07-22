@@ -8,7 +8,8 @@
   * image tag for Messenger
   * handle server down
   * make it optional
-* Pre-populate hello guest
+* https://schema.org/FAQPage – use more properties in answers
+* Pre-populate hello guest for faster loading
 * Airtable
 * fix floaty short messages
 * webchat: emoji
@@ -20,8 +21,6 @@
   * make QRs work
   * log answer views
   * nice quotes
-  * should just send names & links
-  * make add to bottom work nicely when the page is only gradually filling up with short answers
   * error on no question found (so we can add them)
 * What people are asking based on recent popular topics
 * web client
