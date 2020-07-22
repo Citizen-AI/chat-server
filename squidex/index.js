@@ -11,7 +11,7 @@ const topic_map = ({ id, data, lastModified }) => {
   const { intentKey, name, exampleQuestions, answer,
           source, buttonLabel, linkedTopics, category } = data
   const linkify = question => question?.replace(/ /g, '-')
-                                       .replace(/[?'"]/g, '')
+                                       .replace(/[?'"%]/g, '')
                                        .replace(/--+/g, '-')
                                        .toLowerCase()
   const first_example_question = exampleQuestions.iv[0]?.question
