@@ -4,6 +4,7 @@ const express = require('express')
 const exphbs = require('express-handlebars')
 const path = require('path')
 const slashes = require('connect-slashes')
+const minify = require('express-minify')
 
 const { controller, webserver } = require('../../../Botkit/botkit')
 const bus = require('../../../event_bus')
@@ -16,6 +17,7 @@ const { sampleSize } = require('lodash')
 const { web_client_config } = process.env
 const config = JSON.parse(web_client_config)
 
+webserver.use(minify())
 webserver.use(express.static(path.join(__dirname, 'public')))
 webserver.engine('handlebars', exphbs({ layoutsDir: __dirname + '/views/layouts' }))
 webserver.set('view engine', 'handlebars')
