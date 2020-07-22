@@ -23,6 +23,7 @@
   * should just send names & links
   * make add to bottom work nicely when the page is only gradually filling up with short answers
   * error on no question found (so we can add them)
+* What people are asking based on recent popular topics
 * web client
   * event on sidebar open
   * disable send button, not text entry
