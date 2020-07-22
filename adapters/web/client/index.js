@@ -32,7 +32,6 @@ controller.ready(async () => {
     ...config,
     meta: () => config.theme_dir + '_meta',
     sidebar: () => config.theme_dir + '_sidebar',
-    theme_styles: () => config.theme_dir + '_styles.css',
     example_questions: () => sampleSize(_topic_index, 5)
   }
   bus.emit(`STARTUP: Web client online at ${server}/chat`)
