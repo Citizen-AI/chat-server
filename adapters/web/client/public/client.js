@@ -414,6 +414,21 @@ var Botkit = {
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
             s4() + '-' + s4() + s4() + s4();
     },
+
+    make_quick_replies: (quick_replies, that) => {
+      const list = document.createElement('ul')
+      quick_replies.map(qr => {
+        const li = document.createElement('li')
+        const el = document.createElement('a')
+        el.innerHTML = qr.title
+        el.href = '#'
+        el.onclick = () => that.quickReply(qr)
+        li.appendChild(el)
+        list.appendChild(li)
+      })
+      that.replies.appendChild(list)
+    },
+
     boot: function (user) {
         var that = this
         that.message_window = document.getElementById("message_window")
@@ -467,17 +482,7 @@ var Botkit = {
         that.on('message', function (message) {
             that.clearReplies()
             if (message.quick_replies) {
-                const list = document.createElement('ul')
-                message.quick_replies.forEach(qr => {
-                  const li = document.createElement('li')
-                  const el = document.createElement('a')
-                  el.innerHTML = qr.title
-                  el.href = '#'
-                  el.onclick = () => that.quickReply(qr)
-                  li.appendChild(el)
-                  list.appendChild(li)
-                })
-                that.replies.appendChild(list)
+                that.make_quick_replies(quick_replies, that)
 
                 if (message.disable_input) {
                     that.input.disabled = true
@@ -527,7 +532,10 @@ window.onload = () => {
   if(typeof server_data != 'undefined') {  // pre-populated answer
     const { question, answer_messages } = server_data
     Botkit.renderMessage({ text: question, type: 'outgoing' })
-    answer_messages.forEach(message => Botkit.renderMessage(message))
+    answer_messages.map(message => {
+      Botkit.renderMessage(message)
+      if(message.quick_replies) Botkit.make_quick_replies(message.quick_replies, Botkit)
+    })
     const section = document.getElementsByTagName('section')[0]
     section.addEventListener('scroll', () => {
       if (section.scrollHeight - section.scrollTop === section.clientHeight)
