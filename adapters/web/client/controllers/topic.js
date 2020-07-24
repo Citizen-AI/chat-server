@@ -25,7 +25,7 @@ module.exports = context => async (req, res) => {
     })
     res.render('home', {
       ...context,
-      bot_page_title: `${context.bot_name}: ${question}`,
+      bot_page_title: `${question} – ${context.bot_name}`,
       scroll_q: 'noscroll',
       data,
       json_ld
