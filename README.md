@@ -135,6 +135,7 @@ Run `npm install`, then `npm start`. The script will tell you what environment v
 
 ## Thanks to
 
+* [Ben Alman](http://benalman.com/code/test/js-linkify/) for js-linkify
 * [Eze Rodriguez
 ](https://www.facebook.com/groups/NewZealandtechstartups/?post_id=2826203547491477&comment_id=2826237847488047) for the suggestion of using express routes rather than nginx aliases
 * [Nick Volynkin](https://stackoverflow.com/a/30772025/1876628) for `git diff` between to local repositories

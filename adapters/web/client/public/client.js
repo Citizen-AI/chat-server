@@ -1,10 +1,12 @@
 const { host, pathname } = window.location
 const page_url = new URL(window.location.href)
 const query = page_url.searchParams.get('query')
-const converter = new showdown.Converter({ simplifiedAutoLink: true })
-converter.setOption('openLinksInNewWindow', true)
 
 let user_has_sent_something = false   // used to later decide whether to send GTM event
+
+const linkify_new = text => linkify(text, {
+  callback: (text, href) => href ? `<a href="${href}" target="_blank">${href}</a>`: text
+})
 
 const message_template = `
   <div class="message {{message.type}}">
@@ -320,11 +322,11 @@ var Botkit = {
           that.message_list.appendChild(that.next_line)
       }
       if (message.text && typeof message.text == 'string' ) {
-          message.html = converter.makeHtml(message.text)
+          message.html = linkify_new(message.text)
       }
       if (message.buttons) {
         message.buttons.forEach(button => {
-          if(button.source && button.contents) button.contents = converter.makeHtml(button.contents)
+          if(button.source && button.contents) button.contents = linkify_new(button.contents)
           if(button.payload) button.payload = JSON.stringify(button.payload) // for multi-line tell-me-more payloads
         })
       }
@@ -344,41 +346,6 @@ var Botkit = {
         });
     },
     typing: function () { this.renderMessage({ isTyping: true }) },
-    // identifyUser: function (user) {
-    //     user.timezone_offset = new Date().getTimezoneOffset();
-
-    //     this.guid = user.id;
-    //     Botkit.setCookie('botkit_guid', user.id, 1);
-
-    //     this.current_user = user;
-
-    //     this.deliverMessage({
-    //         type: 'identify',
-    //         user: this.guid,
-    //         channel: 'socket',
-    //         user_profile: user,
-    //     });
-    // },
-    // receiveCommand: function (event) {
-    //     switch (event.data.name) {
-    //         case 'trigger':
-    //             // tell Botkit to trigger a specific script/thread
-    //             console.log('TRIGGER', event.data.script, event.data.thread);
-    //             Botkit.triggerScript(event.data.script, event.data.thread);
-    //             break;
-    //         case 'identify':
-    //             // link this account info to this user
-    //             console.log('IDENTIFY', event.data.user);
-    //             Botkit.identifyUser(event.data.user);
-    //             break;
-    //         case 'connect':
-    //             // link this account info to this user
-    //             Botkit.connect(event.data.user);
-    //             break;
-    //         default:
-    //             console.log('UNKNOWN COMMAND', event.data);
-    //     }
-    // },
     sendEvent: function (event) {
         if (this.parent_window) {
             this.parent_window.postMessage(event, '*');
@@ -482,7 +449,7 @@ var Botkit = {
         that.on('message', function (message) {
             that.clearReplies()
             if (message.quick_replies) {
-                that.make_quick_replies(quick_replies, that)
+                that.make_quick_replies(message.quick_replies, that)
 
                 if (message.disable_input) {
                     that.input.disabled = true
@@ -556,6 +523,4 @@ window.onload = () => {
       }
     })
   }
-
-
 }
