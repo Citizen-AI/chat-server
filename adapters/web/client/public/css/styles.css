@@ -339,7 +339,7 @@ a.button:hover {
 }
 
 #message_window div.source {
-  margin: 0;
+  margin-top: 5px;
 }
 .source {
   font-size: 11px;
