@@ -45,6 +45,5 @@ controller.ready(async () => {
       topics: await topic_index
     }))
     .get('/answers/:topic', topic_page(context))
-    .get('/answers/category/:category', category_page(context))
     .use((req, res) => res.status(404).send("Sorry can't find that!"))
 })
