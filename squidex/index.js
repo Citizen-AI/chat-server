@@ -33,7 +33,10 @@ const topic_map = ({ id, data, lastModified }) => {
 
 const items_to_topics = items => {
   const link_up_topics = _topics => _topics.map(topic1 => {
-    topic1.linked_topics = topic1.linked_topics?.map(id => _topics.find(topic2 => topic2.id === id))
+    topic1.linked_topics = topic1.linked_topics?.map(id => _topics
+        .find(topic2 => topic2.id === id)
+      )
+      .filter(({ button_label }) => button_label)
     return topic1
   })
 

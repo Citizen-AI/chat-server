@@ -28,6 +28,7 @@ webserver.use(sitemap)
 controller.ready(async () => {
   const _topic_index = await topic_index
   const server = 'http://localhost:' + controller.http.address().port
+  bus.emit(`STARTUP: Answers online at ${server}/answers`)
   const context = {
     ...config,
     meta: () => config.theme_dir + '_meta',
@@ -35,14 +36,13 @@ controller.ready(async () => {
     example_questions: () => sampleSize(_topic_index, 5)
   }
   bus.emit(`STARTUP: Web client online at ${server}/chat`)
-  topic_index.then(() => bus.emit(`STARTUP: Answers online at ${server}/answers`))
 
   webserver
     .get('/', (req, res) => res.redirect('/chat'))
     .get('/chat', (req, res) => res.render('home', { ...context }))
     .get('/answers', async (req, res) => res.render('answers', {
       ...context,
-      topics: await topic_index
+      topics: _topic_index
     }))
     .get('/answers/:topic', topic_page(context))
     .use((req, res) => res.status(404).send("Sorry can't find that!"))

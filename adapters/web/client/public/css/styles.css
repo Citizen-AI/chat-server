@@ -184,10 +184,13 @@ a.button:hover {
   display: block;
 }
 #message_window .button_message:hover {
-  background-color: #f8f8f8; 
+  background-color: #f8f8f8;
 }
 #message_window .button_message:active {
-  background-color: white; 
+  background-color: white;
+}
+#message_window .button_message:first-child {
+  margin-top: 10px;
 }
 #message_window .button_message:last-child {
   margin-bottom: 0;

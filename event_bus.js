@@ -14,13 +14,13 @@ const bus = new EventEmitter({ wildcard: true })
 bus.onAny((event, payload) => {
   let error_message = ''
   if(event.match(/^error/i)) {
-    error_message = `Bus: ${event}`
+    error_message = `${event}`
     if(payload) error_message += `| ${payload}`
     console.log(chalk.red(error_message))
     Sentry.captureException(new Error(error_message))
   }
   else {
-    let log_message = chalk.green(`Bus: ${event}`)
+    let log_message = chalk.green(`${event}`)
     const intent_name = payload?.df_result?.intent?.displayName
     if(intent_name) log_message += ': ' + chalk.yellow(intent_name)
     console.log(log_message)
