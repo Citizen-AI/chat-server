@@ -157,7 +157,8 @@ a.button:hover {
   padding: 0.25rem;
 }
 #message_window .message {
-  font-size: 15px;
+  font-size: 14px;
+  line-height: 140%;
   padding: 0.5rem;
   background: #F0F0F0;
   border-radius: 5px;
