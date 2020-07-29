@@ -40,7 +40,7 @@ controller.ready(async () => {
   webserver
     .get('/', (req, res) => res.redirect('/chat'))
     .get('/chat', (req, res) => res.render('home', { ...context }))
-    .get('/answers', async (req, res) => res.render('answers', {
+    .get('/answers', (req, res) => res.render('answers', {
       ...context,
       topics: _topic_index
     }))

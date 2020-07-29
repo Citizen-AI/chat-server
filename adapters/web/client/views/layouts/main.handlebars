@@ -10,8 +10,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 {{/if}}
     <meta charset="UTF-8">
-    <link rel="preload" href="/css/styles.css?n=23" as="style" />
-    <link rel="stylesheet" href="/css/styles.css?n=23" />
+    <link rel="preload" href="/css/styles.css" as="style" />
+    <link rel="preload" href="https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap" rel="stylesheet">
     <script src="/js/ba-linkify.min.js"></script>
     {{#if data}}
     <script>const server_data = {{{data}}}</script>
@@ -27,7 +29,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <link rel="stylesheet" href="/themes/{{theme_dir}}/styles.css" type="text/css" />
     {{#if theme_colour}}<meta name="theme-color" content="{{theme_colour}}" />{{/if}}
     <title>{{bot_page_title}}</title>
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap" rel="stylesheet">
     {{> (meta) }}
   </head>
   <body>
