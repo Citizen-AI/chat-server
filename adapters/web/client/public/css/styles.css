@@ -346,8 +346,9 @@ a.button:hover {
   margin-top: 5px;
 }
 .source {
-  font-size: 11px;
+  font-size: 10px;
   color: #00000063;
+  line-height: 150%;
 }
 .source a {
   color: #25216299;

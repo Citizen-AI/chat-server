@@ -1,5 +1,6 @@
 const { get_topic_by_link } = require('../../../../squidex')
 const { squidex_format } = require('../../../web/df_to_webchat_formatter')
+const bus = require('../../../../event_bus')
 
 
 module.exports = context => async (req, res) => {
@@ -23,6 +24,7 @@ module.exports = context => async (req, res) => {
         }
       }]
     })
+    bus.emit(`Topic page: ${question}`)
     res.render('home', {
       ...context,
       bot_page_title: `${question} – ${context.bot_name}`,
@@ -31,5 +33,8 @@ module.exports = context => async (req, res) => {
       json_ld
     })
   }
-  else res.redirect('/')
+  else {
+    bus.emit(`Error: Topic page: couldn't find ${req.params.topic}`)
+    res.redirect('/')
+  }
 }

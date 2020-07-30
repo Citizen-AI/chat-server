@@ -4,9 +4,11 @@ const query = page_url.searchParams.get('query')
 
 let user_has_sent_something = false   // used to later decide whether to send GTM event
 
-const linkify_new = text => linkify(text, {
-  callback: (text, href) => href ? `<a href="${href}" target="_blank">${href}</a>`: text
-})
+const linkify_new = text => {
+  const remove_protocol = str => str.replace(/https?:\/\//i, '')
+  const callback = (text, href) => href ? `<a href="${href}" target="_blank">${remove_protocol(href)}</a>`: text
+  return linkify(text, { callback })
+}
 
 const message_template = `
   <div class="message {{message.type}}">
