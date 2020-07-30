@@ -511,16 +511,9 @@ window.onload = () => {
   } else {
     Botkit.once('connected', () => {
       Botkit.typing()
-      switch(true) {
-        case query:
-          Botkit.send(query, null, true)
-          break
-        case seen_before:
-          Botkit.quietSend('[Web] welcome back')
-          break
-        default:
-          Botkit.quietSend('[Web] get started')
-      }
+      if(query)             Botkit.send(query, null, true)
+      else if(seen_before)  Botkit.quietSend('[Web] welcome back')
+      else                  Botkit.quietSend('[Web] get started')
     })
   }
 }
