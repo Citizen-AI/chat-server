@@ -7,13 +7,15 @@ const { controller, webserver } = require('../Botkit/botkit')
 const { squidex_items } = require('./squidex_api')
 
 
+const linkify = question => question?.replace(/ /g, '-')
+.replace(/[?'"%‘’,()“”/\\.–\n:#]/g, '')
+.replace(/--+/g, '-')
+.toLowerCase()
+
+
 const topic_map = ({ id, data, lastModified }) => {
   const { intentKey, name, exampleQuestions, answer,
           source, buttonLabel, linkedTopics, category } = data
-  const linkify = question => question?.replace(/ /g, '-')
-                                       .replace(/[?'"%‘’,()“”/.–\n]/g, '')
-                                       .replace(/--+/g, '-')
-                                       .toLowerCase()
   const first_example_question = exampleQuestions.iv[0]?.question
   return {
     id,
@@ -65,8 +67,9 @@ const get_topic_by_intent_key = intent_key => topics
   .catch(console.error)
 
 
+// extra linkify here to make it a bit more fault-tolerant
 const get_topic_by_link = link => topics
-  .then(_topics => _topics.find(topic => topic.link == link))
+  .then(_topics => _topics.find(topic => topic.link == linkify(link)))
   .catch(console.error)
 
 

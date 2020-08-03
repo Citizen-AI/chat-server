@@ -10,7 +10,6 @@ const { controller, webserver } = require('../../../Botkit/botkit')
 const bus = require('../../../event_bus')
 const { topic_index } = require('../../../squidex')
 const topic_page = require('./controllers/topic')
-const category_page = require('./controllers/category')
 const sitemap = require('./sitemap')
 
 
