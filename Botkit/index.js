@@ -3,31 +3,39 @@
 const bus = require('../event_bus')
 const botkit = require('./botkit').controller
 const { regex, adapter_name } = require('../helpers')
+const { NODE_ENV } = process.env
 
-
-const message_and_postback_handler = (bot, user_message) => {
+const message_and_postback_handler = (bot, client_message) => {
   const adapter_type = adapter_name(bot)
+  if(NODE_ENV === 'development') console.log(client_message.text)
   let event
-  if(user_message.text.match(regex.web_get_started) ||
-     user_message.text.match(regex.web_welcome_back) ||
-     user_message.text.match(regex.fb_get_started))
+  if(client_message.text.match(regex.web_get_started) ||
+     client_message.text.match(regex.web_welcome_back) ||
+     client_message.text.match(regex.fb_get_started))
     event = `${adapter_type} user starts`
-  else if(user_message.text.match(regex.tell_me_more))
+  else if(client_message.text.match(regex.tell_me_more))
     event = `postback from ${adapter_type}: tell me more`
-  else if(user_message.text.match(regex.intent_key) || user_message.quick_reply?.payload.match(regex.intent_key))
+  else if(client_message.text.match(regex.intent_key) || client_message.quick_reply?.payload.match(regex.intent_key))
     event = `linked topic request from ${adapter_type}`
-  // FB only
-  else if(user_message.quick_reply?.payload.match(regex.follow_up)) {
-    event = `postback from ${adapter_type}: quick reply button`
-    user_message.text = user_message.quick_reply.payload.replace(regex.follow_up, '')
+  else if(client_message.text.match(regex.topic_page)) {
+    event = 'topic page rendered'
+    client_message.topic = client_message.text.match(regex.topic_page)[1]
   }
-  else if(user_message.text?.match(regex.card_button)) {
+  // FB only
+  else if(client_message.quick_reply?.payload.match(regex.follow_up)) {
+    event = `postback from ${adapter_type}: quick reply button`
+    client_message.text = client_message.quick_reply.payload.replace(regex.follow_up, '')
+  }
+  else if(client_message.text?.match(regex.card_button)) {
     event = `postback from ${adapter_type}: card button`
-    user_message.text = user_message.text.replace(regex.card_button, '')
+    client_message.text = client_message.text.replace(regex.card_button, '')
   }
   //
   else event = `message from ${adapter_type} user`
-  bus.emit(event, { bot, user_message })
+  bus.emit(event, {
+    bot,
+    user_message: client_message
+  })
 }
 
 

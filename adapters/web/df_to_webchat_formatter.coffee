@@ -17,7 +17,6 @@ bus = require '../../event_bus'
 
 quick_replies_template = require '../templates/quick_replies'
 generic_template = require './templates/generic_template'
-postback_button = require './templates/postback_button'
 follow_up_button = require '../web/templates/follow_up_button'
 image_reply_template = require './templates/image_reply'
 
@@ -61,7 +60,7 @@ text_reply = (df_speech) ->
           title: "📞 #{phone_number[1]}"
           url: "tel:#{international_number}"
         else
-          bus.emit "Error: Badly formatted button instruction in Dialogflow: #{button_text}"
+          bus.emit "Error: Badly formatted button instruction: #{button_text}"
 
   sources_prep = (x) ->
     source: true
@@ -89,7 +88,8 @@ text_reply = (df_speech) ->
     if button_tags then buttons = buttons_prep button_tags
     if sources_tags then buttons.push sources_prep sources_tags
     if split_text.overflow
-      buttons.push postback_button
+      buttons.push
+        postback: 'postback'
         title: 'Tell me more…'
         payload: 'TELL_ME_MORE:' + split_text.overflow
     text: split_text.reply_text.replace(regex.button_tag, '').replace(regex.sources_tag, '')

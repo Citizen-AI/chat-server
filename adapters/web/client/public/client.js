@@ -151,16 +151,10 @@ var Botkit = {
         return false;
     },
     quietSend: function (text, e) {
-        var that = this;
-        if (e) e.preventDefault();
+        var that = this
+        if (e) e.preventDefault()
         if (!text) return
-        const message = {
-            type: 'outgoing',
-            text
-        }
-
-        // this.clearReplies();
-
+        const message = { type: 'outgoing', text }
         that.deliverMessage({
           type: 'message',
           text: text,
@@ -332,7 +326,6 @@ var Botkit = {
           if(button.payload) button.payload = JSON.stringify(button.payload) // for multi-line tell-me-more payloads
         })
       }
-
       that.next_line.innerHTML = that.message_template({ message })
       if (!message.isTyping) {
           delete (that.next_line)
@@ -360,19 +353,19 @@ var Botkit = {
         document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
     },
     getCookie: function (cname) {
-        var name = cname + "=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        var ca = decodedCookie.split(';');
+        var name = cname + "="
+        var decodedCookie = decodeURIComponent(document.cookie)
+        var ca = decodedCookie.split(';')
         for (var i = 0; i < ca.length; i++) {
-            var c = ca[i];
+            var c = ca[i]
             while (c.charAt(0) == ' ') {
-                c = c.substring(1);
+                c = c.substring(1)
             }
             if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
+                return c.substring(name.length, c.length)
             }
         }
-        return "";
+        return ""
     },
     generate_guid: function () {
         function s4() {
@@ -498,7 +491,7 @@ window.onload = () => {
   if (Botkit.getCookie('botkit_guid')) seen_before = true
 
   Botkit.boot()
-  if(typeof server_data != 'undefined') {  // pre-populated answer
+  if(typeof server_data != 'undefined') {  // pre-populated topic
     const { question, answer_messages } = server_data
     Botkit.renderMessage({ text: question, type: 'outgoing' })
     answer_messages.map(message => {
@@ -509,6 +502,9 @@ window.onload = () => {
     section.addEventListener('scroll', () => {
       if (section.scrollHeight - section.scrollTop === section.clientHeight)
         section.classList.remove('noscroll')
+    })
+    Botkit.once('connected', () => {
+      Botkit.quietSend(`TOPIC_PAGE: ${server_data.question}`)
     })
   } else {
     Botkit.once('connected', () => {

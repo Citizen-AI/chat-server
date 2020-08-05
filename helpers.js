@@ -7,6 +7,7 @@ module.exports = {
   regex: {
     tell_me_more: /^tell_me_more: ?([\s\S]*)/i,
     intent_key: /^intent_key: ?([\s\S]*)/i,
+    topic_page: /^topic_page: ?([\s\S]*)/i,
     web_get_started: /^\[Web\] get started/i,
     web_welcome_back: /^\[Web\] welcome back/i,
     fb_get_started: /GET_STARTED/,

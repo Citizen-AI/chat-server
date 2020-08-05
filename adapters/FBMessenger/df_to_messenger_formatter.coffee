@@ -62,7 +62,7 @@ text_reply = (df_speech) ->
           title: "📞 #{phone_number[1]}"
           payload: international_number
         else
-          bus.emit "Error: Badly formatted button instruction in Dialogflow: #{button_text}"
+          bus.emit "Error: Badly formatted button instruction: #{button_text}"
 
   split_text_by_more_and_length = (text) ->
     truncate_to_word = (string, maxLength) ->   # thanks http://stackoverflow.com/a/5454303

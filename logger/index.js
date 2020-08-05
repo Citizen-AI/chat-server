@@ -60,6 +60,14 @@ module.exports = {
     }),
 
 
+  topic_page_to_user: ({ user_message }) =>{ console.log(user_message)
+    log_event({
+      event_type: 'topic_page_to_user',
+      user: user_message.user,
+      topic: user_message.topic
+    })},
+
+
   feedback: ({ user_id, feedback }) => {
     User.findOneAndUpdate(
       { id: user_id },

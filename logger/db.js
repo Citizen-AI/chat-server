@@ -46,7 +46,8 @@ const EventSchema = new Schema({
   df_messages: Array,
   df_intent: String,
   df_confidence: Number,
-  host: String
+  host: String,
+  topic: String
 })
 
 const User = mongoose.model('User', UserSchema)
