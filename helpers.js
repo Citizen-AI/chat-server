@@ -31,14 +31,11 @@ module.exports = {
 
   remove_empties: arr => arr.filter(x => x != ''),
 
-  // remove_tell_me_more_in_fb_message: fb_message => {
-  //   fb_message.text = fb_message.text.replace @tell_me_more_regex, ''
-  //   fb_message
-  // }
-
-  // Js: (object) -> JSON.stringify object, null, 2
-
   emit_error: err => bus.emit(`Error: ${err}`, err.stack),
 
-  adapter_name: bot => bot.getConfig('context').adapter.name
+  adapter_name: bot => bot.getConfig('context').adapter.name,
+
+  find: (key, value) => arr => arr.find(item => item[key] === value),
+
+  map: func => arr => arr.map(func)
 }

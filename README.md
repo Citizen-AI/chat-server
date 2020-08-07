@@ -103,7 +103,8 @@ Run `npm install`, then `npm start`. The script will tell you what environment v
 
 ## Todo
 
-* Update above documentation
+* Handle lack of Squidex or Dialogflow content
+* Handle update of Squidex intent key
 * squidex
   * Make linked topics work
     * test for button label
