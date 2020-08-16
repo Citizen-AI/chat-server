@@ -42,7 +42,7 @@ const message_template = `
 
     {{#each message.buttons}}
       {{#if postback}}
-        <a href="#" onclick="javascript:Botkit.quietSend({{payload}})" class="button_message">{{title}}</a>
+        <a href="#" onclick="javascript:Botkit.quietSend({{payload}});Botkit.tell_gtm()" class="button_message">{{title}}</a>
       {{else if map}}
         <iframe src="https://www.google.com/maps/embed/v1/search?key=AIzaSyBYTcRWDssK7eRByLCdh0OJJBlF6qQsHZI&q={{payload}}" width="100%" height="400" frameborder="0" style="border:0" allowfullscreen></iframe>
       {{else if source}}
@@ -118,37 +118,32 @@ var Botkit = {
         });
 
     },
+    tell_gtm: () => {
+      if(!user_has_sent_something) {
+        user_has_sent_something = true
+        dataLayer.push({'event':'user_first_sends'})  // GTM event
+      }
+    },
     send: function (text, e, gtm_off) {
-        var that = this;
+        var that = this
         if (e) e.preventDefault()
-        if (!text) {
-            return;
-        }
+        if (!text) return
         var message = {
-            type: 'outgoing',
-            text: text
-        };
-
-        this.clearReplies();
-        that.renderMessage(message);
-
+          type: 'outgoing',
+          text: text
+        }
+        this.clearReplies()
+        that.renderMessage(message)
         that.deliverMessage({
             type: 'message',
             text: text,
             user: this.guid,
             channel: this.options.use_sockets ? 'websocket' : 'webhook'
-        });
-
-        this.input.value = '';
-
-        this.trigger('sent', message);
-
-        if(!user_has_sent_something && !gtm_off) {
-          user_has_sent_something = true
-          dataLayer.push({'event':'user_first_sends'})  // GTM event
-        }
-
-        return false;
+        })
+        this.input.value = ''
+        this.trigger('sent', message)
+        if(!gtm_off) this.tell_gtm()
+        return false
     },
     quietSend: function (text, e) {
         var that = this
@@ -309,6 +304,7 @@ var Botkit = {
           text: reply.title,
           type: 'outgoing'
         })
+        this.tell_gtm()
     },
     focus: function () { this.input.focus() },
     renderMessage: function (message) {

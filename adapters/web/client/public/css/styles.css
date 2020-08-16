@@ -344,6 +344,7 @@ a.button:hover {
 
 #message_window div.source {
   margin-top: 5px;
+  word-break: break-all;
 }
 .source {
   font-size: 10px;
