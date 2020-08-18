@@ -422,6 +422,7 @@ card a {
   }
   #message_window .message {
     max-width: inherit;
+    color: #222;
   }
 
   h1 {

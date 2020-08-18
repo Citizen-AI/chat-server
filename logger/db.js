@@ -13,6 +13,7 @@ mongoose
   .catch(emit_error)
 const Schema = mongoose.Schema
 
+
 const UserSchema = new Schema({
   id: String,
   feedback: [{
@@ -35,6 +36,7 @@ const UserSchema = new Schema({
   created_at: { type: Date, default: Date.now }
 })
 
+
 const EventSchema = new Schema({
   created_at: { type: Date, default: Date.now },
   event_type: { type: String, required: true },
@@ -50,10 +52,9 @@ const EventSchema = new Schema({
   topic: String
 })
 
+
 const User = mongoose.model('User', UserSchema)
-// const User = mongoose.models.User || mongoose.model('User', UserSchema)
 const Event = mongoose.model('Event', EventSchema)
-// const Event = mongoose.models.Event || mongoose.model('Event', EventSchema)
 
 
 const update_user = (user_id, update) => new Promise((resolve, reject) =>
