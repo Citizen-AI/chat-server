@@ -24,7 +24,8 @@ module.exports = context => async (req, res) => {
         }
       }]
     })
-    bus.emit(`Topic page: ${question}`)
+    const { referer } = req.headers
+    bus.emit(`Topic page: ${question}`, { referer })
     res.render('home', {
       ...context,
       bot_page_title: `${question} – ${context.bot_name}`,

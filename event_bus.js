@@ -22,7 +22,9 @@ bus.onAny((event, payload) => {
   else {
     let log_message = chalk.green(`${event}`)
     const intent_name = payload?.df_result?.intent?.displayName
+    const referer = payload?.referer
     if(intent_name) log_message += ': ' + chalk.yellow(intent_name)
+    if(referer) log_message += ' [' + chalk.blue(referer) + ']'
     console.log(log_message)
     if(payload && (NODE_ENV === 'development')) {
       console.log('Payload:', Object.keys(payload))
