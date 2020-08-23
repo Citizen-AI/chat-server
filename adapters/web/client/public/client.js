@@ -156,7 +156,7 @@ var Botkit = {
           user: this.guid,
           channel: this.options.use_sockets ? 'websocket' : 'webhook'
         })
-        this.input.value = ''
+        // this.input.value = ''
         this.trigger('sent', message)
         return false
     },
@@ -392,56 +392,42 @@ var Botkit = {
         that.message_window = document.getElementById("message_window")
         that.message_list = document.getElementById("message_list")
         that.message_template = Handlebars.compile(message_template)
-
-        that.replies = document.getElementById('message_replies');
-
-        that.input = document.getElementById('messenger_input');
-
-        that.focus();
-
+        that.replies = document.getElementById('message_replies')
+        that.input = document.getElementById('messenger_input')
+        that.focus()
         that.on('connected', function () {
-            that.message_window.className = 'connected';
-            that.input.disabled = false;
-            that.sendEvent({
-                name: 'connected'
-            });
+            that.message_window.className = 'connected'
+            that.input.disabled = false
+            that.sendEvent({ name: 'connected' })
         })
-
         that.on('disconnected', function () {
             // that.message_window.className = 'disconnected';
-            that.input.disabled = true;
-        });
-
+            // that.input.disabled = true
+        })
         that.on('webhook_error', function (err) {
-            alert('Error sending message!');
+            alert('Error sending message!')
             console.error('Webhook Error', err)
-        });
-
+        })
         that.on('typing', function () {
             that.clearReplies()
             that.typing()
-        });
-
+        })
         that.on('sent', function () {
             // do something after sending
-        });
-
+        })
         that.on('message', function (message) {
-            console.log('RECEIVED MESSAGE', message);
-            that.renderMessage(message);
-        });
-
+            console.log('RECEIVED MESSAGE', message)
+            that.renderMessage(message)
+        })
         that.on('message', function (message) {
             if (message.goto_link) {
                 window.location = message.goto_link
             }
-        });
-
+        })
         that.on('message', function (message) {
             that.clearReplies()
             if (message.quick_replies) {
                 that.make_quick_replies(message.quick_replies, that)
-
                 if (message.disable_input) {
                     that.input.disabled = true
                 } else {
@@ -450,8 +436,7 @@ var Botkit = {
             } else {
                 that.input.disabled = false
             }
-        });
-
+        })
         that.on('history_loaded', function (history) {
             if (history) {
                 for (var m = 0; m < history.length; m++) {
@@ -461,8 +446,7 @@ var Botkit = {
                     });
                 }
             }
-        });
-
+        })
         that.connect(user)
         return that
     }
@@ -470,10 +454,10 @@ var Botkit = {
 
 
 window.onload = () => {
-  open_menu = () => document.getElementById('sidebar').classList.add('visible')
-  close_menu = () => document.getElementById('sidebar').classList.remove('visible')
-  toggle_menu = () => document.getElementById('sidebar').classList.contains('visible') ? close_menu() : open_menu()
-  handler = event => {
+  const open_menu = () => document.getElementById('sidebar').classList.add('visible')
+  const close_menu = () => document.getElementById('sidebar').classList.remove('visible')
+  const toggle_menu = () => document.getElementById('sidebar').classList.contains('visible') ? close_menu() : open_menu()
+  const handler = event => {
     close_menu()
     Botkit.send(event.target.innerText)
   }
@@ -482,6 +466,13 @@ window.onload = () => {
   }
   document.getElementsByTagName('h1')[0].addEventListener('click', toggle_menu)
   document.getElementById('kebab_menu_icon').addEventListener('click', toggle_menu)
+
+  const placeholders = ['How can I help?', 'What do you want to know?', 'Ask me anything…']
+  placeholders.index = 1
+  placeholders.next = function () { return this[this.index++ % this.length] }
+  const interval_id = window.setInterval(() => Botkit.input.placeholder = placeholders.next(), 5000)
+  const button = document.getElementsByTagName('button')[0]
+  button.addEventListener('click', () => window.clearInterval(interval_id))
 
   let seen_before = false
   if (Botkit.getCookie('botkit_guid')) seen_before = true
