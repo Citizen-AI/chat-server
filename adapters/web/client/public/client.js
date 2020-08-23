@@ -300,6 +300,7 @@ var Botkit = {
     quickReply: function (reply) {
         this.clearReplies()
         this.quietSend(reply.payload)
+        window.clearInterval(this.placeholders.interval_id)
         this.renderMessage({
           text: reply.title,
           type: 'outgoing'
@@ -449,8 +450,15 @@ var Botkit = {
         })
         that.connect(user)
         return that
+    },
+
+    placeholders: {
+      texts: ['How can I help?', 'What do you want to know?', 'Ask me anything…'],
+      index: 1,
+      interval_id: null,
+      next: function () { return this.texts[this.index++ % this.texts.length] }
     }
-};
+}
 
 
 window.onload = () => {
@@ -467,12 +475,9 @@ window.onload = () => {
   document.getElementsByTagName('h1')[0].addEventListener('click', toggle_menu)
   document.getElementById('kebab_menu_icon').addEventListener('click', toggle_menu)
 
-  const placeholders = ['How can I help?', 'What do you want to know?', 'Ask me anything…']
-  placeholders.index = 1
-  placeholders.next = function () { return this[this.index++ % this.length] }
-  const interval_id = window.setInterval(() => Botkit.input.placeholder = placeholders.next(), 5000)
+  Botkit.placeholders.interval_id = window.setInterval(() => Botkit.input.placeholder = Botkit.placeholders.next(), 5000)
   const button = document.getElementsByTagName('button')[0]
-  button.addEventListener('click', () => window.clearInterval(interval_id))
+  button.addEventListener('click', () => window.clearInterval(Botkit.placeholders.interval_id))
 
   let seen_before = false
   if (Botkit.getCookie('botkit_guid')) seen_before = true
