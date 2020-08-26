@@ -11,6 +11,7 @@ const bus = require('../../../event_bus')
 const { topic_index } = require('../../../squidex')
 const topic_page = require('./controllers/topic')
 const sitemap = require('./sitemap')
+const robots = require('./robots')
 
 
 const { web_client_config } = process.env
@@ -22,6 +23,7 @@ webserver.set('view engine', 'handlebars')
 webserver.set('views', __dirname + '/views')
 webserver.use(slashes(false))
 webserver.use(sitemap)
+webserver.get('/robots.txt', robots)
 
 
 controller.ready(async () => {
