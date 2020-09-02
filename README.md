@@ -6,7 +6,7 @@ and [Squidex](https://squidex.io/) to host the content.
 
 ## Squidex schema
 
-The server will be looking for a topic schema including:
+The server will be looking for a `topic` schema including:
 
 * **intentKey** to match Dialogflow intents
 * **answer**: the topic content, which can make use of the below syntax
@@ -47,10 +47,11 @@ You will need
 Run `npm install`, then `npm start`. The script will tell you what environment variables are required. You can put them in a `.env` file.
 
 
+
 ### Optional environment variables
 
 * **Messenger adapter**: to connect your bot to Facebook Messenger, you'll need to add these environment variables:
-  * **fb_page_token**: Facebook Page Access Token (get from https://developers.facebook.com/ > your app > Messenger > Settings > Access Tokens > Generate Token
+  * **fb_page_token**: Facebook Page Access Token (get from https://developers.facebook.com/ > your app > Messenger > Settings > Access Tokens > Generate Token (see below for fuller instructions)
   * **fb_verify_token**: Facebook Verify Token  (get from https://developers.facebook.com/ > your app > Messenger > Settings > Webhooks > Edit Callback URL)
   * **fb_app_secret**: Facebook App Secret (get from https://developers.facebook.com/ > your app > Settings > Basic > App Secret
 
@@ -89,6 +90,31 @@ Run `npm install`, then `npm start`. The script will tell you what environment v
 * Set up Squidex rule (see above) to notify app of content changes
 
 
+## Set up a Messenger bot
+
+You'll need:
+
+  * A **[Facebook page](https://www.facebook.com/pages/creation/)** (choose 'Business or brand', and 'App page' for the category).
+
+  * A **Facebook app**:
+    * Visit [developers.facebook.com](https://developers.facebook.com/), choose 'My apps', then Add New App.
+    * On the Dashboard, under Add a Product, choose Messenger > Set up.
+    * **Connect your app to your page:** On the Messenger Settings page, under **Access Tokens**, choose **Add or Remove Pages** the page you created above. Facebook will ask you to authorise the connection to that page.
+    * You can now generate a **Page Access Token**. Put this in the `fb_page_token` environment variable
+    * Get the **App Secret** from Settings > Basic > App Secret. Put this in the `fb_app_secret` environment variable
+
+To **setup webhooks:**
+  * Once the node app is running, visit your Facebook app page on [developers.facebook.com](https://developers.facebook.com/), go to Messenger > Settings, and under Webhooks, and choose Setup Webhooks. * For the `Callback URL`, use the bot's address (either live on the web or via ngrok) plus '/api/facebook'. Note that this needs to be an https (not http) url.
+  * For `Verify Token`, choose any string of characters. Also put this into an `fb_verify_token` environment variable.
+  * Select `messages` and `messaging_postbacks`
+  * Choose `Verify and Save`
+  * Under `Select a page to subscribe your webhook to the page events`, choose the same page you chose under `Token Generation` earlier, and click `Subscribe`.
+
+
+
+
+
+
 
 ## Thanks to
 
@@ -103,6 +129,7 @@ Run `npm install`, then `npm start`. The script will tell you what environment v
 
 ## Todo
 
+* Does `npm run set_menu` work? (like messenger-server)
 * Handle lack of Squidex or Dialogflow content
 * Handle update of Squidex intent key
 * squidex
