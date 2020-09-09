@@ -54,6 +54,7 @@ Run `npm install`, then `npm start`. The script will tell you what environment v
   * **fb_page_token**: Facebook Page Access Token (get from https://developers.facebook.com/ > your app > Messenger > Settings > Access Tokens > Generate Token (see below for fuller instructions)
   * **fb_verify_token**: Facebook Verify Token  (get from https://developers.facebook.com/ > your app > Messenger > Settings > Webhooks > Edit Callback URL)
   * **fb_app_secret**: Facebook App Secret (get from https://developers.facebook.com/ > your app > Settings > Basic > App Secret
+  * **fb_persistent_menu**: see below
 
 * **dialogflow_environment**: If your agent has multiple environments (e.g. live and staging), set the environment name here
 
@@ -110,9 +111,10 @@ To **setup webhooks:**
   * Choose `Verify and Save`
   * Under `Select a page to subscribe your webhook to the page events`, choose the same page you chose under `Token Generation` earlier, and click `Subscribe`.
 
+To set the Messenger persistant menu and 'Get started' button functionality:
 
-
-
+  * Set an environment variable `fb_persistent_menu` with a JSON object (with newlines removed) according to these specs: https://developers.facebook.com/docs/messenger-platform/send-messages/persistent-menu/
+  * run `node adapters/FBMessenger/set_menu.js`
 
 
 
