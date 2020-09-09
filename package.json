@@ -13,10 +13,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sentry/node": "^5.21.1",
-    "botbuilder-adapter-facebook": "^1.0.10",
-    "botbuilder-adapter-web": "^1.0.8",
-    "botkit": "^4.9.0",
+    "@sentry/node": "^5.22.3",
+    "botbuilder-adapter-facebook": "^1.0.11",
+    "botbuilder-adapter-web": "^1.0.9",
+    "botkit": "^4.10.0",
     "chalk": "^3.0.0",
     "coffeescript": "^2.5.1",
     "connect-slashes": "^1.4.0",
@@ -28,10 +28,10 @@
     "express-handlebars": "^4.0.6",
     "express-sitemap-xml": "^1.1.0",
     "fb": "^2.0.0",
-    "google-libphonenumber": "^3.2.12",
-    "got": "^11.5.2",
+    "google-libphonenumber": "^3.2.13",
+    "got": "^11.6.1",
     "lodash": "^4.17.20",
-    "mongoose": "^5.10.0",
-    "ngrok": "^3.2.7"
+    "mongoose": "^5.10.3",
+    "ngrok": "^3.3.0"
   }
 }
