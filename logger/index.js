@@ -30,6 +30,7 @@ module.exports = {
       .catch(emit_error)
   },
 
+
   from_user: ({ user_message, bot }) =>
     log_event({
       user: user_message.user,

@@ -167,6 +167,10 @@ a.button:hover {
   display: inline-block;
   max-width: 75%;
 }
+#message_window .message a {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
 #message_window .file_attachment img {
   border-radius: 5px;
   max-width: 100%;
