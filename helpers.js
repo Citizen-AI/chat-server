@@ -26,7 +26,8 @@ module.exports = {
     quick_replies_tag: /\[qr: (.+?)\]/i,
     card_button: /^card_button: ?/i,
     cards_tag: /\[cards?: (.+?)\]/i,
-    image_tag: /\[image: (.+?)\]/i
+    image_tag: /\[image: (.+?)\]/i,
+    dialogflow_intent_key_from_name: /.*\/(.*?)$/
   },
 
   remove_empties: arr => arr.filter(x => x != ''),

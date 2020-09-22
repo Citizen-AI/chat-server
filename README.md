@@ -131,7 +131,17 @@ To set the Messenger persistant menu and 'Get started' button functionality:
 
 ## Todo
 
-* Does `npm run set_menu` work? (like messenger-server)
+* Create Dialogflow intent when new Squidex topic created:
+  * squidex/index.js:111 should notice 'TopicCreated', and √
+  * check to see if the topic has an intentKey already (if so throw an error) √
+  * adapters/Dialogflow/df_api_v2.coffee (JS'd), should try and create an intent
+    https://cloud.google.com/dialogflow/es/docs/how/manage-intents#create_intent
+    with displayName, and perhaps a training phrase using displayName (note this will need Google Cloud Platform IAM role 'Dialogflow API Admin' permissions)
+    it should keep track of the intent key, then √
+  * alert in squidex interface?
+  * squidex/squidex_api.js should update the topic with the intentKey
+    https://cloud.squidex.io/api/content/lagbot/docs#operation/UpdateTopicContent
+* Handle error (e.g. no name) in Squidex topic
 * Handle lack of Squidex or Dialogflow content
 * Handle update of Squidex intent key
 * squidex

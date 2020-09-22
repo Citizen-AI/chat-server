@@ -42,6 +42,24 @@ const squidex_items = schema => new Promise(async (resolve, reject) => {
 })
 
 
+const update_item = ({ id, intent_key }, schema='topic') => new Promise(async (resolve, reject) => {
+  const squidex_token = await get_token
+  got
+    .patch(`${squidex_endpoint}${schema}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${squidex_token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        intentKey: { iv: intent_key }
+      })
+    })
+    .then(resolve)
+    .catch(reject)
+})
+
+
 module.exports = {
-  squidex_items
+  squidex_items,
+  update_item
 }

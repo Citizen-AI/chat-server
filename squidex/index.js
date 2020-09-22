@@ -4,8 +4,9 @@ const _ = require('lodash')
 
 const bus = require('../event_bus')
 const { controller, webserver } = require('../Botkit/botkit')
-const { squidex_items } = require('./squidex_api')
+const { squidex_items, update_item } = require('./squidex_api')
 const { find, map } = require('../helpers')
+const { create_intent } = require('../Dialogflow/df_api_v2')
 
 const linkify = question => question?.replace(/ /g, '-')
   .replace(/[?'"%‘’,()“”/\\.–\n:#]/g, '')
@@ -81,15 +82,18 @@ const topics_in_category = category_id => display_topics
 
 
 controller.ready(() => {
-  const update_topic = async payload => {
-    const intent_key = payload.data.intentKey.iv
+  const update_topic = payload => new Promise(async (resolve, reject) => {
+    const { id } = payload
+    const name = payload.data.name.iv
     const _topics = await topics
-    const topic_to_update = _topics.find(topic => topic.intent_key == intent_key)
+    const topic_to_update = _topics.find(topic => topic.id === id)
+    if(!topic_to_update) reject(`Can't find topic to update: ${name}`)
     const replacement_topic = topic_map(payload)
     replacement_topic.linked_topics = replacement_topic.linked_topics?.map(id => _topics.find(topic2 => topic2.id === id))
     Object.assign(topic_to_update, replacement_topic)
-    bus.emit(`Squidex: updated topic ${payload.data.name.iv}`)
-  }
+    bus.emit(`Squidex: updated topic '${payload.data.name.iv}'`)
+    resolve()
+  })
 
   const add_topic = async payload => {
     const _topics = await topics
@@ -99,8 +103,23 @@ controller.ready(() => {
       )
       .filter(({ button_label }) => button_label)
     _topics.push(new_topic)
-    bus.emit(`Squidex: added topic ${payload.data.name.iv}`)
+    bus.emit(`Squidex: added topic '${payload.data.name.iv}' to in-memory store`)
   }
+
+  const add_dialogflow_intent = payload => new Promise(async (resolve, reject) => {
+    const intent_key = payload.data.intentKey?.iv
+    const name = payload.data.name?.iv
+    const { id } = payload
+    if(intent_key) reject('topic already has intent key')
+    if(!name)      reject('topic needs a name')
+    const new_intent_key = await create_intent({ displayName: name })
+      .catch(reject)
+    bus.emit(`Dialogflow: created new intent '${name}' with intent key ${new_intent_key}`)
+    await update_item({ id, intent_key: new_intent_key })
+      .catch(reject)
+    bus.emit(`Squidex: updated topic ${id} with intent key ${new_intent_key}`)
+    resolve()
+  })
 
   const server = 'http://localhost:' + controller.http.address().port
   bus.emit(`STARTUP: Listening for Squidex changes at ${server}/api/squidex`)
@@ -111,12 +130,17 @@ controller.ready(() => {
     switch(type) {
       case 'TopicUpdated':
         await update_topic(payload)
-          .catch(err => console.error('trouble updating: ', err))
+          .catch(err => bus.emit('Error: trouble updating: ', err))
         break
       case 'TopicPublished':
         await add_topic(payload)
-          .catch(err => console.error('trouble adding: ', err))
+          .catch(err => bus.emit('Error: trouble adding: ', err))
         break
+      case 'TopicCreated':
+        await add_topic(payload)
+          .catch(err => bus.emit('Error: trouble adding: ', err))
+        await add_dialogflow_intent(payload)
+          .catch(err => bus.emit('Error: trouble creating linked Dialogflow intent: ', err))
     }
     res.sendStatus(200)
   })
