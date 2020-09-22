@@ -34,17 +34,22 @@ const update_dialogflow_intent = payload => new Promise(async (resolve, reject) 
 const topic_renamed = ({ data, dataOld }) => data.name.iv != dataOld.name.iv
 
 
+const topic_by_id = (topics, id) => topics.find(topic => topic.id === id)
+
+
 const server = 'http://localhost:' + controller.http.address().port
 bus.emit(`STARTUP: Listening for Squidex changes at ${server}/api/squidex`)
 
 
 // in-memory store of topics is injected
-module.exports = topics => {
+module.exports = async topics => {
+  const _topics = await topics
+
+
   const update_local_topic = payload => new Promise(async (resolve, reject) => {
     const { id } = payload
     const name = payload.data.name.iv
-    const _topics = await topics
-    const topic_to_update = _topics.find(topic => topic.id === id)
+    const topic_to_update = topic_by_id(_topics, id)
     if(!topic_to_update)
       return reject(`Can't find topic to update: ${name}`)
     const replacement_topic = topic_map(payload)
@@ -54,16 +59,31 @@ module.exports = topics => {
     resolve()
   })
 
-  const add_local_topic = async payload => {
-    const _topics = await topics
+
+  const upsert_local_topic = async payload => {
+    const { id } = payload
     const new_topic = topic_map(payload)
     new_topic.linked_topics = new_topic.linked_topics?.map(id => _topics
         .find(topic2 => topic2.id === id)
       )
       .filter(({ button_label }) => button_label)
-    _topics.push(new_topic)
+    const existing_topic = topic_by_id(_topics, id)
+    if(existing_topic)
+      Object.assign(existing_topic, new_topic)
+    else
+      _topics.push(new_topic)
     bus.emit(`Squidex: added topic '${payload.data.name.iv}' locally`)
   }
+
+
+  const remove_local_topic = async ({ id, data }) => {
+    const topic = topic_by_id(_topics, id)
+    if(topic) {
+      _topics.splice(_topics.indexOf(topic), 1)
+      bus.emit(`Squidex: removed topic '${data.name.iv}' locally`)
+    }
+  }
+
 
   webserver.post('/api/squidex', async (req, res) => {
     const { body } = req
@@ -72,19 +92,28 @@ module.exports = topics => {
     switch(type) {
       case 'TopicUpdated':
         try {
-          await update_local_topic(payload)
-          if(topic_renamed(payload))
-            await update_dialogflow_intent(payload)
-              .catch(err => bus.emit('Error: trouble updating Dialogflow intent: ', err))
+          if(payload.status = 'Draft')
+            await remove_local_topic(payload)
+          else
+            await update_local_topic(payload)
+            if(topic_renamed(payload))
+              await update_dialogflow_intent(payload)
+                .catch(err => bus.emit('Error: trouble updating Dialogflow intent: ', err))
         } catch (error) { bus.emit('Error: trouble updating: ', error) }
         break
+
       case 'TopicPublished':
-        await add_local_topic(payload)
+        await upsert_local_topic(payload)
           .catch(err => bus.emit('Error: trouble adding: ', err))
         break
+
+      case 'TopicUnpublished':
+        await remove_local_topic(payload)
+        break
+
       case 'TopicCreated':
         const { id } = payload
-        await add_local_topic(payload)
+        await upsert_local_topic(payload)
           .catch(err => bus.emit('Error: trouble adding: ', err))
         const new_intent_key = await add_dialogflow_intent(payload)
           .catch(err => bus.emit('Error: trouble creating linked Dialogflow intent: ', err))
