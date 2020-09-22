@@ -2,7 +2,6 @@
 // Modified from https://github.com/googleapis/nodejs-dialogflow
 // and https://github.com/googleapis/nodejs-dialogflow/blob/master/samples/resource.js
 // Auth from https://medium.com/@tzahi/how-to-setup-dialogflow-v2-authentication-programmatically-with-node-js-b37fa4815d89
-
 const dialogflow = require('@google-cloud/dialogflow')
 
 const bus = require('../event_bus')
@@ -46,7 +45,20 @@ const create_intent = ({ displayName }) => new Promise(async (resolve, reject) =
 })
 
 
+const update_intent = ({ name, displayName }) => new Promise(async (resolve, reject) => {
+  const [ intent ] = await intentsClient.getIntent({
+    name: intentsClient.intentPath(project_id, name),
+    intentView: 'INTENT_VIEW_FULL'
+  }).catch(reject)
+  intent.displayName = displayName
+  await intentsClient.updateIntent({ intent })
+    .catch(reject)
+  resolve()
+})
+
+
 module.exports = {
   df_query,
-  create_intent
+  create_intent,
+  update_intent
 }

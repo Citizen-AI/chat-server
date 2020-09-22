@@ -13,6 +13,17 @@ The server will be looking for a `topic` schema including:
 * **source**: optional citation, e.g. 'Employment Relations Act 2000'
 
 
+# Squidex live-updating
+
+You can set up the app to listen for changes to content in Squidex. It can also add new Dialogflow intents when a new topic is created in Squidex. To enable these features:
+
+* Go to `https://cloud.squidex.io/app/<your app>/rules`
+* New > Content Changed > Add Schema (topic) > Next > Webhook
+* In the Send webhook screen, Url field, use `<your server>/api/squidex`
+
+To let the app create new Dialogflow intents, the Google service account you are using will need to have the permissions of the Google Cloud Platform IAM 'Dialogflow API Admin' role.
+
+
 ## Message syntax
 
 This server interprets messages with custom syntax. Like:
@@ -39,10 +50,6 @@ You will need
 * a [Dialogflow](https://dialogflow.com) agent.
 * a [Squidex](https://squidex.io/) app, with a certain schema setup.
 * [Ngrok](https://ngrok.com/) or some other way of exposing your local computer to the web. Used for webhooks so that Messenger and Squidex can talk back to the app.
-* If you'd like the instance to update live from Squidex:
-  * Go to `https://cloud.squidex.io/app/<your app>/rules`
-  * New > Content Changed > Add Schema (topic) > Next > Webhook
-  * In the Send webhook screen, Url field, use `<your server>/api/squidex`
 
 Run `npm install`, then `npm start`. The script will tell you what environment variables are required. You can put them in a `.env` file.
 
@@ -131,19 +138,8 @@ To set the Messenger persistant menu and 'Get started' button functionality:
 
 ## Todo
 
-* Create Dialogflow intent when new Squidex topic created:
-  * squidex/index.js:111 should notice 'TopicCreated', and √
-  * check to see if the topic has an intentKey already (if so throw an error) √
-  * adapters/Dialogflow/df_api_v2.coffee (JS'd), should try and create an intent
-    https://cloud.google.com/dialogflow/es/docs/how/manage-intents#create_intent
-    with displayName, and perhaps a training phrase using displayName (note this will need Google Cloud Platform IAM role 'Dialogflow API Admin' permissions)
-    it should keep track of the intent key, then √
-  * alert in squidex interface?
-  * squidex/squidex_api.js should update the topic with the intentKey
-    https://cloud.squidex.io/api/content/lagbot/docs#operation/UpdateTopicContent
 * Handle error (e.g. no name) in Squidex topic
 * Handle lack of Squidex or Dialogflow content
-* Handle update of Squidex intent key
 * squidex
   * Make linked topics work
     * test for button label
@@ -152,21 +148,19 @@ To set the Messenger persistant menu and 'Get started' button functionality:
   * image tag for Messenger
   * handle server down
   * make it optional
+* don't allow links to answer-less questions
+* https://github.com/expressjs/express/issues/2596
 * https://schema.org/FAQPage – use more properties in answers
 * Pre-populate hello guest for faster loading
 * Airtable
 * fix floaty short messages
 * webchat: emoji
-* test sentry
-* Test case assessment
 * Incorporate case assessment webhook
 * decorate 404
 * Answers
   * make QRs work
   * log answer views
   * nice quotes
-  * error on no question found (so we can add them)
-* What people are asking based on recent popular topics
 * web client
   * event on sidebar open
   * disable send button, not text entry
