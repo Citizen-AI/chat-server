@@ -88,23 +88,19 @@ module.exports = async topics => {
   webserver.post('/api/squidex', async (req, res) => {
     const { body } = req
     const { type, payload } = body
+    const { id, status } = payload
     bus.emit(`Squidex: heard event ${type}`)
     switch(type) {
       case 'TopicUpdated':
         try {
-          if(payload.status = 'Draft')
+          if(status === 'Draft')
             await remove_local_topic(payload)
-          else
+          else {
             await update_local_topic(payload)
             if(topic_renamed(payload))
               await update_dialogflow_intent(payload)
-                .catch(err => bus.emit('Error: trouble updating Dialogflow intent: ', err))
-        } catch (error) { bus.emit('Error: trouble updating: ', error) }
-        break
-
-      case 'TopicPublished':
-        await upsert_local_topic(payload)
-          .catch(err => bus.emit('Error: trouble adding: ', err))
+          }
+        } catch (error) { bus.emit('Error: ', error) }
         break
 
       case 'TopicUnpublished':
@@ -112,14 +108,19 @@ module.exports = async topics => {
         break
 
       case 'TopicCreated':
-        const { id } = payload
-        await upsert_local_topic(payload)
-          .catch(err => bus.emit('Error: trouble adding: ', err))
-        const new_intent_key = await add_dialogflow_intent(payload)
-          .catch(err => bus.emit('Error: trouble creating linked Dialogflow intent: ', err))
-        await update_item({ id, intent_key: new_intent_key })
-          .catch(err => bus.emit('Error: trouble updating Squidex topic: ', err))
-        bus.emit(`Squidex: updated Squidex topic ${id} with intent key ${new_intent_key}`)
+      case 'TopicPublished':
+        if(status === 'Draft')
+          bus.emit(`Squidex: draft Squidex topic — ignoring`)
+        else {
+          try {
+            await upsert_local_topic(payload)
+            const new_intent_key = await add_dialogflow_intent(payload)
+            await update_item({ id, intent_key: new_intent_key })
+            bus.emit(`Squidex: updated Squidex topic ${id} with intent key ${new_intent_key}`)
+          } catch (error) {
+            bus.emit('Error: ', error)
+          }
+        }
     }
     res.sendStatus(200)
   })
