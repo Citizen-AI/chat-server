@@ -9,29 +9,30 @@ const { topic_map } = require('./utils')
 const add_dialogflow_intent = payload => new Promise(async (resolve, reject) => {
   const intent_key = payload.data.intentKey?.iv
   const name = payload.data.name?.iv
-  if(intent_key) reject('topic already has intent key')
-  if(!name)      reject('topic needs a name')
-  try {
-    const new_intent_key = await create_intent({ displayName: name })
-    bus.emit(`Dialogflow: created new intent '${name}' with intent key ${new_intent_key}`)
-    resolve(new_intent_key)
-  } catch (error) { reject(error) }
+  if(intent_key) return reject('topic already has intent key')
+  if(!name)      return reject('topic needs a name')
+  const new_intent_key = await create_intent({ displayName: name })
+    .catch(error => reject(error))
+  bus.emit(`Dialogflow: created new intent '${name}' with intent key ${new_intent_key}`)
+  resolve(new_intent_key)
 })
 
 
-const update_dialogflow_intent = payload => new Promise(async (resolve, reject) => {
-  const intent_key = payload.data.intentKey?.iv
-  const name = payload.data.name?.iv
-  const old_name = payload.dataOld.name?.iv
-  try {
-    await update_intent({ name: intent_key, displayName: name })
-    bus.emit(`Dialogflow: renamed intent '${old_name}' to '${name}'`)
-    resolve()
-  } catch (error) { reject(error) }
+const update_dialogflow_intent = ({ data, dataOld }) => new Promise(async (resolve, reject) => {
+  const intent_key = data.intentKey?.iv
+  const name = data.name?.iv
+  const old_name = dataOld.name?.iv
+  await update_intent({ name: intent_key, displayName: name })
+    .catch(reject)
+  bus.emit(`Dialogflow: renamed intent '${old_name}' to '${name}'`)
+  resolve()
 })
 
 
 const topic_renamed = ({ data, dataOld }) => data.name.iv != dataOld.name.iv
+
+
+const intent_key_added = ({ data, dataOld }) => data.intentKey?.iv != dataOld.intentKey?.iv
 
 
 const topic_by_id = (topics, id) => topics.find(topic => topic.id === id)
@@ -55,7 +56,6 @@ module.exports = async topics => {
     const replacement_topic = topic_map(payload)
     replacement_topic.linked_topics = replacement_topic.linked_topics?.map(id => _topics.find(topic2 => topic2.id === id))
     Object.assign(topic_to_update, replacement_topic)
-    bus.emit(`Squidex: updated topic '${payload.data.name.iv}' locally`)
     resolve()
   })
 
@@ -72,54 +72,64 @@ module.exports = async topics => {
       Object.assign(existing_topic, new_topic)
     else
       _topics.push(new_topic)
-    bus.emit(`Squidex: added topic '${payload.data.name.iv}' locally`)
   }
 
 
-  const remove_local_topic = async ({ id, data }) => {
+  const remove_local_topic = ({ id }) => {
     const topic = topic_by_id(_topics, id)
-    if(topic) {
-      _topics.splice(_topics.indexOf(topic), 1)
-      bus.emit(`Squidex: removed topic '${data.name.iv}' locally`)
-    }
+    if(topic) _topics.splice(_topics.indexOf(topic), 1)
   }
 
 
   webserver.post('/api/squidex', async (req, res) => {
     const { body } = req
     const { type, payload } = body
-    const { id, status } = payload
+    const { id, data } = payload
+    const intent_key = data.intentKey?.iv
     bus.emit(`Squidex: heard event ${type}`)
     switch(type) {
       case 'TopicUpdated':
         try {
-          if(status === 'Draft')
-            await remove_local_topic(payload)
-          else {
-            await update_local_topic(payload)
-            if(topic_renamed(payload))
-              await update_dialogflow_intent(payload)
+          await update_local_topic(payload)
+          bus.emit(`Squidex: updated topic '${data.name.iv}' locally`)
+          if(topic_renamed(payload)) {
+            await update_dialogflow_intent(payload)
+            bus.emit(`Squidex: renamed Dialogflow intent '${intent_key}'`)
           }
-        } catch (error) { bus.emit('Error: ', error) }
+          if(intent_key_added(payload)) {
+            await update_intent({ name: intent_key, priority: 500000 })
+            bus.emit(`Squidex: enabled matching Dialogflow intent ${intent_key}`)
+          }
+        } catch (error) { bus.emit('Error: ', error.stack) }
         break
 
       case 'TopicUnpublished':
-        await remove_local_topic(payload)
+        try {
+          remove_local_topic(payload)
+          await update_intent({ name: intent_key, priority: -1 }) // https://cloud.google.com/dialogflow/es/docs/intents-settings#priority
+          bus.emit(`Squidex: removed local topic '${data.name.iv}' and disabled matching Dialogflow intent`)
+        } catch (error) { bus.emit('Error: ', error.stack) }
         break
 
-      case 'TopicCreated':
       case 'TopicPublished':
-        if(status === 'Draft')
-          bus.emit(`Squidex: draft Squidex topic — ignoring`)
-        else {
-          try {
-            await upsert_local_topic(payload)
-            const new_intent_key = await add_dialogflow_intent(payload)
-            await update_item({ id, intent_key: new_intent_key })
-            bus.emit(`Squidex: updated Squidex topic ${id} with intent key ${new_intent_key}`)
-          } catch (error) {
-            bus.emit('Error: ', error)
+        try {
+          await upsert_local_topic(payload)
+          bus.emit(`Squidex: added local topic '${data.name.iv}'`)
+          if(intent_key) {
+            await update_intent({ name: intent_key, priority: 500000 })
+            bus.emit(`Squidex: enabled matching Dialogflow intent ${intent_key}`)
           }
+        } catch (error) { bus.emit('Error', error.stack)}
+        break
+
+      // assuming that these are all Draft, for now
+      case 'TopicCreated':
+        try {
+          const new_intent_key = await add_dialogflow_intent(payload)
+          await update_item({ id, intent_key: new_intent_key })
+          bus.emit(`Squidex: updated Squidex topic ${id} with intent key ${new_intent_key}`)
+        } catch (error) {
+          bus.emit('Error: ', error.stack)
         }
     }
     res.sendStatus(200)

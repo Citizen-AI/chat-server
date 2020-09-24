@@ -34,26 +34,31 @@ const df_query = async ({ query, session_id }) => {
 
 // https://cloud.google.com/dialogflow/es/docs/how/manage-intents#create_intent
 const create_intent = ({ displayName }) => new Promise(async (resolve, reject) => {
-  const intent_request = {
+  intentsClient.createIntent({
     parent: agentPath,
-    intent: { displayName }
-  }
-  const [ response ] = await intentsClient.createIntent(intent_request)
+    intent: {
+      displayName,
+      priority: -1  // == IGNORE
+    }
+  })
+    .then(([ response ]) => {
+      const intent_key = response.name.match(regex.dialogflow_intent_key_from_name)?.[1]
+      resolve(intent_key)
+    })
     .catch(reject)
-  const intent_key = response.name.match(regex.dialogflow_intent_key_from_name)?.[1]
-  resolve(intent_key)
 })
 
 
-const update_intent = ({ name, displayName }) => new Promise(async (resolve, reject) => {
+const update_intent = ({ name, displayName, priority }) => new Promise(async (resolve, reject) => {
   const [ intent ] = await intentsClient.getIntent({
     name: intentsClient.intentPath(project_id, name),
     intentView: 'INTENT_VIEW_FULL'
-  }).catch(reject)
-  intent.displayName = displayName
-  await intentsClient.updateIntent({ intent })
+  })
+  if(displayName) intent.displayName = displayName
+  if(priority) intent.priority = priority
+  intentsClient.updateIntent({ intent })
+    .then(resolve)
     .catch(reject)
-  resolve()
 })
 
 

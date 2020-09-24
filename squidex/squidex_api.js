@@ -14,7 +14,7 @@ const get_token = new Promise(resolve =>
      body: `grant_type=client_credentials&client_id=${squidex_client_id}&client_secret=${squidex_client_secret}&scope=squidex-api`
    })
    .then(response => resolve(JSON.parse(response.body).access_token))
-   .catch(err => bus.emit('Error: Squidex identity: ', err))
+   .catch(err => bus.emit('Error: Squidex identity: ', err.stack))
 )
 
 
@@ -26,7 +26,7 @@ const get_page_from_api = (skip=0, schema='topic') => new Promise(async (resolve
       const { total, items } = JSON.parse(response.body)
       resolve({ total, items})
     })
-    .catch(err => bus.emit('Error: While fetching page from Squidex: ', err))
+    .catch(err => bus.emit('Error: While fetching page from Squidex: ', err.stack))
 })
 
 

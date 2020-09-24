@@ -138,6 +138,7 @@ To set the Messenger persistant menu and 'Get started' button functionality:
 
 ## Todo
 
+* should only create Dialogflow intent on publish (but not delete on unpublish – perhaps it should go draft in DF too?)
 * Handle error (e.g. no name) in Squidex topic
 * Handle lack of Squidex or Dialogflow content
 * squidex
