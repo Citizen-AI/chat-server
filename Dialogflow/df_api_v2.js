@@ -50,6 +50,7 @@ const create_intent = ({ displayName }) => new Promise(async (resolve, reject) =
 
 
 const update_intent = ({ name, displayName, priority }) => new Promise(async (resolve, reject) => {
+  if(!name) return reject("Can't update intent without a name (intent key)")
   const [ intent ] = await intentsClient.getIntent({
     name: intentsClient.intentPath(project_id, name),
     intentView: 'INTENT_VIEW_FULL'

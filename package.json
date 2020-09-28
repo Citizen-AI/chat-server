@@ -31,7 +31,7 @@
     "google-libphonenumber": "^3.2.13",
     "got": "^11.7.0",
     "lodash": "^4.17.20",
-    "mongoose": "^5.10.6",
+    "mongoose": "^5.10.7",
     "ngrok": "^3.3.0"
   }
 }
