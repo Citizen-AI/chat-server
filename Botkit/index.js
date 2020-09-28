@@ -6,8 +6,8 @@ const { regex, adapter_name } = require('../helpers')
 const { NODE_ENV } = process.env
 
 const message_and_postback_handler = (bot, client_message) => {
-  if(!client_message) {
-    bus.emit('Error: client_message is empty. ', bot)
+  if(!client_message.text) {
+    bus.emit('Error: client_message.text is empty. client_message: ', client_message)
     return
   }
   const adapter_type = adapter_name(bot)
