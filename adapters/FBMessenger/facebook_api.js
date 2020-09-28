@@ -5,7 +5,6 @@ const FB = require('fb')
 
 const bus = require('../../event_bus')
 
-
 FB.setAccessToken(fb_page_token)
 
 
@@ -33,6 +32,7 @@ connected_facebook_page = () =>
 
 connected_facebook_page()
   .then(res => bus.emit(`STARTUP: Connected to Messenger profile '${res.name}': https://m.me/${res.id}`))
+  .catch(error => bus.emit('Error: (check your fb_page_token) ', error.stack))
 
 
 module.exports = {

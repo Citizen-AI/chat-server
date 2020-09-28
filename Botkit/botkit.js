@@ -59,10 +59,7 @@ if(fb_verify_token && fb_page_token && fb_app_secret) {
     controller.webserver.post(messenger_endpoint, (req, res) =>
       facebook_adapter
         .processActivity(req, res, controller.handleTurn.bind(controller))
-        .catch((err) => {
-          console.error('Experienced an error inside the turn handler', err)
-          throw err
-        })
+        .catch(error => bus.emit('Error: (check your fb_app_secret) ', error.stack))
     )
   })
 }
