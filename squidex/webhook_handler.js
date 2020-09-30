@@ -3,7 +3,7 @@ const { controller, webserver } = require('../Botkit/botkit')
 const bus = require('../event_bus')
 const { create_intent, update_intent } = require('../Dialogflow/df_api_v2')
 const { update_item } = require('./squidex_api')
-const { topic_map } = require('./utils')
+const { topic_map, link_up_topics } = require('./utils')
 
 
 const add_dialogflow_intent = payload => new Promise(async (resolve, reject) => {
@@ -54,8 +54,10 @@ module.exports = async topics => {
     if(!topic_to_update)
       return reject(`Can't find topic to update: ${name}`)
     const replacement_topic = topic_map(payload)
-    replacement_topic.linked_topics = replacement_topic.linked_topics?.map(id => _topics.find(topic2 => topic2.id === id))
+    replacement_topic.linked_topics =
+      replacement_topic.linked_topics?.map(id => _topics.find(topic2 => topic2.id === id))
     Object.assign(topic_to_update, replacement_topic)
+    Object.assign(_topics, link_up_topics(_topics))
     resolve()
   })
 
@@ -66,7 +68,6 @@ module.exports = async topics => {
     new_topic.linked_topics = new_topic.linked_topics?.map(id => _topics
         .find(topic2 => topic2.id === id)
       )
-      .filter(({ button_label }) => button_label)
     const existing_topic = topic_by_id(_topics, id)
     if(existing_topic)
       Object.assign(existing_topic, new_topic)
@@ -100,7 +101,7 @@ module.exports = async topics => {
             await update_intent({ name: intent_key, priority: 500000 })
             bus.emit(`Squidex: enabled matching Dialogflow intent ${intent_key}`)
           }
-        } catch (error) { bus.emit('Error: ', error.stack) }
+        } catch (error) { bus.emit(`Error: ${error}: `, error.stack) }
         break
 
       case 'TopicUnpublished':
@@ -108,7 +109,7 @@ module.exports = async topics => {
           remove_local_topic(payload)
           await update_intent({ name: intent_key, priority: -1 }) // https://cloud.google.com/dialogflow/es/docs/intents-settings#priority
           bus.emit(`Squidex: removed local topic '${data.name.iv}' and disabled matching Dialogflow intent`)
-        } catch (error) { bus.emit('Error: ', error.stack) }
+        } catch (error) { bus.emit(`Error: ${error}: `, error.stack) }
         break
 
       case 'TopicPublished':
@@ -119,7 +120,7 @@ module.exports = async topics => {
             await update_intent({ name: intent_key, priority: 500000 })
             bus.emit(`Squidex: enabled matching Dialogflow intent ${intent_key}`)
           }
-        } catch (error) { bus.emit('Error', error.stack)}
+        } catch (error) { bus.emit(`Error: ${error}: `, error.stack) }
         break
 
       // assuming that these are all Draft, for now
@@ -129,7 +130,7 @@ module.exports = async topics => {
           await update_item({ id, intent_key: new_intent_key })
           bus.emit(`Squidex: updated Squidex topic ${id} with intent key ${new_intent_key}`)
         } catch (error) {
-          bus.emit('Error: ', error.stack)
+          bus.emit(`Error: ${error}: `, error.stack)
         }
     }
     res.sendStatus(200)
