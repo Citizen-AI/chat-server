@@ -5,6 +5,7 @@ const botkit = require('./botkit').controller
 const { regex, adapter_name } = require('../helpers')
 const { NODE_ENV } = process.env
 
+
 const message_and_postback_handler = (bot, client_message) => {
   if(!client_message.text) {
     bus.emit('Error: client_message.text is empty. client_message: ', JSON.stringify(client_message))

@@ -27,15 +27,14 @@ const display_topics = topics
   )
 
 
-const get_topic_by_intent_key = intent_key => topics
-  .then(find('intent_key', intent_key))
-  .catch(console.error)
+const get_topic_by_field = (key, value) => topics.then(find(key, value))
+  .catch(error => bus.emit(`Error: ${error}`, error.stack))
 
 
 // extra linkify here to make it a bit more fault-tolerant
 const get_topic_by_link = link => topics
   .then(find('link', linkify(link)))
-  .catch(console.error)
+  .catch(error => bus.emit(`Error: ${error}`, error.stack))
 
 
 const topic_index = display_topics.then(map(({ question, link }) => ({ question, link })))
@@ -45,8 +44,8 @@ controller.ready(() => webhook_handler(topics))
 
 
 module.exports = {
-  get_topic_by_intent_key,
   get_topic_by_link,
+  get_topic_by_field,
   topic_index,
   display_topics
 }

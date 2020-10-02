@@ -33,6 +33,8 @@ bus
 
   .on('message from Dialogflow for Web Adapter', web.regular_message)
   .on('message from Dialogflow for Facebook Adapter', fb.regular_message)
+  .on('too many fallbacks in a row for Web Adapter', web.bot_fail_message)
+  .on('too many fallbacks in a row for Facebook Adapter', fb.bot_fail_message)
   .on('message from Dialogflow for Web Adapter', logger.from_df)
   .on('message from Dialogflow for Facebook Adapter', logger.from_df)
 

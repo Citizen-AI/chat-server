@@ -4,7 +4,10 @@ const bus = require('../../event_bus')
 const { dialogflow_format, squidex_format, text_processor } = require('./df_to_webchat_formatter')
 const { ms_delay, intent_key_from_df_result, replace_in_object } = require('../shared')
 const { regex } = require('../../helpers')
-const { get_topic_by_intent_key } = require('../../squidex')
+const { get_topic_by_field } = require('../../squidex')
+
+
+const { fail_message_intent_name } = process.env
 
 
 const send_queue = async payload => {
@@ -38,9 +41,19 @@ const send_queue = async payload => {
 
 const regular_message = async payload => {
   const { df_result } = payload
-  const topic = await get_topic_by_intent_key(intent_key_from_df_result(df_result))
+  const topic = await get_topic_by_field('intent_key', intent_key_from_df_result(df_result))
   if(!topic?.answer) bus.emit('No matching squidex content found; falling back to Dialogflow')
   const messages_to_send = topic?.answer ? squidex_format(topic) : dialogflow_format(df_result)
+  send_queue({
+    ...payload,
+    messages_to_send
+  })
+}
+
+
+const bot_fail_message = async payload => {
+  const topic = await get_topic_by_field('name', fail_message_intent_name)
+  const messages_to_send = squidex_format(topic)
   send_queue({
     ...payload,
     messages_to_send
@@ -62,7 +75,7 @@ const tell_me_more = payload => {
 const linked_topic = async payload => {
   const { user_message } = payload
   const intent_key = user_message.text.match(regex.intent_key)[1]
-  const topic = await get_topic_by_intent_key(intent_key)
+  const topic = await get_topic_by_field('intent_key', intent_key)
   const messages_to_send = squidex_format(topic)
   send_queue({
     ...payload,
@@ -74,5 +87,6 @@ const linked_topic = async payload => {
 module.exports = {
   regular_message,
   tell_me_more,
-  linked_topic
+  linked_topic,
+  bot_fail_message
 }

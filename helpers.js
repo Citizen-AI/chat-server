@@ -27,7 +27,8 @@ module.exports = {
     card_button: /^card_button: ?/i,
     cards_tag: /\[cards?: (.+?)\]/i,
     image_tag: /\[image: (.+?)\]/i,
-    dialogflow_intent_key_from_name: /.*\/(.*?)$/
+    dialogflow_intent_key_from_name: /.*\/(.*?)$/,
+    fallback_intent_name: /.*Default Fallback Intent/
   },
 
   remove_empties: arr => arr.filter(x => x != ''),

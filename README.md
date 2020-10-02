@@ -13,7 +13,7 @@ The server will be looking for a `topic` schema including:
 * **source**: optional citation, e.g. 'Employment Relations Act 2000'
 
 
-# Squidex live-updating
+## Squidex live-updating
 
 You can set up the app to listen for changes to content in Squidex. It can also add new Dialogflow intents when a new topic is created in Squidex. To enable these features:
 
@@ -62,6 +62,9 @@ Run `npm install`, then `npm start`. The script will tell you what environment v
   * **fb_verify_token**: Facebook Verify Token  (get from https://developers.facebook.com/ > your app > Messenger > Settings > Webhooks > Edit Callback URL)
   * **fb_app_secret**: Facebook App Secret (get from https://developers.facebook.com/ > your app > Settings > Basic > App Secret
   * **fb_persistent_menu**: see below
+
+* **fallbacks_before_fail_message** and **fail_message_intent_name**: if these are set, the bot will, after a user triggers the Default Fallback Intent fallbacks_before_fail_message times in a row, look for the Squidex topic (e.g. '[App] Three strikes fallback').
+
 
 * **dialogflow_environment**: If your agent has multiple environments (e.g. live and staging), set the environment name here
 

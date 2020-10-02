@@ -13,7 +13,6 @@ bus = require '../../event_bus'
   has_cards_before_more,
   has_image_before_more
 } = require '../shared'
-{ get_topic_by_intent_key } = require '../../squidex'
 
 quick_replies_template = require '../templates/quick_replies'
 generic_template = require './templates/generic_template'
