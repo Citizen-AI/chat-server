@@ -83,10 +83,8 @@ module.exports = async topics => {
 
 
   webserver.post('/api/squidex', async (req, res) => {
-    const { body } = req
-    const { type, payload } = body
-    const { id, data } = payload
-    const intent_key = data.intentKey?.iv
+    const { body: { type, payload, payload: { id, data } } } = req
+    const intent_key = data?.intentKey?.iv
     bus.emit(`Squidex: heard event ${type}`)
     switch(type) {
       case 'TopicUpdated':

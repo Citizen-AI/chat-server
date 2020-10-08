@@ -14,7 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/dialogflow": "^3.3.0",
-    "@sentry/node": "^5.24.2",
+    "@sentry/node": "^5.25.0",
     "botbuilder-adapter-facebook": "^1.0.11",
     "botbuilder-adapter-web": "^1.0.9",
     "botkit": "^4.10.0",
@@ -31,7 +31,7 @@
     "google-libphonenumber": "^3.2.13",
     "got": "^11.7.0",
     "lodash": "^4.17.20",
-    "mongoose": "^5.10.7",
+    "mongoose": "^5.10.8",
     "ngrok": "^3.3.0"
   }
 }
