@@ -1,22 +1,35 @@
 'use strict'
-// in-memory storage to keep track of the number of times in a row people get the default fallback intent
+/*
+In-memory storage to keep track of the last X intents triggered for each user, so that a
+graceful fallback message can be sent when there are too many of the same
+*/
 
-const user_repeated_fallbacks = {}
+const { repeated_intents_before_fail_message } = process.env
+
+const data = {}
 
 
-const inc_fallback = user_id => {
-  user_repeated_fallbacks[user_id] = (user_repeated_fallbacks[user_id] || 0) + 1
-  return user_repeated_fallbacks[user_id]
+const add = (user_id, intent_name) => {
+  Array.isArray(data[user_id]) ? data[user_id].push(intent_name) : data[user_id] = [intent_name]
+  if(data[user_id].length > repeated_intents_before_fail_message) data[user_id].shift()
 }
 
 
-const reset_fallback = user_id => {
-  user_repeated_fallbacks[user_id] = 0
-  return 0
+// Thanks https://stackoverflow.com/a/35568895/1876628
+const n_the_same = user_id => {
+  const user_data = data[user_id]
+  if(!user_data) return false
+  if(user_data.length < repeated_intents_before_fail_message) return false
+  return user_data.every(v => v === user_data[0])
+}
+
+
+const is_repeated = (user_id, intent_name) => {
+  add(user_id, intent_name)
+  return n_the_same(user_id)
 }
 
 
 module.exports = {
-  inc_fallback,
-  reset_fallback
+  is_repeated
 }
