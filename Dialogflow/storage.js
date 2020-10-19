@@ -4,7 +4,7 @@ In-memory storage to keep track of the last X intents triggered for each user, s
 graceful fallback message can be sent when there are too many of the same
 */
 
-const { repeated_intents_before_fail_message } = process.env
+const { repeated_intents_before_fail_message, fail_message_intent_name } = process.env
 
 const data = {}
 
@@ -18,6 +18,7 @@ const add = (user_id, intent_name) => {
 // Thanks https://stackoverflow.com/a/35568895/1876628
 const n_the_same = user_id => {
   const user_data = data[user_id]
+  if(!repeated_intents_before_fail_message || !fail_message_intent_name) return false
   if(!user_data) return false
   if(user_data.length < repeated_intents_before_fail_message) return false
   return user_data.every(v => v === user_data[0])
