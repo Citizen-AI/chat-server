@@ -123,13 +123,13 @@ module.exports = async topics => {
 
       // assuming that these are all Draft, for now
       case 'TopicCreated':
-        try {
-          const new_intent_key = await add_dialogflow_intent(payload)
-          await update_item({ id, intent_key: new_intent_key })
-          bus.emit(`Squidex: updated Squidex topic ${id} with intent key ${new_intent_key}`)
-        } catch (error) {
-          bus.emit(`Error: ${error}: `, error.stack)
-        }
+        add_dialogflow_intent(payload)
+          .then(new_intent_key => {
+            update_item({ id, intent_key: new_intent_key })
+              .then(() => bus.emit(`Squidex: updated Squidex topic ${id} with intent key ${new_intent_key}`))
+              .catch(error => bus.emit(`Error: Couldn't update Squidex topic ${id}. Could be a Squidex permissions problem. ${error}`, error.stack))
+          })
+          .catch(error => bus.emit(`Error: ${error}: `, error.stack))
     }
     res.sendStatus(200)
   })

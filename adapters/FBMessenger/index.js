@@ -1,7 +1,7 @@
 'use strict'
 
 const bus = require('../../event_bus')
-const { send_typing } = require('./facebook_api')
+const { send_typing, get_facebook_profile } = require('./facebook_api')
 const { dialogflow_format, squidex_format, text_processor } = require('./df_to_messenger_formatter')
 const { ms_delay, intent_key_from_df_result, find_in_object, replace_in_object } = require('../shared')
 const { get_topic_by_field } = require('../../squidex')
@@ -22,10 +22,14 @@ const swap_in_user_name = (user_message, messages_to_send) => new Promise(async 
     let first_name
     if(!user?.fb_user_profile?.first_name) {
       bus.emit('Asking Facebook for user name')
-      const fb_user_profile = await get_facebook_profile(fb_user_id)
-      // this should catch errors
-      update_user(fb_user_id, { fb_user_profile })
-      first_name = fb_user_profile.first_name
+      try {
+        const fb_user_profile = await get_facebook_profile(fb_user_id)
+        update_user(fb_user_id, { fb_user_profile })
+        first_name = fb_user_profile.first_name
+      } catch (error) {
+        bus.emit(`Error: ${error.message}: `, JSON.stringify(error))
+        first_name = 'there'
+      }
     } else {
       bus.emit('Found user name in db')
       first_name = user.fb_user_profile.first_name
