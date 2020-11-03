@@ -11,7 +11,7 @@ const topic_map = ({ id, data, lastModified }) => {
   return {
     id,
     intent_key: intentKey?.iv,
-    name: name.iv,
+    name: name?.iv,
     question: first_example_question,
     link: linkify(first_example_question),
     answer: answer?.iv,
