@@ -32,6 +32,9 @@ const update_dialogflow_intent = ({ data, dataOld }) => new Promise(async (resol
 const topic_renamed = ({ data, dataOld }) => data.name.iv != dataOld.name.iv
 
 
+const topic_live = ({ status }) => status === 'Published'
+
+
 const intent_key_added = ({ data, dataOld }) => data.intentKey?.iv != dataOld.intentKey?.iv
 
 
@@ -52,7 +55,7 @@ module.exports = async topics => {
     const name = payload.data.name.iv
     const topic_to_update = topic_by_id(_topics, id)
     if(!topic_to_update)
-      return reject(`Can't find topic to update: ${name}`)
+      return reject(`Can't find local topic to update: ${name}`)
     const replacement_topic = topic_map(payload)
     replacement_topic.linked_topics =
       replacement_topic.linked_topics?.map(id => _topics.find(topic2 => topic2.id === id))
@@ -89,8 +92,10 @@ module.exports = async topics => {
     switch(type) {
       case 'TopicUpdated':
         try {
-          await update_local_topic(payload)
-          bus.emit(`Squidex: updated topic '${data.name.iv}' locally`)
+          if(topic_live(payload)) {
+            await update_local_topic(payload)
+            bus.emit(`Squidex: updated topic '${data.name.iv}' locally`)
+          }
           if(topic_renamed(payload)) {
             await update_dialogflow_intent(payload)
             bus.emit(`Squidex: renamed Dialogflow intent '${intent_key}'`)
