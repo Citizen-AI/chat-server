@@ -31,12 +31,13 @@ module.exports = {
   },
 
 
-  from_user: ({ user_message, bot }) =>
+  from_user: ({ user_message, bot, user_said_too_long }) =>
     log_event({
       user: user_message.user,
       event_type: 'from_' + platform(bot),
       user_said: user_message.text,
       user_quick_reply: user_message.quick_reply?.payload,
+      user_said_too_long,
       host: user_message.host
     }),
 

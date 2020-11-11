@@ -27,7 +27,7 @@ bus.onAny((event, payload) => {
     if(referer) log_message += ' [' + chalk.blue(referer) + ']'
     console.log(log_message)
     if(payload && (NODE_ENV === 'development')) {
-      console.log('Payload:', Object.keys(payload))
+      console.log('Payload:', typeof payload === 'object' ? Object.keys(payload) : payload)
     }
   }
 })

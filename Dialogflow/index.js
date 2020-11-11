@@ -14,7 +14,8 @@ const send_to_df = async payload => {
   let query
   if(text?.length > 255) {
     query = 'USER_TEXT_TOO_LONG_INTENT'
-    bus.emit(`Error: too-long message from user: ${text}`)
+    bus.emit(`Too-long message from user: ${text}`)
+    payload.user_said_too_long = true
   }
   else query = text
 

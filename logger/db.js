@@ -43,6 +43,7 @@ const EventSchema = new Schema({
   user: { type: String, ref: 'User' },
   user_said: String,
   user_quick_reply: String,
+  user_said_too_long: Boolean,
   bot_said: Object,
   df_session: String,
   df_messages: Array,
