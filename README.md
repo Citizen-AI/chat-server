@@ -1,6 +1,6 @@
 # Citizen AI chatbot server
 
-A Botkit-based chatbot server for websocket & Messenger clients. Currently used to run legal help chatbots [workbot.nz](https://workbot.nz/chat) and [rentbot.nz](https://rentbot.nz/chat). It uses [Dialogflow](https://dialogflow.cloud.google.com/) to identify intents,
+A Botkit-based chatbot server for websocket & Messenger clients. Currently used to run legal help chatbots [workbot.nz](https://workbot.nz/chat), [rentbot.nz](https://rentbot.nz/chat) and [lagbot.nz](https://lagbot.nz/chat). It uses [Dialogflow](https://dialogflow.cloud.google.com/) to identify intents,
 and [Squidex](https://squidex.io/) to host the content.
 
 
