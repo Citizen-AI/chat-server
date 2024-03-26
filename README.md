@@ -3,6 +3,7 @@
 A Botkit-based chatbot server for websocket & Messenger clients. Currently used to run legal help chatbots [workbot.nz](https://workbot.nz/chat), [rentbot.nz](https://rentbot.nz/chat) and [lagbot.nz](https://lagbot.nz/chat). It uses [Dialogflow](https://dialogflow.cloud.google.com/) to identify intents,
 and [Squidex](https://squidex.io/) to host the content.
 
+![image](https://github.com/Citizen-AI/chat-server/assets/1380991/7ea92eae-c993-4cc8-969d-68c0e307351c)
 
 ## Squidex schema
 
